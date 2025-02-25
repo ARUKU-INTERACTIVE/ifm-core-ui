@@ -9,7 +9,7 @@ export default function PrivateLayout() {
 		StoredCookies.USERNAME,
 		StoredCookies.REFRESH_TOKEN,
 	]);
-	const { handleRefreshSession, loadingState } = useAuthProvider();
+	const { loadingState } = useAuthProvider();
 
 	const isAuthenticated =
 		!!cookies[StoredCookies.REFRESH_TOKEN] && !!cookies[StoredCookies.USERNAME];

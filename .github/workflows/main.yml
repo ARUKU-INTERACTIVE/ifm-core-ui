@@ -42,9 +42,11 @@ jobs:
 
       - name: Setup LCOV
         uses: hrishikesh-kadam/setup-lcov@v1
+        with:
+          ref: v1.14
 
       - name: Report code coverage
-        uses: zgosalvez/github-actions-report-lcov@v3
+        uses: zgosalvez/github-actions-report-lcov@v4.1.23
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           coverage-files: ./coverage/cypress/lcov.info
