@@ -13,10 +13,10 @@ export interface IAuthService {
 		config?: ApiRequestConfig,
 	) => Promise<ISingleResponse<ISignUpResponse>>;
 	signIn: (
-		username: string,
-		password: string,
-		config?: ApiRequestConfig,
-	) => Promise<ISingleResponse<ISignInResponse>>;
+		transactionSigned: string,
+		publicKey: string,
+		nonce: string,
+	) => Promise<ISignInResponse>;
 	confirmUser: (
 		username: string,
 		code: string,
