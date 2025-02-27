@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { useAuthProvider } from './useAuthProvider';
 import { useSimpleSigner } from './useSimpleSigner';
@@ -28,43 +28,58 @@ export function useWallet() {
 		}
 	};
 
-	const signTransaction = async (transactionXDR: string) => {
-		try {
-			const signedTransaction = await handleSignTransaction(transactionXDR);
+	const handleSignTransactionXDR = useCallback(
+		(transactionXDR: string) => {
+			async function signTransaction(transactionXDR: string) {
+				try {
+					const signedTransaction = await handleSignTransaction(transactionXDR);
 
-			notificationService.success(TRANSACTION_SIGNED_MESSAGE);
-			return signedTransaction;
-		} catch (error) {
-			return notificationService.error(SIGN_TRANSACTION_ERROR);
-		}
-	};
-
-	const signInWithTransaction = async (publicKey: string) => {
-		setIsLoading(true);
-		const { transactionXDR, nonce } = await authService.getChallengeTransaction(
-			publicKey,
-		);
-
-		if (!transactionXDR || !nonce) {
-			notificationService.error(INVALID_TRANSACTION_ERROR);
-		} else {
-			const signedTransaction = await signTransaction(transactionXDR);
-
-			if (!signedTransaction) {
-				setIsLoading(false);
-				return;
+					notificationService.success(TRANSACTION_SIGNED_MESSAGE);
+					return signedTransaction;
+				} catch (error) {
+					return notificationService.error(SIGN_TRANSACTION_ERROR);
+				}
 			}
 
-			handleSignIn(signedTransaction, publicKey, nonce);
-		}
+			return signTransaction(transactionXDR);
+		},
+		[handleSignTransaction],
+	);
 
-		setIsLoading(false);
-	};
+	const handleSignInWithTransaction = useCallback(
+		(publicKey: string) => {
+			async function signInWithTransaction(publicKey: string) {
+				setIsLoading(true);
+				const { transactionXDR, nonce } =
+					await authService.getChallengeTransaction(publicKey);
+
+				if (!transactionXDR || !nonce) {
+					notificationService.error(INVALID_TRANSACTION_ERROR);
+				} else {
+					const signedTransaction = await handleSignTransactionXDR(
+						transactionXDR,
+					);
+
+					if (!signedTransaction) {
+						setIsLoading(false);
+						return;
+					}
+
+					handleSignIn(signedTransaction, publicKey, nonce);
+				}
+
+				setIsLoading(false);
+			}
+
+			return signInWithTransaction(publicKey);
+		},
+		[handleSignIn, handleSignTransactionXDR],
+	);
 
 	return {
 		isLoading,
 		publicKey,
 		connectWallet,
-		signInWithTransaction,
+		handleSignInWithTransaction,
 	};
 }

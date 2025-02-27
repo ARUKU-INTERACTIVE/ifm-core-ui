@@ -1,5 +1,5 @@
 import { Keypair } from '@stellar/stellar-sdk';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { connectWallet, signTransaction } from 'simple-stellar-signer-api';
 
 export const useSimpleSigner = () => {
@@ -23,20 +23,27 @@ export const useSimpleSigner = () => {
 		}
 	};
 
-	const handleSignTransaction = async (xdr: string, description?: string) => {
-		try {
-			return await signTransaction(xdr, network, {
-				description,
-			});
-		} catch (error) {
-			const err = error as Error;
-			console.error('[SIGN_TRANSACTION_ERROR]', err);
-			if (err.message.includes('User cancelled process')) {
-				throw new Error('SIMPLE_SIGNER_SIGN_CANCELLED');
+	const handleSignTransaction = useCallback(
+		(xdr: string, description?: string) => {
+			async function signXDRTransaction(xdr: string, description?: string) {
+				try {
+					return await signTransaction(xdr, network, {
+						description,
+					});
+				} catch (error) {
+					const err = error as Error;
+					console.error('[SIGN_TRANSACTION_ERROR]', err);
+					if (err.message.includes('User cancelled process')) {
+						throw new Error('SIMPLE_SIGNER_SIGN_CANCELLED');
+					}
+					throw err;
+				}
 			}
-			throw err;
-		}
-	};
+
+			return signXDRTransaction(xdr, description);
+		},
+		[network],
+	);
 
 	return {
 		publicKey,
