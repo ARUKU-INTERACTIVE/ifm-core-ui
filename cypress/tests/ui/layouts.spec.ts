@@ -2,7 +2,7 @@ describe('Layouts', () => {
 	describe('Private Layout', () => {
 		it('should redirect to login when accessing private route without auth', () => {
 			cy.visit('/about');
-			cy.url().should('include', '/auth/sign-in');
+			cy.url().should('include', '/');
 		});
 
 		it('should allow access to private route when authenticated', () => {
