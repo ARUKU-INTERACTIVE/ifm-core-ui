@@ -39,5 +39,6 @@ export default defineConfig({
 	},
 	env: {
 		VITE_API_URL: process.env.VITE_API_URL,
+		VITE_SIMPLE_SIGNER_URL: process.env.VITE_SIMPLE_SIGNER_URL,
 	},
 });
