@@ -21,38 +21,7 @@ describe('/auth', () => {
 		beforeEach(() => {
 			cy.visit('/');
 		});
-		it('Should be able to connect your wallet', () => {
-			cy.window().then((window) => {
-				cy.stub(window, 'open')
-					.as('connect-wallet')
-					.callsFake(() => null);
-			});
-
-			cy.getBySel('connect-wallet-btn')
-				.should('have.text', 'Connect your Wallet')
-				.click();
-			cy.get('@connect-wallet').should('be.called');
-
-			const connectEvent = new MessageEvent('message', {
-				data: {
-					type: 'onConnect',
-					page: `${simpleSignerUrl}/connect`,
-					message: {
-						publicKey: walletAddress,
-						wallet: 'albedo',
-					},
-				},
-				origin: simpleSignerUrl,
-			});
-
-			cy.window().then((win) => {
-				win.dispatchEvent(connectEvent);
-			});
-
-			cy.getBySel('toast-container').contains(CONNECT_WALLET_MESSAGE);
-		});
-
-		it('should be able to sign in', () => {
+		it('Should be able to connect your wallet and sign in with transaction', () => {
 			cy.interceptApi(
 				`/auth/challenge?publicKey=${walletAddress}`,
 				{ method: 'GET' },
@@ -70,9 +39,7 @@ describe('/auth', () => {
 					.callsFake(() => null);
 			});
 
-			cy.getBySel('connect-wallet-btn')
-				.should('have.text', 'Connect your Wallet')
-				.click();
+			cy.getBySel('sign-in-btn').should('have.text', 'Sign In').click();
 			cy.get('@connect-wallet').should('be.called');
 
 			const connectEvent = new MessageEvent('message', {
@@ -93,7 +60,7 @@ describe('/auth', () => {
 
 			cy.getBySel('toast-container').contains(CONNECT_WALLET_MESSAGE);
 
-			cy.getBySel('sign-in-btn').should('have.text', 'Sign In').click();
+			cy.wait(1000);
 
 			const signEvent = new MessageEvent('message', {
 				data: {
@@ -122,9 +89,7 @@ describe('/auth', () => {
 					.callsFake(() => null);
 			});
 
-			cy.getBySel('connect-wallet-btn')
-				.should('have.text', 'Connect your Wallet')
-				.click();
+			cy.getBySel('sign-in-btn').should('have.text', 'Sign In').click();
 			cy.get('@connect-wallet').should('be.called');
 
 			const connectCancelEvent = new MessageEvent('message', {
@@ -156,9 +121,7 @@ describe('/auth', () => {
 					.callsFake(() => null);
 			});
 
-			cy.getBySel('connect-wallet-btn')
-				.should('have.text', 'Connect your Wallet')
-				.click();
+			cy.getBySel('sign-in-btn').should('have.text', 'Sign In').click();
 			cy.get('@connect-wallet').should('be.called');
 
 			const connectEvent = new MessageEvent('message', {
@@ -177,7 +140,9 @@ describe('/auth', () => {
 				win.dispatchEvent(connectEvent);
 			});
 
-			cy.getBySel('sign-in-btn').should('have.text', 'Sign In').click();
+			cy.getBySel('toast-container').contains(CONNECT_WALLET_MESSAGE);
+
+			cy.wait(2000);
 
 			const signCancelEvent = new MessageEvent('message', {
 				data: {
