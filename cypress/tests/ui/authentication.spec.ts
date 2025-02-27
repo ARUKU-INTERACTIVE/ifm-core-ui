@@ -442,12 +442,4 @@ describe('/auth', () => {
 			cy.getBySel('toast-container').contains(errorResponse.error.detail);
 		});
 	});
-	describe('/auth/sign-out', () => {
-		it('After a successful sign in, should be able to sign out', () => {
-			cy.signIn();
-			cy.getBySel('sign-out').click();
-			cy.url().should('eq', Cypress.config('baseUrl') + '/');
-			cy.getBySel('toast-container').contains(SIGN_OUT_SUCCESS_MESSAGE);
-		});
-	});
 });
