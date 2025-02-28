@@ -15,11 +15,14 @@ class AuthService implements IAuthService {
 		this.api = api;
 	}
 	async signIn(transactionSigned: string, publicKey: string, nonce: string) {
-		return await this.api.post<ISignInResponse>('/auth/sign-in', {
-			transactionSigned,
-			publicKey,
-			nonce,
-		});
+		return await this.api.post<ISingleResponse<ISignInResponse>>(
+			'/auth/sign-in',
+			{
+				transactionSigned,
+				publicKey,
+				nonce,
+			},
+		);
 	}
 	async signUp(username: string, password: string, config?: ApiRequestConfig) {
 		return await this.api.post<ISingleResponse<ISignUpResponse>>(
@@ -68,7 +71,7 @@ class AuthService implements IAuthService {
 		try {
 			const queryParam = `?publicKey=${publicKey}`;
 
-			return await this.api.get<IChallengeTransactionResponse>(
+			return await this.api.get<ISingleResponse<IChallengeTransactionResponse>>(
 				`/auth/challenge${queryParam}`,
 			);
 		} catch (error) {

@@ -16,7 +16,7 @@ export interface IAuthService {
 		transactionSigned: string,
 		publicKey: string,
 		nonce: string,
-	) => Promise<ISignInResponse>;
+	) => Promise<ISingleResponse<ISignInResponse>>;
 	confirmUser: (
 		username: string,
 		code: string,
