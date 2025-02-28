@@ -31,11 +31,12 @@ export const AuthProvider = ({ children }: PropTypes) => {
 			) {
 				setLoadingState('signIn', true);
 				try {
-					const { accessToken, refreshToken } = await authService.signIn(
+					const signInResponse = await authService.signIn(
 						transactionSigned,
 						publicKey,
 						nonce,
 					);
+					const { accessToken, refreshToken } = signInResponse.data.attributes;
 
 					cookieService.setAccessTokenCookie(accessToken);
 					cookieService.setRefreshTokenCookie(refreshToken);

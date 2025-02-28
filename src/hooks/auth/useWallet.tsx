@@ -50,8 +50,10 @@ export function useWallet() {
 		(publicKey: string) => {
 			async function signInWithTransaction(publicKey: string) {
 				setIsLoading(true);
-				const { transactionXDR, nonce } =
+				const challengeTransactionResponse =
 					await authService.getChallengeTransaction(publicKey);
+				const { transactionXDR, nonce } =
+					challengeTransactionResponse.data.attributes;
 
 				if (!transactionXDR || !nonce) {
 					notificationService.error(INVALID_TRANSACTION_ERROR);
