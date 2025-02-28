@@ -52,14 +52,14 @@ export function useWallet() {
 				setIsLoading(true);
 				const challengeTransactionResponse =
 					await authService.getChallengeTransaction(publicKey);
-				const { transactionXDR, nonce } =
+				const { transactionXdr, nonce } =
 					challengeTransactionResponse.data.attributes;
 
-				if (!transactionXDR || !nonce) {
+				if (!transactionXdr || !nonce) {
 					notificationService.error(INVALID_TRANSACTION_ERROR);
 				} else {
 					const signedTransaction = await handleSignTransactionXDR(
-						transactionXDR,
+						transactionXdr,
 					);
 
 					if (!signedTransaction) {

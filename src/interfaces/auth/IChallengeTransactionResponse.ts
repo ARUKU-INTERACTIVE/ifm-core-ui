@@ -1,4 +1,4 @@
 export interface IChallengeTransactionResponse {
-	transactionXDR: string;
+	transactionXdr: string;
 	nonce: string;
 }
