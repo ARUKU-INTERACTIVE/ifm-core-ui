@@ -1,4 +1,8 @@
 {
-	"transactionXDR": "transaction",
-	"nonce": "nonce"
+	"data": {
+		"attributes": {
+			"transactionXDR": "transaction",
+			"nonce": "nonce"
+		}
+	}
 }
