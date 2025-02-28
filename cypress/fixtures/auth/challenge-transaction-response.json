@@ -1,7 +1,7 @@
 {
 	"data": {
 		"attributes": {
-			"transactionXDR": "transaction",
+			"transactionXdr": "transaction",
 			"nonce": "nonce"
 		}
 	}
