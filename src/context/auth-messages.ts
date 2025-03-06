@@ -12,3 +12,5 @@ export const SIGN_TRANSACTION_ERROR =
 	'There was an error signing the transaction';
 export const TRANSACTION_SIGNED_MESSAGE = 'Transaction signed successfully';
 export const CONNECT_WALLET_MESSAGE = 'Wallet connected successfully';
+export const SIMPLE_SIGNER_CONNECT_ERROR = 'Simple Signer connect cancelled';
+export const SIMPLE_SIGNER_SIGN_ERROR = 'Simple Signer sign cancelled';

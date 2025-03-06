@@ -3,6 +3,10 @@ import { useCallback, useState } from 'react';
 import { connectWallet, signTransaction } from 'simple-stellar-signer-api';
 
 import { SIMPLE_SIGNER_URL } from '@/configs/environment';
+import {
+	SIMPLE_SIGNER_CONNECT_ERROR,
+	SIMPLE_SIGNER_SIGN_ERROR,
+} from '@/context/auth-messages';
 
 export const useSimpleSigner = () => {
 	const [publicKey, setPublicKey] = useState<string>('');
@@ -17,7 +21,7 @@ export const useSimpleSigner = () => {
 		} catch (error) {
 			const err = error as Error;
 			if (err.message.includes('User cancelled process')) {
-				throw new Error('SIMPLE_SIGNER_CONNECT_CANCELLED');
+				throw new Error(SIMPLE_SIGNER_CONNECT_ERROR);
 			}
 			throw err;
 		}
@@ -33,7 +37,7 @@ export const useSimpleSigner = () => {
 				} catch (error) {
 					const err = error as Error;
 					if (err.message.includes('User cancelled process')) {
-						throw new Error('SIMPLE_SIGNER_SIGN_CANCELLED');
+						throw new Error(SIMPLE_SIGNER_SIGN_ERROR);
 					}
 					throw err;
 				}
