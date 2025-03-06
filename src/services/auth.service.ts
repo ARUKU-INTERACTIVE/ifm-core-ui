@@ -76,7 +76,6 @@ class AuthService implements IAuthService {
 			);
 		} catch (error) {
 			const err = error as Error;
-			console.error('[GET_CHALLENGE_TRANSACTION_ERROR]', err);
 			throw new Error(err.message);
 		}
 	}

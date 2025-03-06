@@ -16,7 +16,6 @@ export const useSimpleSigner = () => {
 			}
 		} catch (error) {
 			const err = error as Error;
-			console.error('[CONNECT_WALLET_ERROR]', err);
 			if (err.message.includes('User cancelled process')) {
 				throw new Error('SIMPLE_SIGNER_CONNECT_CANCELLED');
 			}
@@ -33,7 +32,6 @@ export const useSimpleSigner = () => {
 					});
 				} catch (error) {
 					const err = error as Error;
-					console.error('[SIGN_TRANSACTION_ERROR]', err);
 					if (err.message.includes('User cancelled process')) {
 						throw new Error('SIMPLE_SIGNER_SIGN_CANCELLED');
 					}
