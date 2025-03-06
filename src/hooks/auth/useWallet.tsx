@@ -24,7 +24,7 @@ export function useWallet() {
 			await handleConnectWallet();
 			notificationService.success(CONNECT_WALLET_MESSAGE);
 		} catch (error) {
-			return notificationService.error(CONNECT_WALLET_ERROR);
+			notificationService.error(CONNECT_WALLET_ERROR);
 		}
 	};
 
@@ -37,7 +37,7 @@ export function useWallet() {
 					notificationService.success(TRANSACTION_SIGNED_MESSAGE);
 					return signedTransaction;
 				} catch (error) {
-					return notificationService.error(SIGN_TRANSACTION_ERROR);
+					notificationService.error(SIGN_TRANSACTION_ERROR);
 				}
 			}
 
