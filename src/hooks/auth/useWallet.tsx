@@ -52,10 +52,10 @@ export function useWallet() {
 				setIsLoading(true);
 				const challengeTransactionResponse =
 					await authService.getChallengeTransaction(publicKey);
-				const { transactionXdr, nonce } =
+				const { transactionXdr, memo } =
 					challengeTransactionResponse.data.attributes;
 
-				if (!transactionXdr || !nonce) {
+				if (!transactionXdr || !memo) {
 					notificationService.error(INVALID_TRANSACTION_ERROR);
 				} else {
 					const signedTransaction = await handleSignTransactionXDR(
@@ -67,7 +67,7 @@ export function useWallet() {
 						return;
 					}
 
-					handleSignIn(signedTransaction, publicKey, nonce);
+					handleSignIn(signedTransaction, publicKey, memo);
 				}
 
 				setIsLoading(false);

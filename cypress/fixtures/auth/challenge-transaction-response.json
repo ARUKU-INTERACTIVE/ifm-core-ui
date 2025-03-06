@@ -2,7 +2,7 @@
 	"data": {
 		"attributes": {
 			"transactionXdr": "transaction",
-			"nonce": "nonce"
+			"memo": "memo"
 		}
 	}
 }

@@ -23,18 +23,18 @@ export const AuthProvider = ({ children }: PropTypes) => {
 	const { loadingState, setLoadingState } = useLoadingState();
 	const navigate = useNavigate();
 	const handleSignIn = useCallback(
-		(transactionSigned: string, publicKey: string, nonce: string) => {
+		(transactionSigned: string, publicKey: string, memo: string) => {
 			async function signIn(
 				transactionSigned: string,
 				publicKey: string,
-				nonce: string,
+				memo: string,
 			) {
 				setLoadingState('signIn', true);
 				try {
 					const signInResponse = await authService.signIn(
 						transactionSigned,
 						publicKey,
-						nonce,
+						memo,
 					);
 					const { accessToken, refreshToken } = signInResponse.data.attributes;
 
@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }: PropTypes) => {
 					setLoadingState('signIn', false);
 				}
 			}
-			return signIn(transactionSigned, publicKey, nonce);
+			return signIn(transactionSigned, publicKey, memo);
 		},
 		[setLoadingState, navigate],
 	);

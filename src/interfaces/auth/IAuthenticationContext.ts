@@ -4,7 +4,7 @@ export interface IAuthenticationContext {
 	handleSignIn: (
 		transactionSigned: string,
 		publicKey: string,
-		nonce: string,
+		memo: string,
 	) => Promise<void>;
 	handleSignUp: (username: string, password: string) => Promise<void>;
 	handleSignOut: () => void;

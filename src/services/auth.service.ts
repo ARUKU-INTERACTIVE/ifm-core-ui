@@ -14,13 +14,13 @@ class AuthService implements IAuthService {
 	constructor(api: IApiService<ApiRequestConfig>) {
 		this.api = api;
 	}
-	async signIn(transactionSigned: string, publicKey: string, nonce: string) {
+	async signIn(transactionSigned: string, publicKey: string, memo: string) {
 		return await this.api.post<ISingleResponse<ISignInResponse>>(
 			'/auth/sign-in',
 			{
 				transactionSigned,
 				publicKey,
-				nonce,
+				memo,
 			},
 		);
 	}
