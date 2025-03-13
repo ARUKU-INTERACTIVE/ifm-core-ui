@@ -1,7 +1,11 @@
 import { ILoadingState } from './ILoadingState';
 
 export interface IAuthenticationContext {
-	handleSignIn: (username: string, password: string) => Promise<void>;
+	handleSignIn: (
+		transactionSigned: string,
+		publicKey: string,
+		memo: string,
+	) => Promise<void>;
 	handleSignUp: (username: string, password: string) => Promise<void>;
 	handleSignOut: () => void;
 	handleConfirmUser: (username: string, code: string) => Promise<void>;

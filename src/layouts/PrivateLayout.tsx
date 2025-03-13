@@ -5,14 +5,10 @@ import { useAuthProvider } from '@/hooks/auth/useAuthProvider';
 import { StoredCookies } from '@/interfaces/auth/cookies.enum';
 
 export default function PrivateLayout() {
-	const [cookies] = useCookies([
-		StoredCookies.USERNAME,
-		StoredCookies.REFRESH_TOKEN,
-	]);
+	const [cookies] = useCookies([StoredCookies.REFRESH_TOKEN]);
 	const { loadingState } = useAuthProvider();
 
-	const isAuthenticated =
-		!!cookies[StoredCookies.REFRESH_TOKEN] && !!cookies[StoredCookies.USERNAME];
+	const isAuthenticated = !!cookies[StoredCookies.REFRESH_TOKEN];
 
 	if (loadingState.refreshSession) {
 		return (
@@ -27,7 +23,7 @@ export default function PrivateLayout() {
 	}
 
 	if (!isAuthenticated) {
-		return <Navigate to="/auth/sign-in" replace />;
+		return <Navigate to="/" replace />;
 	}
 
 	return (
