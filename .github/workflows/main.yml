@@ -2,9 +2,9 @@ name: CI Workflow
 
 on:
   push:
-    branches: ['main']
+    branches: ["main", "staging"]
   pull_request:
-    branches: ['*']
+    branches: ["*"]
 
 env:
   PORT: 3500
