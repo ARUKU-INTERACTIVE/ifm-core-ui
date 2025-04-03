@@ -18,13 +18,13 @@ class PlayerService implements IPlayerService {
 		let queryParams = '';
 
 		if (name) {
-			queryParams += `filter[name]=${name}`;
+			queryParams += `?filter[name]=${name}`;
 		}
 
 		if (isInAuction) {
 			queryParams += queryParams
 				? `&filter[isInAuction]=${isInAuction}`
-				: `filter[isInAuction]=${isInAuction}`;
+				: `?filter[isInAuction]=${isInAuction}`;
 		}
 
 		return await this.api.get<IListResponse<IPlayer>>(`/player${queryParams}`);
