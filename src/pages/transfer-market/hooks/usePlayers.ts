@@ -8,6 +8,12 @@ export const usePlayers = (name: string, isInAuction: boolean) => {
 
 	return useQuery({
 		queryKey: ['players', nameDebounce, isInAuction],
-		queryFn: () => playerService.getAll(nameDebounce, isInAuction),
+		queryFn: () =>
+			playerService.getAll({
+				filters: {
+					name: nameDebounce,
+					isInAuction,
+				},
+			}),
 	});
 };

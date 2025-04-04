@@ -1,6 +1,8 @@
 import { IListResponse } from './../interfaces/api/IApiBaseResponse';
 import { ApiRequestConfig, apiService } from './api.service';
 
+import { IGetAllConfig } from '@/interfaces/common/IGetAllConfig';
+import { IGetAllPlayersFilters } from '@/interfaces/player/IGetAllPlayers';
 import { IPlayer } from '@/interfaces/player/IPlayer';
 import { IApiService } from '@/interfaces/services/IApiService';
 import { IPlayerService } from '@/interfaces/services/IPlayerService';
@@ -11,23 +13,22 @@ class PlayerService implements IPlayerService {
 		this.api = api;
 	}
 
-	async getAll(
-		name: string,
-		isInAuction: boolean,
-	): Promise<IListResponse<IPlayer>> {
-		let queryParams = '';
+	async getAll({
+		filters,
+	}: IGetAllConfig<IGetAllPlayersFilters>): Promise<IListResponse<IPlayer>> {
+		const queryParams = new URLSearchParams();
 
-		if (name) {
-			queryParams += `?filter[name]=${name}`;
+		if (filters) {
+			Object.entries(filters).forEach(([key, value]) => {
+				if (value !== undefined && value !== null) {
+					queryParams.append(`filter[${key}]`, value);
+				}
+			});
 		}
 
-		if (isInAuction) {
-			queryParams += queryParams
-				? `&filter[isInAuction]=${isInAuction}`
-				: `?filter[isInAuction]=${isInAuction}`;
-		}
-
-		return await this.api.get<IListResponse<IPlayer>>(`/player${queryParams}`);
+		return await this.api.get<IListResponse<IPlayer>>('/player', {
+			params: queryParams,
+		});
 	}
 }
 
