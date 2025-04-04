@@ -87,7 +87,7 @@ describe('Transfer Market', () => {
 	it('should search a player by its name', () => {
 		const searchValue = 'two';
 		cy.interceptApi(
-			`/player?filter[name]=${searchValue}`,
+			`/player?filter%5Bname%5D=${searchValue}`,
 			{ method: 'GET' },
 			{ fixture: 'player/search-player-response.json' },
 		);
