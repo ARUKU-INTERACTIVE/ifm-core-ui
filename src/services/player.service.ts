@@ -20,7 +20,7 @@ class PlayerService implements IPlayerService {
 
 		if (filters) {
 			Object.entries(filters).forEach(([key, value]) => {
-				if (value !== undefined && value !== null) {
+				if (value) {
 					queryParams.append(`filter[${key}]`, value);
 				}
 			});
