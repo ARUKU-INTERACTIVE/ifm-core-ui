@@ -12,6 +12,7 @@ import SignOut from '@/pages/auth/SignOut';
 import SignUp from '@/pages/auth/SignUp';
 import Users from '@/pages/example-users/Users';
 import Home from '@/pages/home/Home';
+import TransferMarket from '@/pages/transfer-market/TransferMarket';
 
 export const authRoutes: RouteObject[] = [
 	{
@@ -52,6 +53,10 @@ export const privateRoutes: RouteObject[] = [
 			{
 				path: '/about',
 				element: <About />,
+			},
+			{
+				path: '/transfer-market',
+				element: <TransferMarket />,
 			},
 		],
 	},
