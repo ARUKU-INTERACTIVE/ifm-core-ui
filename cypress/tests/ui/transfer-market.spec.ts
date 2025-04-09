@@ -163,7 +163,7 @@ describe('Transfer Market', () => {
 		cy.getBySel('toast-container').contains(PLAYER_MINTED_SUCCESSFULLY);
 	});
 
-	it.only('should show an error if the player is not minted', () => {
+	it('should show an error if the player is not minted', () => {
 		cy.interceptApi(
 			'/player',
 			{ method: 'GET' },
