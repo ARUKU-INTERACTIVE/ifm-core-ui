@@ -43,7 +43,9 @@ class PlayerService implements IPlayerService {
 		mintPlayerParams: IMintPlayerParams,
 	): Promise<ISingleResponse<ITransactionNFTData>> {
 		const formData = new FormData();
-		formData.append('file', mintPlayerParams.file);
+		if (mintPlayerParams.file) {
+			formData.append('file', mintPlayerParams.file);
+		}
 		formData.append('name', mintPlayerParams.name);
 		formData.append('description', mintPlayerParams.description);
 
