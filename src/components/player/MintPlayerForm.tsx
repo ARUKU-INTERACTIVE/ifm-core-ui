@@ -1,45 +1,72 @@
+import { UseMutateFunction } from '@tanstack/react-query';
 import { Field, Form, Formik } from 'formik';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { PLAYER_REQUIRED_ERROR } from './player-messages';
 
-import { useWallet } from '@/hooks/auth/useWallet';
-import { IMintPlayerParams } from '@/interfaces/player/IMintPlayer';
-import { useMintPlayer } from '@/pages/transfer-market/hooks/useMintPlayer';
-import { useSubmitMintPlayer } from '@/pages/transfer-market/hooks/useSubmitMintPlayer';
+import { ISingleResponse } from '@/interfaces/api/IApiBaseResponse';
+import {
+	IMintPlayerParams,
+	ISubmitMintPlayerParams,
+} from '@/interfaces/player/IMintPlayer';
+import { IPlayer } from '@/interfaces/player/IPlayer';
+import { ITransactionNFTData } from '@/interfaces/player/ITransactionNFT';
+import { SubmitMintPlayerContext } from '@/pages/transfer-market/hooks/useSubmitMintPlayer';
 import { notificationService } from '@/services/notification.service';
 
 interface IMintPlayerFormProps {
 	onHide: () => void;
+	mintPlayer: UseMutateFunction<
+		ISingleResponse<ITransactionNFTData>,
+		Error,
+		IMintPlayerParams,
+		unknown
+	>;
+	isMintPlayerPending: boolean;
+	mintPlayerData: ISingleResponse<ITransactionNFTData> | undefined;
+	submitMintPlayer: UseMutateFunction<
+		ISingleResponse<IPlayer>,
+		Error,
+		ISubmitMintPlayerParams & SubmitMintPlayerContext,
+		unknown
+	>;
+	isSubmitMintPlayerPending: boolean;
+	handleSignTransactionXDR: (xdr: string) => Promise<string | undefined>;
 }
 
-const MintPlayerForm = ({ onHide }: IMintPlayerFormProps) => {
-	const {
-		mutate: mintPlayer,
-		isPending: isMintPlayerPending,
-		data: mintPlayerData,
-	} = useMintPlayer();
-	const { mutate: submitMintPlayer, isPending: isSubmitMintPlayerPending } =
-		useSubmitMintPlayer();
-	const { handleSignTransactionXDR } = useWallet();
+const MintPlayerForm = ({
+	onHide,
+	mintPlayer,
+	isMintPlayerPending,
+	mintPlayerData,
+	submitMintPlayer,
+	isSubmitMintPlayerPending,
+	handleSignTransactionXDR,
+}: IMintPlayerFormProps) => {
 	const [name, setName] = useState<string>('');
 	const [description, setDescription] = useState<string>('');
 	const isLoading = isMintPlayerPending || isSubmitMintPlayerPending;
+	const processedXdrRef = useRef<string | null>(null);
 	const initialValues = {
 		file: null,
 		name: '',
 		description: '',
 	};
 
-	useEffect(() => {
-		async function handleMintPlayer() {
-			if (mintPlayerData?.data.attributes.xdr) {
-				const signedTransactionXdr = await handleSignTransactionXDR(
-					mintPlayerData.data.attributes.xdr,
-				);
+	const handleCompleteTransaction = useCallback(async () => {
+		if (mintPlayerData?.data.attributes.xdr) {
+			const currentXdr = mintPlayerData.data.attributes.xdr;
+			if (processedXdrRef.current === currentXdr) {
+				return;
+			}
+
+			const signedTransactionXdr = await handleSignTransactionXDR(currentXdr);
+
+			if (signedTransactionXdr) {
+				processedXdrRef.current = currentXdr;
 
 				submitMintPlayer({
-					xdr: signedTransactionXdr as string,
+					xdr: signedTransactionXdr,
 					metadataCid: mintPlayerData.data.attributes.metadataCid,
 					imageCid: mintPlayerData.data.attributes.imageCid,
 					issuer: mintPlayerData.data.attributes.issuer,
@@ -49,8 +76,6 @@ const MintPlayerForm = ({ onHide }: IMintPlayerFormProps) => {
 				});
 			}
 		}
-
-		handleMintPlayer();
 	}, [
 		mintPlayerData,
 		handleSignTransactionXDR,
@@ -59,6 +84,12 @@ const MintPlayerForm = ({ onHide }: IMintPlayerFormProps) => {
 		description,
 		onHide,
 	]);
+
+	useEffect(() => {
+		if (mintPlayerData?.data.attributes.xdr) {
+			handleCompleteTransaction();
+		}
+	}, [mintPlayerData, handleCompleteTransaction]);
 
 	const handleSubmit = async (values: IMintPlayerParams) => {
 		if (!values.file) {
