@@ -9,7 +9,7 @@ import {
 } from '@/interfaces/player/IMintPlayer';
 import { IPlayer } from '@/interfaces/player/IPlayer';
 import { ITransactionNFTData } from '@/interfaces/player/ITransactionNFT';
-import { SubmitMintPlayerContext } from '@/pages/transfer-market/hooks/useSubmitMintPlayer';
+import { ISubmitMintPlayerContext } from '@/pages/transfer-market/hooks/useSubmitMintPlayer';
 
 interface IMintPlayerModalProps {
 	isOpen: boolean;
@@ -25,7 +25,7 @@ interface IMintPlayerModalProps {
 	submitMintPlayer: UseMutateFunction<
 		ISingleResponse<IPlayer>,
 		Error,
-		ISubmitMintPlayerParams & SubmitMintPlayerContext,
+		ISubmitMintPlayerParams & ISubmitMintPlayerContext,
 		unknown
 	>;
 	isSubmitMintPlayerPending: boolean;

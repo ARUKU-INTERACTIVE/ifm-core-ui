@@ -8,16 +8,16 @@ import { ISubmitMintPlayerParams } from '@/interfaces/player/IMintPlayer';
 import { notificationService } from '@/services/notification.service';
 import { playerService } from '@/services/player.service';
 
-export type SubmitMintPlayerContext = {
+export interface ISubmitMintPlayerContext {
 	onHide: () => void;
-};
+}
 
 export const useSubmitMintPlayer = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
 		mutationFn: async (
-			params: ISubmitMintPlayerParams & SubmitMintPlayerContext,
+			params: ISubmitMintPlayerParams & ISubmitMintPlayerContext,
 		) => {
 			const { onHide, ...submitParams } = params;
 			return await playerService.submitMintPlayer(submitParams);
