@@ -24,7 +24,7 @@ const MintPlayerForm = ({ onHide }: MintPlayerFormProps) => {
 	const { handleSignTransactionXDR } = useWallet();
 	const [name, setName] = useState<string>('');
 	const [description, setDescription] = useState<string>('');
-	const isButtonDisabled = isMintPlayerPending || isSubmitMintPlayerPending;
+	const isLoading = isMintPlayerPending || isSubmitMintPlayerPending;
 	const initialValues = {
 		file: null,
 		name: '',
@@ -132,12 +132,12 @@ const MintPlayerForm = ({ onHide }: MintPlayerFormProps) => {
 						<button
 							type="submit"
 							className={`px-4 py-2 bg-green-600 text-white rounded-md ${
-								isButtonDisabled ? 'opacity-50 cursor-not-allowed' : ''
+								isLoading ? 'opacity-50 cursor-not-allowed' : ''
 							}`}
-							disabled={isButtonDisabled}
+							disabled={isLoading}
 							data-test="mint-player-button"
 						>
-							{isButtonDisabled ? 'Minting...' : 'Mint'}
+							{isLoading ? 'Minting...' : 'Mint'}
 						</button>
 					</div>
 				</Form>
