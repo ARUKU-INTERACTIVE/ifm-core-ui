@@ -1,11 +1,47 @@
+import { UseMutateFunction } from '@tanstack/react-query';
+
 import MintPlayerForm from './MintPlayerForm';
+
+import { ISingleResponse } from '@/interfaces/api/IApiBaseResponse';
+import {
+	IMintPlayerParams,
+	ISubmitMintPlayerParams,
+} from '@/interfaces/player/IMintPlayer';
+import { IPlayer } from '@/interfaces/player/IPlayer';
+import { ITransactionNFTData } from '@/interfaces/player/ITransactionNFT';
+import { SubmitMintPlayerContext } from '@/pages/transfer-market/hooks/useSubmitMintPlayer';
 
 interface IMintPlayerModalProps {
 	isOpen: boolean;
 	onHide: () => void;
+	mintPlayer: UseMutateFunction<
+		ISingleResponse<ITransactionNFTData>,
+		Error,
+		IMintPlayerParams,
+		unknown
+	>;
+	isMintPlayerPending: boolean;
+	mintPlayerData: ISingleResponse<ITransactionNFTData> | undefined;
+	submitMintPlayer: UseMutateFunction<
+		ISingleResponse<IPlayer>,
+		Error,
+		ISubmitMintPlayerParams & SubmitMintPlayerContext,
+		unknown
+	>;
+	isSubmitMintPlayerPending: boolean;
+	handleSignTransactionXDR: (xdr: string) => Promise<string | undefined>;
 }
 
-const MintPlayerModal = ({ isOpen, onHide }: IMintPlayerModalProps) => {
+const MintPlayerModal = ({
+	isOpen,
+	onHide,
+	mintPlayer,
+	isMintPlayerPending,
+	mintPlayerData,
+	submitMintPlayer,
+	isSubmitMintPlayerPending,
+	handleSignTransactionXDR,
+}: IMintPlayerModalProps) => {
 	if (!isOpen) {
 		return null;
 	}
@@ -19,7 +55,15 @@ const MintPlayerModal = ({ isOpen, onHide }: IMintPlayerModalProps) => {
 				>
 					Mint Player
 				</h2>
-				<MintPlayerForm onHide={onHide} />
+				<MintPlayerForm
+					onHide={onHide}
+					mintPlayer={mintPlayer}
+					isMintPlayerPending={isMintPlayerPending}
+					mintPlayerData={mintPlayerData}
+					submitMintPlayer={submitMintPlayer}
+					isSubmitMintPlayerPending={isSubmitMintPlayerPending}
+					handleSignTransactionXDR={handleSignTransactionXDR}
+				/>
 			</div>
 		</div>
 	);

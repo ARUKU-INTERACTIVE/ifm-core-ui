@@ -8,7 +8,7 @@ import { ISubmitMintPlayerParams } from '@/interfaces/player/IMintPlayer';
 import { notificationService } from '@/services/notification.service';
 import { playerService } from '@/services/player.service';
 
-type SubmitMintPlayerContext = {
+export type SubmitMintPlayerContext = {
 	onHide: () => void;
 };
 

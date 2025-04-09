@@ -1,14 +1,25 @@
 import { useState } from 'react';
 
+import { useMintPlayer } from './hooks/useMintPlayer';
 import { usePlayers } from './hooks/usePlayers';
+import { useSubmitMintPlayer } from './hooks/useSubmitMintPlayer';
 
 import MintPlayerModal from '@/components/player/MintPlayerModal';
 import PlayerList from '@/components/player/PlayerList';
 import Loading from '@/components/ui/Loading';
+import { useWallet } from '@/hooks/auth/useWallet';
 import { IListResponse } from '@/interfaces/api/IApiBaseResponse';
 import { IPlayer } from '@/interfaces/player/IPlayer';
 
 export default function TransferMarket() {
+	const {
+		mutate: mintPlayer,
+		isPending: isMintPlayerPending,
+		data: mintPlayerData,
+	} = useMintPlayer();
+	const { mutate: submitMintPlayer, isPending: isSubmitMintPlayerPending } =
+		useSubmitMintPlayer();
+	const { handleSignTransactionXDR } = useWallet();
 	const [name, setName] = useState('');
 	const { data: players, isLoading } = usePlayers(name, false);
 	const [isMintPlayerModalOpen, setIsMintPlayerModalOpen] = useState(false);
@@ -52,6 +63,12 @@ export default function TransferMarket() {
 			<MintPlayerModal
 				isOpen={isMintPlayerModalOpen}
 				onHide={handleCloseMintPlayerModal}
+				mintPlayer={mintPlayer}
+				isMintPlayerPending={isMintPlayerPending}
+				mintPlayerData={mintPlayerData}
+				submitMintPlayer={submitMintPlayer}
+				isSubmitMintPlayerPending={isSubmitMintPlayerPending}
+				handleSignTransactionXDR={handleSignTransactionXDR}
 			/>
 			{isLoading ? (
 				<Loading />
