@@ -9,11 +9,11 @@ import { useMintPlayer } from '@/pages/transfer-market/hooks/useMintPlayer';
 import { useSubmitMintPlayer } from '@/pages/transfer-market/hooks/useSubmitMintPlayer';
 import { notificationService } from '@/services/notification.service';
 
-type MintPlayerFormProps = {
+interface IMintPlayerFormProps {
 	onHide: () => void;
-};
+}
 
-const MintPlayerForm = ({ onHide }: MintPlayerFormProps) => {
+const MintPlayerForm = ({ onHide }: IMintPlayerFormProps) => {
 	const {
 		mutate: mintPlayer,
 		isPending: isMintPlayerPending,

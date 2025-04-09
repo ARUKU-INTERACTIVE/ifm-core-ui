@@ -1,11 +1,11 @@
 import MintPlayerForm from './MintPlayerForm';
 
-type Props = {
+interface IMintPlayerModalProps {
 	isOpen: boolean;
 	onHide: () => void;
-};
+}
 
-const MintPlayerModal = ({ isOpen, onHide }: Props) => {
+const MintPlayerModal = ({ isOpen, onHide }: IMintPlayerModalProps) => {
 	if (!isOpen) {
 		return null;
 	}
