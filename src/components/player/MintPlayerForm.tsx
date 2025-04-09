@@ -21,8 +21,8 @@ const MintPlayerForm = ({ onHide }: { onHide: () => void }) => {
 	const [name, setName] = useState<string>('');
 	const [description, setDescription] = useState<string>('');
 	const isButtonDisabled = isMintPlayerPending || isSubmitMintPlayerPending;
-	const initialValues: IMintPlayerParams = {
-		file: new File([], 'empty.png', { type: 'image/png' }),
+	const initialValues = {
+		file: null,
 		name: '',
 		description: '',
 	};
@@ -56,7 +56,7 @@ const MintPlayerForm = ({ onHide }: { onHide: () => void }) => {
 		onHide,
 	]);
 
-	const handleSubmit = async (values: typeof initialValues) => {
+	const handleSubmit = async (values: IMintPlayerParams) => {
 		if (!values.file) {
 			notificationService.error(PLAYER_REQUIRED_ERROR);
 			return;

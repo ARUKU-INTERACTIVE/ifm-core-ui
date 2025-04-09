@@ -1,7 +1,7 @@
 import { ITransactionNFTData } from './ITransactionNFT';
 
 export interface IMintPlayerParams {
-	file: File;
+	file: File | null;
 	name: string;
 	description: string;
 }
