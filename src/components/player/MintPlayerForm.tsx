@@ -11,7 +11,6 @@ import {
 } from '@/interfaces/player/IMintPlayer';
 import { IPlayer } from '@/interfaces/player/IPlayer';
 import { ITransactionNFTData } from '@/interfaces/player/ITransactionNFT';
-import { ISubmitMintPlayerContext } from '@/pages/transfer-market/hooks/useSubmitMintPlayer';
 import { notificationService } from '@/services/notification.service';
 
 interface IMintPlayerFormProps {
@@ -27,7 +26,7 @@ interface IMintPlayerFormProps {
 	submitMintPlayer: UseMutateFunction<
 		ISingleResponse<IPlayer>,
 		Error,
-		ISubmitMintPlayerParams & ISubmitMintPlayerContext,
+		ISubmitMintPlayerParams,
 		unknown
 	>;
 	isSubmitMintPlayerPending: boolean;
@@ -72,7 +71,6 @@ const MintPlayerForm = ({
 					issuer: mintPlayerData.data.attributes.issuer,
 					name,
 					description,
-					onHide,
 				});
 			}
 		}
@@ -82,7 +80,6 @@ const MintPlayerForm = ({
 		submitMintPlayer,
 		name,
 		description,
-		onHide,
 	]);
 
 	useEffect(() => {

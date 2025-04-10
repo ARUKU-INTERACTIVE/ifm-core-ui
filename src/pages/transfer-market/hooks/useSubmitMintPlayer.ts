@@ -8,24 +8,23 @@ import { ISubmitMintPlayerParams } from '@/interfaces/player/IMintPlayer';
 import { notificationService } from '@/services/notification.service';
 import { playerService } from '@/services/player.service';
 
-export interface ISubmitMintPlayerContext {
-	onHide: () => void;
+export interface ISubmitMintPlayerSuccess {
+	onSuccess: () => void;
 }
 
-export const useSubmitMintPlayer = () => {
+export const useSubmitMintPlayer = ({
+	onSuccess,
+}: ISubmitMintPlayerSuccess) => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: async (
-			params: ISubmitMintPlayerParams & ISubmitMintPlayerContext,
-		) => {
-			const { onHide, ...submitParams } = params;
-			return await playerService.submitMintPlayer(submitParams);
+		mutationFn: async (params: ISubmitMintPlayerParams) => {
+			return await playerService.submitMintPlayer(params);
 		},
-		onSuccess: (_, params) => {
+		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['players'] });
 			notificationService.success(PLAYER_MINTED_SUCCESSFULLY);
-			params.onHide();
+			onSuccess();
 		},
 		onError: () => {
 			notificationService.error(PLAYER_MINTED_ERROR);

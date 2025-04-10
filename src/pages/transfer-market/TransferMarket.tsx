@@ -18,7 +18,7 @@ export default function TransferMarket() {
 		data: mintPlayerData,
 	} = useMintPlayer();
 	const { mutate: submitMintPlayer, isPending: isSubmitMintPlayerPending } =
-		useSubmitMintPlayer();
+		useSubmitMintPlayer({ onSuccess: () => handleCloseMintPlayerModal() });
 	const { handleSignTransactionXDR } = useWallet();
 	const [name, setName] = useState('');
 	const { data: players, isLoading } = usePlayers(name, false);
