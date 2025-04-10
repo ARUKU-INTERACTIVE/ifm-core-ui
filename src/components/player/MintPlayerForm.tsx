@@ -106,70 +106,74 @@ const MintPlayerForm = ({
 
 	return (
 		<Formik initialValues={initialValues} onSubmit={handleSubmit}>
-			{({ setFieldValue }) => (
-				<Form className="flex flex-col gap-4">
-					<div className="flex flex-col">
-						<label htmlFor="file" className="font-bold mb-1">
-							Image
-						</label>
-						<input
-							type="file"
-							id="file"
-							onChange={(e) => {
-								const file = e.target.files?.[0];
-								if (file) setFieldValue('file', file);
-							}}
-							data-test="mint-player-image-input"
-						/>
-					</div>
+			{({ setFieldValue }) => {
+				const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+					const file = e.target.files?.[0];
+					if (file) setFieldValue('file', file);
+				};
 
-					<div className="flex flex-col">
-						<label htmlFor="name" className="font-bold mb-1">
-							Name
-						</label>
-						<Field
-							type="text"
-							id="name"
-							name="name"
-							className="border border-gray-300 rounded-md p-2"
-							data-test="mint-player-name-input"
-						/>
-					</div>
+				return (
+					<Form className="flex flex-col gap-4">
+						<div className="flex flex-col">
+							<label htmlFor="file" className="font-bold mb-1">
+								Image
+							</label>
+							<input
+								type="file"
+								id="file"
+								onChange={handleFileChange}
+								data-test="mint-player-image-input"
+							/>
+						</div>
 
-					<div className="flex flex-col">
-						<label htmlFor="description" className="font-bold mb-1">
-							Description
-						</label>
-						<Field
-							type="text"
-							id="description"
-							name="description"
-							className="border border-gray-300 rounded-md p-2"
-							data-test="mint-player-description-input"
-						/>
-					</div>
+						<div className="flex flex-col">
+							<label htmlFor="name" className="font-bold mb-1">
+								Name
+							</label>
+							<Field
+								type="text"
+								id="name"
+								name="name"
+								className="border border-gray-300 rounded-md p-2"
+								data-test="mint-player-name-input"
+							/>
+						</div>
 
-					<div className="flex justify-end gap-3 mt-2">
-						<button
-							type="button"
-							onClick={onHide}
-							className="px-4 py-2 bg-red-500 text-white border border-gray-300 rounded-md"
-						>
-							Cancel
-						</button>
-						<button
-							type="submit"
-							className={`px-4 py-2 bg-green-600 text-white rounded-md ${
-								isLoading ? 'opacity-50 cursor-not-allowed' : ''
-							}`}
-							disabled={isLoading}
-							data-test="mint-player-button"
-						>
-							{isLoading ? 'Minting...' : 'Mint'}
-						</button>
-					</div>
-				</Form>
-			)}
+						<div className="flex flex-col">
+							<label htmlFor="description" className="font-bold mb-1">
+								Description
+							</label>
+							<Field
+								type="text"
+								id="description"
+								name="description"
+								className="border border-gray-300 rounded-md p-2"
+								data-test="mint-player-description-input"
+							/>
+						</div>
+
+						<div className="flex justify-end gap-3 mt-2">
+							<button
+								type="button"
+								onClick={onHide}
+								className="px-4 py-2 bg-red-500 text-white border border-gray-300 rounded-md"
+							>
+								Cancel
+							</button>
+							<button
+								type="submit"
+								className={`px-4 py-2 bg-green-600 text-white rounded-md ${
+									isLoading ? 'opacity-50 cursor-not-allowed' : ''
+								}`}
+								disabled={isLoading}
+								data-test="mint-player-button"
+							>
+								{isLoading ? 'Minting...' : 'Mint'}
+							</button>
+						</div>
+					</Form>
+				);
+			}}
 		</Formik>
 	);
 };
