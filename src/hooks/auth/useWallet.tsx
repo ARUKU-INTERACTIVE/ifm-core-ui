@@ -83,5 +83,6 @@ export function useWallet() {
 		publicKey,
 		connectWallet,
 		handleSignInWithTransaction,
+		handleSignTransactionXDR,
 	};
 }
