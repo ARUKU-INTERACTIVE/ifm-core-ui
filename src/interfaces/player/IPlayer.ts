@@ -14,4 +14,5 @@ export interface IPlayer {
 	owner?: IUser;
 	isInAuction?: boolean;
 	auctions?: IAuction[];
+	address?: string;
 }
