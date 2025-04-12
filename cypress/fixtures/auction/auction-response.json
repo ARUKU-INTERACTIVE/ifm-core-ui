@@ -1,0 +1,19 @@
+{
+	"data": {
+		"type": "auction",
+		"id": 1,
+		"attributes": {
+			"uuid": "550e8400-e29b-41d4-a716-446655440001",
+			"externalId": 2,
+			"highestBidAmount": 1000,
+			"endTime": 1711555200000,
+			"startTime": 1711468800000,
+			"status": "Open",
+			"highestBidderAddress": "GBXGQJWVLWOYHFLVTKWV5FGHA3LNYY2JQKM7OAJAUEQFU6LPCSEFVXON",
+			"playerAddress": "GBLDXQMG7KEKJSXYFODVB7ONOQHFHOQ3LNPGWXMB5HPVLQZRDRNXNRYE",
+			"createdAt": "2024-03-19T15:30:00Z",
+			"updatedAt": "2024-03-19T15:30:00Z",
+			"deletedAt": null
+		}
+	}
+}

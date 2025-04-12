@@ -35,21 +35,8 @@
 					"id": "user_2",
 					"name": "Jane Smith",
 					"email": "jane@example.com"
-				}
-			}
-		},
-		{
-			"type": "player",
-			"id": "3",
-			"attributes": {
-				"name": "Player Three",
-				"uuid": "550e8400-e29b-41d4-a716-446655440002",
-				"metadataUri": "https://example.com/metadata/player3",
-				"issuer": "issuer_1",
-				"externalId": 1003,
-				"createdAt": "2024-03-18T09:15:00Z",
-				"updatedAt": "2024-03-18T09:15:00Z",
-				"isInAuction": false
+				},
+				"address": "address_2"
 			}
 		}
 	],
