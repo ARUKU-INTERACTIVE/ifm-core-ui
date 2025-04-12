@@ -7,7 +7,6 @@ import { usePlayers } from './hooks/usePlayers';
 import { useSubmitCreateAuctionTransaction } from './hooks/useSubmitCreateAuctionTransaction';
 import useSubmitMintPlayerSac from './hooks/useSubmitMintPlayerSac';
 
-import filter from '@/assets/filter.svg';
 import PlayerList from '@/components/player/PlayerList';
 import Loading from '@/components/ui/Loading';
 import { useWallet } from '@/hooks/auth/useWallet';
@@ -16,7 +15,6 @@ import { IPlayer } from '@/interfaces/player/IPlayer';
 
 export default function TransferMarket() {
 	const [name, setName] = useState('');
-	const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
 	const { data: players, isLoading } = usePlayers({
 		name,
 		isInAuction: false,
@@ -34,10 +32,6 @@ export default function TransferMarket() {
 	const { mutateAsync: mintPlayerSac } = useMintPlayerSac();
 	const { mutateAsync: submitMintPlayerSac } = useSubmitMintPlayerSac();
 	const { data: auctions } = useAuctions();
-
-	const toggleFilter = () => {
-		setIsFilterOpen(!isFilterOpen);
-	};
 
 	const handleMintPlayer = async (playerId: string) => {
 		const mintResponse = await mintPlayerSac(playerId);
@@ -60,12 +54,6 @@ export default function TransferMarket() {
 				Transfer Market
 			</h1>
 			<div className="flex justify-center items-center">
-				<button
-					onClick={toggleFilter}
-					className="ml-3 border border-gray-300 rounded-md p-2 bg-gray-100"
-				>
-					<img src={filter} alt="filter" className="w-6 h-6" />
-				</button>
 				<input
 					type="text"
 					placeholder="Search..."
