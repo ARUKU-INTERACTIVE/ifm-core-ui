@@ -80,7 +80,7 @@ export default function PlayerCard({
 
 	useEffect(() => {
 		if (auctionTimeLeft > 0) {
-			handleCloseCreateAuctionModal();
+			setIsOpenCreateAuctionModal(false);
 		}
 	}, [auctionTimeLeft]);
 
@@ -93,14 +93,6 @@ export default function PlayerCard({
 		} finally {
 			setIsLoading(false);
 		}
-	};
-
-	const handleCloseCreateAuctionModal = () => {
-		setIsOpenCreateAuctionModal(false);
-	};
-
-	const handleOpenCreateAuctionModal = () => {
-		setIsOpenCreateAuctionModal(true);
 	};
 
 	const renderButton = () => {
@@ -124,7 +116,7 @@ export default function PlayerCard({
 		return (
 			<button
 				className="bg-blue-500 text-white p-2 my-3 rounded-md w-full h-10"
-				onClick={handleOpenCreateAuctionModal}
+				onClick={() => setIsOpenCreateAuctionModal(true)}
 				data-test="create-auction-btn"
 			>
 				<div className="flex justify-center items-center h-full">
@@ -161,7 +153,7 @@ export default function PlayerCard({
 				handleSignTransactionXDR={handleSignTransactionXDR}
 				createAuctionTransactionXDR={createAuctionTransactionXDR}
 				isOpen={isOpenCreateAuctionModal}
-				onHide={handleCloseCreateAuctionModal}
+				onHide={() => setIsOpenCreateAuctionModal(false)}
 				isSubmittingCreateAuctionTransaction={
 					isSubmittingCreateAuctionTransaction
 				}
