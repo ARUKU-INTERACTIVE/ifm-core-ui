@@ -8,7 +8,10 @@ import { ITransactionResponse } from '@/interfaces/api/ITransactionResponse';
 import { IAuction } from '@/interfaces/auction/IAuction';
 import { ICreateAuctionTransactionParams } from '@/interfaces/auction/ICreateAuctionTransaction';
 import { ISubmitCreateAuctionTransactionParams } from '@/interfaces/auction/ISubmitCreateAuction';
-import { SUBMIT_CREATE_AUCTION_ERROR_MESSAGE } from '@/interfaces/auction/auction-messages';
+import {
+	CREATE_AUCTION_TRANSACTION_ERROR_MESSAGE,
+	SUBMIT_CREATE_AUCTION_ERROR_MESSAGE,
+} from '@/interfaces/auction/auction-messages';
 import { notificationService } from '@/services/notification.service';
 import { convertPriceToStroops } from '@/utils/convertPriceToStroops';
 import { convertTimeToMs } from '@/utils/convertTimeToMs';
@@ -94,12 +97,17 @@ const PlayerAuctionForm = ({
 		setIsLoading(true);
 		const { startingPrice, auctionTimeInHours } = values;
 
-		await createAuctionTransaction({
-			playerId: playerId,
-			startingPrice: convertPriceToStroops(startingPrice),
-			auctionTimeMs: convertTimeToMs(auctionTimeInHours),
-		});
-		setIsLoading(false);
+		try {
+			await createAuctionTransaction({
+				playerId: playerId,
+				startingPrice: convertPriceToStroops(startingPrice),
+				auctionTimeMs: convertTimeToMs(auctionTimeInHours),
+			});
+		} catch (error) {
+			notificationService.error(CREATE_AUCTION_TRANSACTION_ERROR_MESSAGE);
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	return (
