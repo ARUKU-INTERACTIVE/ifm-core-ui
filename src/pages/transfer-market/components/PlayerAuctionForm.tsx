@@ -2,6 +2,7 @@ import { UseMutateAsyncFunction } from '@tanstack/react-query';
 import { Field, Form, Formik } from 'formik';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { auctionPlayerSchema } from '@/components/player/schemas/auction-player.schema';
 import Loading from '@/components/ui/Loading';
 import { ISingleResponse } from '@/interfaces/api/IApiBaseResponse';
 import { ITransactionResponse } from '@/interfaces/api/ITransactionResponse';
@@ -111,67 +112,91 @@ const PlayerAuctionForm = ({
 	};
 
 	return (
-		<Formik initialValues={initialValues} onSubmit={handleSubmitAuction}>
-			<Form>
-				<div className="col-span-3 py-3">
-					<div className="flex flex-col gap-2">
-						<label htmlFor="startingPrice" className="dark:text-white">
-							Starting Price
-						</label>
-						<div className="relative flex items-center">
-							<span className="absolute left-3 text-gray-500 mb-3">$</span>
+		<Formik
+			initialValues={initialValues}
+			onSubmit={handleSubmitAuction}
+			validationSchema={auctionPlayerSchema}
+		>
+			{({ errors, touched }) => (
+				<Form>
+					<div className="col-span-3 py-3">
+						<div className="flex flex-col gap-2">
+							<label htmlFor="startingPrice" className="dark:text-white">
+								Starting Price
+							</label>
+							{errors.startingPrice && touched.startingPrice && (
+								<span className="text-red-500 text-sm">
+									{errors.startingPrice}
+								</span>
+							)}
+							<div className="relative flex items-center">
+								<span className="absolute left-3 text-gray-500 mb-3">$</span>
+								<Field
+									type="number"
+									id="startingPrice"
+									name="startingPrice"
+									className={`w-full p-2 pl-7 border ${
+										errors.startingPrice && touched.startingPrice
+											? 'border-red-500'
+											: 'border-gray-300'
+									} rounded-md mb-5`}
+									data-test="starting-price-input"
+								/>
+							</div>
+						</div>
+
+						<div className="flex flex-col gap-2">
+							<label htmlFor="auctionTimeInHours" className="dark:text-white">
+								Auction Duration (hours)
+							</label>
+							{errors.auctionTimeInHours && touched.auctionTimeInHours && (
+								<span className="text-red-500 text-sm">
+									{errors.auctionTimeInHours}
+								</span>
+							)}
 							<Field
 								type="number"
-								id="startingPrice"
-								name="startingPrice"
-								className="w-full p-2 pl-7 border border-gray-300 rounded-md mb-3"
-								data-test="starting-price-input"
+								id="auctionTimeInHours"
+								name="auctionTimeInHours"
+								className={`w-full p-2 pl-7 border ${
+									errors.auctionTimeInHours && touched.auctionTimeInHours
+										? 'border-red-500'
+										: 'border-gray-300'
+								} rounded-md mb-3`}
+								data-test="auction-time-input"
 							/>
 						</div>
-					</div>
+						<div className="flex flex-col pt-2 gap-2">
+							<button
+								className="bg-red-500 text-white p-2 mt-3 rounded-md w-full h-10"
+								type="button"
+								onClick={onHide}
+							>
+								Cancel
+							</button>
 
-					<div className="flex flex-col gap-2">
-						<label htmlFor="auctionTimeInHours" className="dark:text-white">
-							Auction Duration (hours)
-						</label>
-						<Field
-							type="number"
-							id="auctionTimeInHours"
-							name="auctionTimeInHours"
-							className="w-full p-2 pl-7 border border-gray-300 rounded-md mb-3"
-							data-test="auction-time-input"
-						/>
+							<button
+								className={`bg-blue-500 text-white p-2 my-3 rounded-md w-full h-10 ${
+									isLoading || isSubmittingCreateAuctionTransaction
+										? 'opacity-50'
+										: ''
+								}`}
+								type="submit"
+								data-test="submit-auction-btn"
+								disabled={isLoading || isSubmittingCreateAuctionTransaction}
+							>
+								{isLoading || isSubmittingCreateAuctionTransaction ? (
+									<div className="flex justify-center items-center h-full">
+										<Loading />
+									</div>
+								) : (
+									'Submit'
+								)}
+							</button>
+						</div>
 					</div>
-					<div className="flex flex-col pt-2 gap-2">
-						<button
-							className="bg-red-500 text-white p-2 mt-3 rounded-md w-full h-10"
-							type="button"
-							onClick={onHide}
-						>
-							Cancel
-						</button>
-
-						<button
-							className={`bg-blue-500 text-white p-2 my-3 rounded-md w-full h-10 ${
-								isLoading || isSubmittingCreateAuctionTransaction
-									? 'opacity-50'
-									: ''
-							}`}
-							type="submit"
-							data-test="submit-auction-btn"
-							disabled={isLoading || isSubmittingCreateAuctionTransaction}
-						>
-							{isLoading || isSubmittingCreateAuctionTransaction ? (
-								<div className="flex justify-center items-center h-full">
-									<Loading />
-								</div>
-							) : (
-								'Submit'
-							)}
-						</button>
-					</div>
-				</div>
-			</Form>
+				</Form>
+			)}
 		</Formik>
 	);
 };
