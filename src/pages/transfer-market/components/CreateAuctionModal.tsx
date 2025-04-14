@@ -48,21 +48,23 @@ const CreateAuctionModal = ({
 	}
 
 	return (
-		<div className="z-10 w-auto p-3 bg-white rounded-lg shadow dark:bg-gray-700 fixed">
-			<h6 className="mb-3 text-sm font-medium text-gray-900 dark:text-white">
-				Create Auction
-			</h6>
-			<PlayerAuctionForm
-				playerId={playerId}
-				createAuctionTransaction={createAuctionTransaction}
-				submitCreateAuctionTransaction={submitCreateAuctionTransaction}
-				handleSignTransactionXDR={handleSignTransactionXDR}
-				createAuctionTransactionXDR={createAuctionTransactionXDR}
-				onHide={onHide}
-				isSubmittingCreateAuctionTransaction={
-					isSubmittingCreateAuctionTransaction
-				}
-			/>
+		<div className="fixed top-0 left-0 z-50 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+			<div className="relative z-10 w-[400px] h-auto p-6 bg-white rounded-lg shadow dark:bg-gray-700">
+				<h6 className="mb-3 font-medium text-gray-900 dark:text-white">
+					Create Auction
+				</h6>
+				<PlayerAuctionForm
+					playerId={playerId}
+					createAuctionTransaction={createAuctionTransaction}
+					submitCreateAuctionTransaction={submitCreateAuctionTransaction}
+					handleSignTransactionXDR={handleSignTransactionXDR}
+					createAuctionTransactionXDR={createAuctionTransactionXDR}
+					onHide={onHide}
+					isSubmittingCreateAuctionTransaction={
+						isSubmittingCreateAuctionTransaction
+					}
+				/>
+			</div>
 		</div>
 	);
 };

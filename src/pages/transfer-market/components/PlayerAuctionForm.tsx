@@ -105,9 +105,9 @@ const PlayerAuctionForm = ({
 	return (
 		<Formik initialValues={initialValues} onSubmit={handleSubmitAuction}>
 			<Form>
-				<div className="col-span-3">
+				<div className="col-span-3 py-3">
 					<div className="flex flex-col gap-2">
-						<label htmlFor="startingPrice" className="text-sm dark:text-white">
+						<label htmlFor="startingPrice" className="dark:text-white">
 							Starting Price
 						</label>
 						<div className="relative flex items-center">
@@ -123,10 +123,7 @@ const PlayerAuctionForm = ({
 					</div>
 
 					<div className="flex flex-col gap-2">
-						<label
-							htmlFor="auctionTimeInHours"
-							className="text-sm dark:text-white"
-						>
+						<label htmlFor="auctionTimeInHours" className="dark:text-white">
 							Auction Duration (hours)
 						</label>
 						<Field
@@ -137,7 +134,7 @@ const PlayerAuctionForm = ({
 							data-test="auction-time-input"
 						/>
 					</div>
-					<div className="flex flex-col">
+					<div className="flex flex-col pt-2 gap-2">
 						<button
 							className="bg-red-500 text-white p-2 mt-3 rounded-md w-full h-10"
 							type="button"
