@@ -8,7 +8,7 @@ import { IAuction } from '@/interfaces/auction/IAuction';
 import { ICreateAuctionTransactionParams } from '@/interfaces/auction/ICreateAuctionTransaction';
 import { ISubmitCreateAuctionTransactionParams } from '@/interfaces/auction/ISubmitCreateAuction';
 
-interface CreateAuctionModalProps {
+interface ICreateAuctionModalProps {
 	playerId: string;
 	createAuctionTransaction: UseMutateAsyncFunction<
 		ISingleResponse<ITransactionResponse>,
@@ -42,7 +42,7 @@ const CreateAuctionModal = ({
 	isOpen,
 	onHide,
 	isSubmittingCreateAuctionTransaction,
-}: CreateAuctionModalProps) => {
+}: ICreateAuctionModalProps) => {
 	if (!isOpen) {
 		return null;
 	}

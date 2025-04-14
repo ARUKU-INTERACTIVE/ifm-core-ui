@@ -13,7 +13,7 @@ import { notificationService } from '@/services/notification.service';
 import { convertPriceToStroops } from '@/utils/convertPriceToStroops';
 import { convertTimeToMs } from '@/utils/convertTimeToMs';
 
-interface PlayerAuctionFormProps {
+interface IPlayerAuctionFormProps {
 	playerId: string;
 	createAuctionTransaction: UseMutateAsyncFunction<
 		ISingleResponse<ITransactionResponse>,
@@ -44,7 +44,7 @@ const PlayerAuctionForm = ({
 	createAuctionTransactionXDR,
 	onHide,
 	isSubmittingCreateAuctionTransaction,
-}: PlayerAuctionFormProps) => {
+}: IPlayerAuctionFormProps) => {
 	const initialValues = {
 		startingPrice: 0,
 		auctionTimeInHours: 0,

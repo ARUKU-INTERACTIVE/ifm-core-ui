@@ -16,7 +16,7 @@ import { ISubmitCreateAuctionTransactionParams } from '@/interfaces/auction/ISub
 import { notificationService } from '@/services/notification.service';
 import { getAuctionTimeLeft } from '@/utils/getAuctionTimeLeft';
 
-interface PlayerCardProps {
+interface IPlayerCardProps {
 	readonly name: string;
 	readonly playerId: string;
 	readonly playerAddress: string;
@@ -54,7 +54,7 @@ export default function PlayerCard({
 	auctions,
 	isSubmittingCreateAuctionTransaction,
 	onMintPlayer,
-}: PlayerCardProps) {
+}: IPlayerCardProps) {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [isOpenCreateAuctionModal, setIsOpenCreateAuctionModal] =
 		useState<boolean>(false);

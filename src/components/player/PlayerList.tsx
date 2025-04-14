@@ -11,7 +11,7 @@ import { ISubmitCreateAuctionTransactionParams } from '@/interfaces/auction/ISub
 import { IPlayer } from '@/interfaces/player/IPlayer';
 import PlayerCard from '@/pages/transfer-market/components/PlayerCard';
 
-type Props = {
+interface IPlayerListProps {
 	players: IListResponse<IPlayer>;
 	createAuctionTransaction: UseMutateAsyncFunction<
 		ISingleResponse<ITransactionResponse>,
@@ -34,7 +34,7 @@ type Props = {
 	auctions: IListResponse<IAuction> | undefined;
 	isSubmittingCreateAuctionTransaction: boolean;
 	onMintPlayer: (playerId: string) => Promise<void>;
-};
+}
 
 const PlayerList = ({
 	players,
@@ -45,7 +45,7 @@ const PlayerList = ({
 	auctions,
 	isSubmittingCreateAuctionTransaction,
 	onMintPlayer,
-}: Props) => {
+}: IPlayerListProps) => {
 	return (
 		<div className="grid grid-cols-3 gap-4 py-3 px-10">
 			{players?.data.map((player) => (
