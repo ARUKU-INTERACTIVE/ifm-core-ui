@@ -10,6 +10,8 @@ import {
 } from '@/interfaces/auction/auction-messages';
 
 import {
+	PLAYER_MINTED_ERROR,
+	PLAYER_MINTED_SUCCESSFULLY,
 	SUBMIT_MINT_PLAYER_SAC_ERROR_MESSAGE,
 	SUBMIT_MINT_PLAYER_SAC_SUCCESS_MESSAGE,
 } from '@components/player/player-messages';
@@ -67,7 +69,7 @@ describe('Transfer Market', () => {
 				page: `${simpleSignerUrl}/sign`,
 				message: {
 					signedXDR:
-						'AAAAAGrj5kK0Xb3d3c3NvZ2Z3YXJpZ2F0ZQAAAAAAAAAAABiGAAAAQAAAAA=',
+						'AAAAAGrj5kK0Xb3d3c3NvZ2Z3YXJpZ2F0ZQAAAAAAAAAAABiGAAAAQAAAAAEAAAAAAAAAZQ==',
 				},
 			},
 			origin: simpleSignerUrl,
@@ -109,6 +111,117 @@ describe('Transfer Market', () => {
 		cy.getBySel('card')
 			.should('have.length', 1)
 			.and('contain.text', 'Player Two');
+	});
+
+	it('should mint a player', () => {
+		cy.interceptApi(
+			'/player',
+			{ method: 'GET' },
+			{ fixture: 'player/players-response.json' },
+		);
+		cy.interceptApi(
+			'/player/mint',
+			{ method: 'POST' },
+			{ fixture: 'player/mint-player-response.json' },
+		);
+		cy.interceptApi(
+			'/player/submit/mint',
+			{ method: 'POST' },
+			{ fixture: 'player/submit-mint-player-response.json' },
+		);
+
+		cy.window().then((window) => {
+			cy.stub(window, 'open')
+				.as('mint-player')
+				.callsFake(() => null);
+		});
+
+		cy.getBySel('transfer-market-mint-player-button').click();
+		cy.getBySel('mint-player-modal-title').should('contain', 'Mint Player');
+
+		cy.getBySel('mint-player-image-input').attachFile('/player/test.png', {
+			force: true,
+		});
+		cy.getBySel('mint-player-name-input').type('Player Three');
+		cy.getBySel('mint-player-description-input').type('Test description');
+		cy.getBySel('mint-player-button').click();
+
+		cy.get('@mint-player').should('be.called');
+
+		const signEvent = new MessageEvent('message', {
+			data: {
+				type: 'onSign',
+				page: `${simpleSignerUrl}/sign`,
+				message: {
+					signedXDR:
+						'AAAAAGrj5kK0Xb3d3c3NvZ2Z3YXJpZ2F0ZQAAAAAAAAAAABiGAAAAQAAAAAEAAAAAAAAAZQ==',
+				},
+			},
+			origin: simpleSignerUrl,
+		});
+
+		cy.window().then((win) => {
+			win.dispatchEvent(signEvent);
+		});
+
+		cy.wait(1000);
+
+		cy.getBySel('toast-container').contains(TRANSACTION_SIGNED_MESSAGE);
+		cy.getBySel('toast-container').contains(PLAYER_MINTED_SUCCESSFULLY);
+	});
+
+	it('should show an error if the player is not minted', () => {
+		cy.interceptApi(
+			'/player',
+			{ method: 'GET' },
+			{ fixture: 'player/players-response.json' },
+		);
+		cy.interceptApi(
+			'/player/mint',
+			{ method: 'POST' },
+			{ fixture: 'player/mint-player-response.json' },
+		);
+		cy.interceptApi(
+			'/player/submit/mint',
+			{ method: 'POST' },
+			{ statusCode: 500 },
+		);
+
+		cy.window().then((window) => {
+			cy.stub(window, 'open')
+				.as('mint-player')
+				.callsFake(() => null);
+		});
+
+		cy.getBySel('transfer-market-mint-player-button').click();
+		cy.getBySel('mint-player-modal-title').should('contain', 'Mint Player');
+
+		cy.getBySel('mint-player-image-input').attachFile('/player/test.png', {
+			force: true,
+		});
+		cy.getBySel('mint-player-name-input').type('Player Three');
+		cy.getBySel('mint-player-description-input').type('Test description');
+		cy.getBySel('mint-player-button').click();
+
+		cy.get('@mint-player').should('be.called');
+
+		const signEvent = new MessageEvent('message', {
+			data: {
+				type: 'onSign',
+				page: `${simpleSignerUrl}/sign`,
+				message: {
+					signedXDR:
+						'AAAAAGrj5kK0Xb3d3c3NvZ2Z3YXJpZ2F0ZQAAAAAAAAAAABiGAAAAQAAAAAEAAAAAAAAAZQ==',
+				},
+			},
+			origin: simpleSignerUrl,
+		});
+
+		cy.window().then((win) => {
+			win.dispatchEvent(signEvent);
+		});
+
+		cy.getBySel('toast-container').contains(PLAYER_MINTED_ERROR);
 	});
 
 	it('should mint and submit a player sac', () => {
