@@ -9,7 +9,6 @@ export interface IAuctionService {
 	createAuctionTransaction(
 		params: ICreateAuctionTransactionParams,
 	): Promise<ISingleResponse<ITransactionResponse>>;
-
 	submitCreateAuctionTransaction(
 		params: ISubmitCreateAuctionTransactionParams,
 	): Promise<ISingleResponse<IAuction>>;
