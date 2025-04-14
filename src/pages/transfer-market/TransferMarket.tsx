@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 import { useAuctions } from './hooks/useAuctions';
 import { useCreateAuctionTransaction } from './hooks/useCreateAuctionTransaction';
+import useGetPlayerSacTransaction from './hooks/useGetPlayerSacTransaction';
 import { useMintPlayer } from './hooks/useMintPlayer';
-import useMintPlayerSac from './hooks/useMintPlayerSac';
 import { usePlayers } from './hooks/usePlayers';
 import { useSubmitCreateAuctionTransaction } from './hooks/useSubmitCreateAuctionTransaction';
 import { useSubmitMintPlayer } from './hooks/useSubmitMintPlayer';
@@ -30,7 +30,7 @@ export default function TransferMarket() {
 		name,
 		isInAuction: false,
 	});
-	const { mutateAsync: mintPlayerSac } = useMintPlayerSac();
+	const { mutateAsync: getPlayerSacTransaction } = useGetPlayerSacTransaction();
 	const { mutateAsync: submitMintPlayerSac } = useSubmitMintPlayerSac();
 	const { data: auctions } = useAuctions();
 	const [isMintPlayerModalOpen, setIsMintPlayerModalOpen] = useState(false);
@@ -45,7 +45,7 @@ export default function TransferMarket() {
 	} = useSubmitCreateAuctionTransaction();
 
 	const handleMintPlayer = async (playerId: string) => {
-		const mintResponse = await mintPlayerSac(playerId);
+		const mintResponse = await getPlayerSacTransaction(playerId);
 		if (mintResponse?.data?.attributes?.xdr) {
 			const signedXDR = await handleSignTransactionXDR(
 				mintResponse.data.attributes.xdr,

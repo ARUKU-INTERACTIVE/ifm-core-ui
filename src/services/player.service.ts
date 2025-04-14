@@ -40,7 +40,7 @@ class PlayerService implements IPlayerService {
 		});
 	}
 
-	async mintPlayerSac(
+	async getPlayerSACTransaction(
 		playerId: string,
 	): Promise<ISingleResponse<ITransactionResponse>> {
 		try {

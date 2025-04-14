@@ -19,7 +19,7 @@ export interface IPlayerService {
 	submitMintPlayer(
 		submitMintPlayerParams: ISubmitMintPlayerParams,
 	): Promise<ISingleResponse<IPlayer>>;
-	mintPlayerSac(
+	getPlayerSACTransaction(
 		playerId: string,
 	): Promise<ISingleResponse<ITransactionResponse>>;
 	submitPlayerSac(
