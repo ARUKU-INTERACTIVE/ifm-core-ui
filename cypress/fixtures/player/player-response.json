@@ -11,12 +11,7 @@
 				"externalId": 1002,
 				"createdAt": "2024-03-19T15:30:00Z",
 				"updatedAt": "2024-03-19T15:30:00Z",
-				"isInAuction": false,
-				"owner": {
-					"id": "user_2",
-					"name": "Jane Smith",
-					"email": "jane@example.com"
-				}
+				"isInAuction": false
 			}
 		}
 	],

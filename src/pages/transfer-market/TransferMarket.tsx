@@ -1,8 +1,13 @@
 import { useState } from 'react';
 
+import { useAuctions } from './hooks/useAuctions';
+import { useCreateAuctionTransaction } from './hooks/useCreateAuctionTransaction';
+import useGetPlayerSacTransaction from './hooks/useGetPlayerSacTransaction';
 import { useMintPlayer } from './hooks/useMintPlayer';
 import { usePlayers } from './hooks/usePlayers';
+import { useSubmitCreateAuctionTransaction } from './hooks/useSubmitCreateAuctionTransaction';
 import { useSubmitMintPlayer } from './hooks/useSubmitMintPlayer';
+import useSubmitMintPlayerSac from './hooks/useSubmitMintPlayerSac';
 
 import MintPlayerModal from '@/components/player/MintPlayerModal';
 import PlayerList from '@/components/player/PlayerList';
@@ -21,8 +26,35 @@ export default function TransferMarket() {
 		useSubmitMintPlayer({ onSuccess: () => handleCloseMintPlayerModal() });
 	const { handleSignTransactionXDR } = useWallet();
 	const [name, setName] = useState('');
-	const { data: players, isLoading } = usePlayers(name, false);
+	const { data: players, isLoading } = usePlayers({
+		name,
+		isInAuction: false,
+	});
+	const { mutateAsync: getPlayerSacTransaction } = useGetPlayerSacTransaction();
+	const { mutateAsync: submitMintPlayerSac } = useSubmitMintPlayerSac();
+	const { data: auctions } = useAuctions();
 	const [isMintPlayerModalOpen, setIsMintPlayerModalOpen] = useState(false);
+
+	const {
+		mutateAsync: createAuctionTransaction,
+		data: createAuctionTransactionXDR,
+	} = useCreateAuctionTransaction();
+	const {
+		mutateAsync: submitCreateAuctionTransaction,
+		isPending: isSubmittingCreateAuctionTransaction,
+	} = useSubmitCreateAuctionTransaction();
+
+	const handleMintPlayer = async (playerId: string) => {
+		const mintResponse = await getPlayerSacTransaction(playerId);
+		if (mintResponse?.data?.attributes?.xdr) {
+			const signedXDR = await handleSignTransactionXDR(
+				mintResponse.data.attributes.xdr,
+			);
+			if (signedXDR) {
+				await submitMintPlayerSac({ playerId, transactionXDR: signedXDR });
+			}
+		}
+	};
 
 	const handleOpenMintPlayerModal = () => {
 		setIsMintPlayerModalOpen(true);
@@ -54,7 +86,7 @@ export default function TransferMarket() {
 					type="text"
 					placeholder="Search..."
 					value={name}
-					className="w-[90%] p-2 m-3 border border-gray-300 rounded-md"
+					className="w-[90%] p-2 m-3 ml-1 border border-gray-300 rounded-md"
 					onChange={(e) => setName(e.target.value)}
 					data-test="transfer-market-searchbar"
 				/>
@@ -70,10 +102,22 @@ export default function TransferMarket() {
 				isSubmitMintPlayerPending={isSubmitMintPlayerPending}
 				handleSignTransactionXDR={handleSignTransactionXDR}
 			/>
+
 			{isLoading ? (
 				<Loading />
 			) : (
-				<PlayerList players={players as IListResponse<IPlayer>} />
+				<PlayerList
+					players={players as IListResponse<IPlayer>}
+					createAuctionTransaction={createAuctionTransaction}
+					submitCreateAuctionTransaction={submitCreateAuctionTransaction}
+					handleSignTransactionXDR={handleSignTransactionXDR}
+					createAuctionTransactionXDR={createAuctionTransactionXDR}
+					auctions={auctions}
+					isSubmittingCreateAuctionTransaction={
+						isSubmittingCreateAuctionTransaction
+					}
+					onMintPlayer={handleMintPlayer}
+				/>
 			)}
 		</>
 	);

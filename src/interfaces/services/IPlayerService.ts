@@ -1,4 +1,5 @@
 import { IListResponse, ISingleResponse } from '../api/IApiBaseResponse';
+import { ITransactionResponse } from '../api/ITransactionResponse';
 import { IGetAllConfig } from '../common/IGetAllConfig';
 import { IGetAllPlayersFilters } from '../player/IGetAllPlayers';
 import {
@@ -17,5 +18,12 @@ export interface IPlayerService {
 	): Promise<ISingleResponse<ITransactionNFTData>>;
 	submitMintPlayer(
 		submitMintPlayerParams: ISubmitMintPlayerParams,
+	): Promise<ISingleResponse<IPlayer>>;
+	getPlayerSACTransaction(
+		playerId: string,
+	): Promise<ISingleResponse<ITransactionResponse>>;
+	submitPlayerSac(
+		playerId: string,
+		transactionXDR: string,
 	): Promise<ISingleResponse<IPlayer>>;
 }

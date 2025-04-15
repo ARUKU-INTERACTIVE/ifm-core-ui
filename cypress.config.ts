@@ -22,6 +22,7 @@ export default defineConfig({
 				webpackOptions: {
 					resolve: {
 						alias: {
+							'@': path.resolve(__dirname, './src'),
 							'@support': path.resolve(__dirname, './cypress/support'),
 							'@context': path.resolve(__dirname, './src/context'),
 							'@components': path.resolve(__dirname, './src/components'),
