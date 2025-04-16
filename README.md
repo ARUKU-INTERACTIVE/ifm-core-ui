@@ -1,6 +1,6 @@
-# template-ui-vite-react
+# Invincible Football Manager UI
 
-Template for building Web Apps using React + Vite.
+Web App using React + Vite.
 
 # Features
 
@@ -24,9 +24,10 @@ Template for building Web Apps using React + Vite.
 1. `npm ci` to install dependencies.
 2. `npm run dev:prepare` to copy contents of `.env.dist` into a `.env` file and populate it. Ensure that environment variables have the prefix `VITE_`.
 
-For example:
-
-If your application requires a API_BASE_URL, name the enviroment variable "VITE_API_BASE_URL" in the '.env' file.
+# Environment Variables
+* PORT: Port on which the Vite development server will run.
+* API_URL: API base URL.
+* SIMPLE_SIGNER_URL: Simple Signer service URL. 
 
 # How to run
 
