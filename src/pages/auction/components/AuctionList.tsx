@@ -20,7 +20,7 @@ interface AuctionListProps {
 		getPlaceBidTransactionParams: IGetPlaceBidTransactionParams,
 	) => Promise<void>;
 	isSubmitPlaceBidTransactionPending: boolean;
-	myUser: ISingleResponse<IUser> | undefined;
+	user: ISingleResponse<IUser> | undefined;
 }
 
 const AuctionList = ({
@@ -29,9 +29,8 @@ const AuctionList = ({
 	isGetPlaceBidTransactionPending,
 	handleSubmitBid,
 	isSubmitPlaceBidTransactionPending,
-	myUser,
+	user,
 }: AuctionListProps) => {
-	console.log('auctions', auctions);
 	return (
 		<div className="grid grid-cols-3 gap-4 py-3 px-10">
 			{auctions?.data.map((auction) => {
@@ -59,7 +58,7 @@ const AuctionList = ({
 						isSubmitPlaceBidTransactionPending={
 							isSubmitPlaceBidTransactionPending
 						}
-						myPublicKey={myUser?.data.attributes.publicKey as string}
+						publicKey={user?.data.attributes.publicKey as string}
 						highestBidderAddress={auction.attributes.highestBidderAddress}
 					/>
 				);

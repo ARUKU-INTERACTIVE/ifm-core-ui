@@ -26,7 +26,7 @@ const Auctions = () => {
 	const [playerName, setPlayerName] = useState<string>('');
 	const { data: auctions, isPending: isAuctionsPending } = useAuctions();
 	const { data: players } = usePlayers({ name: playerName });
-	const { data: myUser } = useGetMe();
+	const { data: user } = useGetMe();
 	const [filteredAuctions, setFilteredAuctions] = useState<
 		IListResponse<IAuction> | undefined
 	>(auctions);
@@ -134,7 +134,7 @@ const Auctions = () => {
 					isSubmitPlaceBidTransactionPending={
 						isSubmitPlaceBidTransactionPending
 					}
-					myUser={myUser}
+					user={user}
 				/>
 			)}
 		</div>

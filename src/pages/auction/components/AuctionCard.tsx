@@ -14,7 +14,7 @@ interface IAuctionCardProps {
 	) => Promise<void>;
 	auctionId: string;
 	isSubmitPlaceBidTransactionPending: boolean;
-	myPublicKey: string;
+	publicKey: string;
 	highestBidderAddress: string;
 }
 
@@ -26,7 +26,7 @@ const AuctionCard = ({
 	handleSubmitBid,
 	auctionId,
 	isSubmitPlaceBidTransactionPending,
-	myPublicKey,
+	publicKey,
 	highestBidderAddress,
 }: IAuctionCardProps) => {
 	const [isCreateBidModalOpen, setIsCreateBidModalOpen] =
@@ -53,7 +53,7 @@ const AuctionCard = ({
 					</p>
 				</div>
 
-				{highestBidderAddress === myPublicKey && (
+				{highestBidderAddress === publicKey && (
 					<p
 						className="text-gray-700 text-base mt-3"
 						data-test="highest-bidder-msg"
