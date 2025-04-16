@@ -11,7 +11,7 @@ export default function NavBar() {
 	const connected = !!cookies[StoredCookies.REFRESH_TOKEN];
 	return (
 		<div className="flex gap-4 p-2 shadow-md justify-between items-center">
-			<Logo width={100} height={50} />
+			<Logo width={80} height={100} />
 			<Link to="/transfer-market" className="text-sm font-bold">
 				Transfer Market
 			</Link>
