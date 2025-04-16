@@ -1,0 +1,12 @@
+{
+	"data": {
+		"type": "user",
+		"id": 3,
+		"attributes": {
+			"name": "Admin user",
+			"username": "admin",
+			"email": "admin@test.co",
+			"publicKey": "GCIFA5TO3C43J24C46MKPZEELRPOG3WKPUCTZX3JRLNG2IPHAECRXUY5"
+		}
+	}
+}
