@@ -9,7 +9,7 @@ type PropTypes = {
 export default function Logo({ width, height }: PropTypes) {
 	return (
 		<Link to="/">
-			<img src={logo} width={width} height={height} alt="Bigger Logo" />
+			<img src={logo} width={width} height={height} alt="IFM Logo" />
 		</Link>
 	);
 }
