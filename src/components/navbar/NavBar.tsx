@@ -10,11 +10,16 @@ export default function NavBar() {
 	const [cookies] = useCookies([StoredCookies.REFRESH_TOKEN]);
 	const connected = !!cookies[StoredCookies.REFRESH_TOKEN];
 	return (
-		<div className="flex gap-4 p-2 shadow-md justify-between items-center">
-			<Logo width={100} height={50} />
-			<Link to="/transfer-market" className="text-sm font-bold">
-				Transfer Market
-			</Link>
+		<div className="flex p-2 shadow-md justify-between items-center">
+			<div className="flex gap-4 items-center">
+				<Logo width={100} height={50} />
+				<Link to="/transfer-market" className="text-sm font-bold">
+					Transfer Market
+				</Link>
+				<Link to="/auctions" className="text-sm font-bold">
+					Auctions
+				</Link>
+			</div>
 			<Action connected={connected} />
 		</div>
 	);

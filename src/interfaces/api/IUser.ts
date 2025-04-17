@@ -1,5 +1,6 @@
 export interface IUser {
 	id: number;
+	publicKey?: string;
 	username: string;
 	externalId: string;
 	createdAt: string;

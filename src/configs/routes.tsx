@@ -3,6 +3,7 @@ import { RouteObject } from 'react-router-dom';
 import AuthLayout from '@/layouts/AuthLayout';
 import PrivateLayout from '@/layouts/PrivateLayout';
 import About from '@/pages/about/About';
+import Auctions from '@/pages/auction/Auctions';
 import ConfirmPassword from '@/pages/auth/ConfirmPassword';
 import ConfirmUser from '@/pages/auth/ConfirmUser';
 import ForgotPassword from '@/pages/auth/ForgotPassword';
@@ -57,6 +58,10 @@ export const privateRoutes: RouteObject[] = [
 			{
 				path: '/transfer-market',
 				element: <TransferMarket />,
+			},
+			{
+				path: '/auctions',
+				element: <Auctions />,
 			},
 		],
 	},
