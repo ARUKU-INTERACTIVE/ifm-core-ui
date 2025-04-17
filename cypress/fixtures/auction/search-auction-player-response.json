@@ -1,0 +1,36 @@
+{
+	"data": [
+		{
+			"type": "player",
+			"id": "3",
+			"attributes": {
+				"name": "Player Three",
+				"uuid": "550e8400-e29b-41d4-a716-446655440002",
+				"metadataUri": "https://example.com/metadata/player3",
+				"issuer": "issuer_3",
+				"externalId": 1003,
+				"createdAt": "2024-03-19T15:30:00Z",
+				"updatedAt": "2024-03-19T15:30:00Z",
+				"isInAuction": false,
+				"owner": {
+					"id": "user_3",
+					"name": "Jane Smith",
+					"email": "jane2@example.com"
+				},
+				"address": "address_3"
+			}
+		}
+	],
+	"links": {
+		"self": "https://example.com/api/players",
+		"last": "https://example.com/api/players?page=2",
+		"next": null
+	},
+	"meta": {
+		"pageNumber": 1,
+		"pageSize": 10,
+		"pageCount": 1,
+		"itemCount": 1
+	},
+	"included": []
+}

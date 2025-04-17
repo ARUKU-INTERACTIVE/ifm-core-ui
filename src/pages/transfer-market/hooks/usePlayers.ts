@@ -4,11 +4,11 @@ import { useDebounce } from 'use-debounce';
 import { playerService } from '@/services/player.service';
 
 interface IUsePlayersProps {
-	name: string;
-	isInAuction: boolean;
+	name?: string;
+	isInAuction?: boolean;
 }
 
-export const usePlayers = ({ name, isInAuction }: IUsePlayersProps) => {
+export const usePlayers = ({ name, isInAuction }: IUsePlayersProps = {}) => {
 	const [nameDebounce] = useDebounce(name, 300);
 
 	return useQuery({
