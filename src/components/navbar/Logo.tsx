@@ -2,11 +2,12 @@ import { Link } from 'react-router-dom';
 
 import logo from '../../assets/ifm.png';
 
-type PropTypes = {
+interface ILogoProps {
 	width: number;
 	height: number;
-};
-export default function Logo({ width, height }: PropTypes) {
+}
+
+export default function Logo({ width, height }: ILogoProps) {
 	return (
 		<Link to="/">
 			<img src={logo} width={width} height={height} alt="IFM Logo" />
