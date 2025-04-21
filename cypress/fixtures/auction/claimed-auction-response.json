@@ -1,0 +1,19 @@
+{
+	"data": {
+		"type": "auction",
+		"id": "4",
+		"attributes": {
+			"uuid": "550e8400-e29b-41d4-a716-446655440004",
+			"externalId": 5,
+			"highestBidAmount": 3000,
+			"endTime": 1745268398,
+			"startTime": 1745268598,
+			"status": "NFTTransferred",
+			"highestBidderAddress": "GCIFA5TO3C43J24C46MKPZEELRPOG3WKPUCTZX3JRLNG2IPHAECRXUY5",
+			"playerAddress": "address_3",
+			"createdAt": "2024-03-19T15:30:00Z",
+			"updatedAt": "2024-03-19T15:30:00Z",
+			"deletedAt": null
+		}
+	}
+}
