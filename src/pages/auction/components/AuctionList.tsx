@@ -6,6 +6,7 @@ import {
 } from '@/interfaces/api/IApiBaseResponse';
 import { IUser } from '@/interfaces/api/IUser';
 import { IAuction } from '@/interfaces/auction/IAuction';
+import { IGetClaimTransactionParams } from '@/interfaces/auction/IGetClaimTransaction';
 import { IGetPlaceBidTransactionParams } from '@/interfaces/auction/IGetPlaceBidTransaction';
 import { IPlayer } from '@/interfaces/player/IPlayer';
 import { convertStroopsToXlm } from '@/utils/convert-stroops-to-xlm';
@@ -18,9 +19,18 @@ interface AuctionListProps {
 	isGetPlaceBidTransactionPending: boolean;
 	handleSubmitBid: (
 		getPlaceBidTransactionParams: IGetPlaceBidTransactionParams,
+		accountAddress: string,
+		tokenIssuer: string,
 	) => Promise<void>;
 	isSubmitPlaceBidTransactionPending: boolean;
 	user: ISingleResponse<IUser> | undefined;
+	handleSubmitClaim: (
+		getClaimTransactionParams: IGetClaimTransactionParams,
+	) => Promise<void>;
+	currentTime: number;
+	isStellarLoading: boolean;
+	isGetClaimTransactionPending: boolean;
+	isSubmitClaimTransactionPending: boolean;
 }
 
 const AuctionList = ({
@@ -30,6 +40,11 @@ const AuctionList = ({
 	handleSubmitBid,
 	isSubmitPlaceBidTransactionPending,
 	user,
+	handleSubmitClaim,
+	currentTime,
+	isStellarLoading,
+	isGetClaimTransactionPending,
+	isSubmitClaimTransactionPending,
 }: AuctionListProps) => {
 	return (
 		<div className="grid grid-cols-3 gap-4 py-3 px-10">
@@ -45,6 +60,7 @@ const AuctionList = ({
 					auction.attributes.startTime,
 					auction.attributes.endTime,
 				);
+				const isAuctionEnded = currentTime >= auction.attributes.endTime;
 
 				return (
 					<AuctionCard
@@ -60,6 +76,13 @@ const AuctionList = ({
 						}
 						publicKey={user?.data.attributes.publicKey as string}
 						highestBidderAddress={auction.attributes.highestBidderAddress}
+						ownerAddress={auction.attributes.ownerAddress}
+						isAuctionEnded={isAuctionEnded}
+						handleSubmitClaim={handleSubmitClaim}
+						isStellarLoading={isStellarLoading}
+						playerIssuer={auctionPlayer?.attributes.issuer as string}
+						isGetClaimTransactionPending={isGetClaimTransactionPending}
+						isSubmitClaimTransactionPending={isSubmitClaimTransactionPending}
 					/>
 				);
 			})}
