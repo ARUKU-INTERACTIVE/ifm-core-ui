@@ -3,16 +3,20 @@ import { Field, Form, Formik } from 'formik';
 import { auctionBidSchema } from '@/components/player/schemas/auction-bid.schema';
 import Loading from '@/components/ui/Loading';
 import { IGetPlaceBidTransactionParams } from '@/interfaces/auction/IGetPlaceBidTransaction';
-import { convertPriceToStroops } from '@/utils/convertPriceToStroops';
 
 interface ICreateBidFormProps {
 	onHide: () => void;
 	isGetPlaceBidTransactionPending: boolean;
-	handleSubmitBid(
+	handleSubmitBid: (
 		getPlaceBidTransactionParams: IGetPlaceBidTransactionParams,
-	): Promise<void>;
+		accountAddress: string,
+		tokenIssuer: string,
+	) => Promise<void>;
 	auctionId: string;
 	isSubmitPlaceBidTransactionPending: boolean;
+	isStellarLoading: boolean;
+	publicKey: string;
+	playerIssuer: string;
 }
 
 const CreateBidForm = ({
@@ -21,20 +25,29 @@ const CreateBidForm = ({
 	handleSubmitBid,
 	auctionId,
 	isSubmitPlaceBidTransactionPending,
+	isStellarLoading,
+	publicKey,
+	playerIssuer,
 }: ICreateBidFormProps) => {
 	const initialValues = {
 		bidAmount: 0,
 	};
 	const isLoading =
-		isGetPlaceBidTransactionPending || isSubmitPlaceBidTransactionPending;
+		isGetPlaceBidTransactionPending ||
+		isSubmitPlaceBidTransactionPending ||
+		isStellarLoading;
 
 	const handleSubmit = async (values: typeof initialValues) => {
 		const { bidAmount } = values;
 
-		await handleSubmitBid({
-			auctionId: Number(auctionId),
-			bidAmount: convertPriceToStroops(bidAmount),
-		});
+		await handleSubmitBid(
+			{
+				auctionId: Number(auctionId),
+				bidAmount,
+			},
+			publicKey,
+			playerIssuer,
+		);
 
 		onHide();
 	};
