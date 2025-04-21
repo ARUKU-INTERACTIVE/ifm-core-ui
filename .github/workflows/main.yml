@@ -11,7 +11,7 @@ env:
   CYPRESS_HOST_PORT: 4000
   CYPRESS_BASE_URL_PREFIX: http://localhost:3500
   VITE_SIMPLE_SIGNER_URL: test_url
-  VITE_STELLAR_HORIZON_URL: test_url
+  VITE_STELLAR_HORIZON_URL: https://horizon-testnet.stellar.org
   VITE_STELLAR_NETWORK_PASSPHRASE: test_passphrase
   VITE_STELLAR_TOKEN_CODE: NFT
 
