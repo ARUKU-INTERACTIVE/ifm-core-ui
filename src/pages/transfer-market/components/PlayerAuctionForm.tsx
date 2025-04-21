@@ -15,7 +15,7 @@ import {
 } from '@/interfaces/auction/auction-messages';
 import { notificationService } from '@/services/notification.service';
 import { convertPriceToStroops } from '@/utils/convertPriceToStroops';
-import { convertTimeToMs } from '@/utils/convertTimeToMs';
+import { convertTimeToSeconds } from '@/utils/convertTimeToSeconds';
 
 interface IPlayerAuctionFormProps {
 	playerId: string;
@@ -100,9 +100,9 @@ const PlayerAuctionForm = ({
 
 		try {
 			await createAuctionTransaction({
-				playerId: playerId,
+				playerId,
 				startingPrice: convertPriceToStroops(startingPrice),
-				auctionTimeMs: convertTimeToMs(auctionTimeInHours),
+				auctionTimeMs: convertTimeToSeconds(auctionTimeInHours),
 			});
 		} catch (error) {
 			notificationService.error(CREATE_AUCTION_TRANSACTION_ERROR_MESSAGE);
