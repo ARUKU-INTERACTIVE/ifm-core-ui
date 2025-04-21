@@ -7,6 +7,6 @@ describe('Home page', () => {
 	it('Should render correctly', () => {
 		cy.getBySel('home-msg')
 			.should('be.visible')
-			.and('have.text', 'This is the homepage!');
+			.and('have.text', 'Welcome to Invincible Football Manager!');
 	});
 });
