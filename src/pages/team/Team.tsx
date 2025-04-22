@@ -3,6 +3,11 @@ import { useCallback, useEffect, useState } from 'react';
 import CreateTeamModal from './components/CreateTeamModal';
 
 import Loading from '@/components/ui/Loading';
+import {
+	CREATE_TEAM_ERROR_MESSAGE,
+	CREATE_TEAM_SUCCESS_MESSAGE,
+	GET_TEAM_ERROR_MESSAGE,
+} from '@/constants/messages/team-messages';
 import { useGetMe } from '@/hooks/auth/useGetMe';
 import { IPlayer } from '@/interfaces/player/IPlayer';
 import { ICreateTeamParams } from '@/interfaces/team/ICreateTeam';
@@ -28,9 +33,7 @@ export default function Team() {
 				setTeam(data.attributes);
 			} catch (error) {
 				console.error(error);
-				notificationService.error(
-					'An error occurred while getting the team. Please try again later.',
-				);
+				notificationService.error(GET_TEAM_ERROR_MESSAGE);
 			}
 		}
 	}, [userData?.data.attributes.teamId]);
@@ -46,9 +49,7 @@ export default function Team() {
 				setTeamPlayers(data.map((player) => player.attributes));
 			} catch (error) {
 				console.error(error);
-				notificationService.error(
-					'An error occurred while getting the team. Please try again later.',
-				);
+				notificationService.error(GET_TEAM_ERROR_MESSAGE);
 			}
 		}
 	}, [userData?.data.attributes.teamId]);
@@ -58,12 +59,10 @@ export default function Team() {
 		try {
 			await teamService.createTeam(createTeamParams);
 			await refetchUserData();
-			notificationService.success('Team created successfully');
+			notificationService.success(CREATE_TEAM_SUCCESS_MESSAGE);
 		} catch (error) {
 			console.error(error);
-			notificationService.error(
-				'An error occurred while creating the team. Please try again later.',
-			);
+			notificationService.error(CREATE_TEAM_ERROR_MESSAGE);
 		} finally {
 			setIsLoading(false);
 		}
