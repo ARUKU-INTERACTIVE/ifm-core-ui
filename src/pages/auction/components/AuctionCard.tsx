@@ -75,7 +75,7 @@ const AuctionCard = ({
 						<span className="font-bold text-red-600">
 							{isAuctionEnded
 								? 'The auction has ended'
-								: `Auction time left: ${timeLeft} hours${' '}`}
+								: `Auction time left: ${timeLeft} hours`}
 						</span>
 					</p>
 				</div>
