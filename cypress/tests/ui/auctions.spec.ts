@@ -125,7 +125,7 @@ describe('Auctions Page', () => {
 		);
 
 		cy.getBySel('auctions-searchbar').type(searchValue);
-		cy.wait(200);
+		cy.wait(2000);
 
 		cy.getBySel('auction-card')
 			.should('have.length', 1)
@@ -169,7 +169,6 @@ describe('Auctions Page', () => {
 				.as('bid-auction')
 				.callsFake(() => null);
 		});
-		cy.wait('@get-auctions');
 
 		cy.getBySel('auction-card')
 			.first()
@@ -296,18 +295,12 @@ describe('Auctions Page', () => {
 			{ method: 'POST' },
 			{ fixture: 'auction/claimed-auction-response.json' },
 		);
-		cy.interceptApi(
-			'/auction',
-			{ method: 'GET' },
-			{ fixture: 'auction/auctions-response.json' },
-		).as('get-auctions');
 
 		cy.window().then((window) => {
 			cy.stub(window, 'open')
 				.as('claim-auction')
 				.callsFake(() => null);
 		});
-
 		cy.wait('@get-claim-auctions');
 
 		cy.getBySel('auction-card')
@@ -333,6 +326,11 @@ describe('Auctions Page', () => {
 		cy.window().then((win) => {
 			win.dispatchEvent(signEvent);
 		});
+		cy.interceptApi(
+			'/auction',
+			{ method: 'GET' },
+			{ fixture: 'auction/auctions-response.json' },
+		).as('get-auctions');
 
 		cy.getBySel('toast-container').contains(TRANSACTION_SIGNED_MESSAGE);
 		cy.getBySel('toast-container').contains(

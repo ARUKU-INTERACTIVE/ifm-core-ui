@@ -3,3 +3,8 @@ export interface ICreateAuctionTransactionParams {
 	startingPrice: number;
 	auctionTimeMs: number;
 }
+
+export interface ICreateAuctionFormValues {
+	startingPrice: number;
+	auctionTimeInHours: number;
+}

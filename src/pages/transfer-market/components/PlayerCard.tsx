@@ -1,66 +1,46 @@
-import { UseMutateAsyncFunction } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import { Tooltip } from 'react-tooltip';
 
 import CreateAuctionModal from './CreateAuctionModal';
 
+import { DescriptionIcon } from '@/components/icon/DescriptionIcon';
 import { SUBMIT_MINT_PLAYER_SAC_ERROR_MESSAGE } from '@/components/player/player-messages';
 import Loading from '@/components/ui/Loading';
-import {
-	IListResponse,
-	ISingleResponse,
-} from '@/interfaces/api/IApiBaseResponse';
-import { ITransactionResponse } from '@/interfaces/api/ITransactionResponse';
+import { IListResponse } from '@/interfaces/api/IApiBaseResponse';
 import { IAuction } from '@/interfaces/auction/IAuction';
-import { ICreateAuctionTransactionParams } from '@/interfaces/auction/ICreateAuctionTransaction';
-import { ISubmitCreateAuctionTransactionParams } from '@/interfaces/auction/ISubmitCreateAuction';
+import { ICreateAuctionFormValues } from '@/interfaces/auction/ICreateAuctionTransaction';
+import { IPlayer } from '@/interfaces/player/IPlayer';
 import { notificationService } from '@/services/notification.service';
 import { getAuctionTimeLeft } from '@/utils/getAuctionTimeLeft';
 
 interface IPlayerCardProps {
-	readonly name: string;
-	readonly playerId: string;
-	readonly playerAddress: string;
-	readonly createAuctionTransaction: UseMutateAsyncFunction<
-		ISingleResponse<ITransactionResponse>,
-		Error,
-		ICreateAuctionTransactionParams,
-		unknown
-	>;
-	readonly submitCreateAuctionTransaction: UseMutateAsyncFunction<
-		ISingleResponse<IAuction>,
-		Error,
-		ISubmitCreateAuctionTransactionParams,
-		unknown
-	>;
-	readonly handleSignTransactionXDR: (
-		transactionXDR: string,
-	) => Promise<string | undefined>;
-	readonly createAuctionTransactionXDR:
-		| ISingleResponse<ITransactionResponse>
-		| undefined;
+	readonly player: IPlayer;
+
+	readonly submitCreateAuctionTransaction: (
+		values: ICreateAuctionFormValues,
+		playerId: string,
+	) => Promise<void>;
+
 	readonly auctions: IListResponse<IAuction> | undefined;
 	readonly isSubmittingCreateAuctionTransaction: boolean;
 	readonly onMintPlayer: (playerId: string) => Promise<void>;
 }
 
 export default function PlayerCard({
-	name,
-	playerId,
-	playerAddress,
-	createAuctionTransaction,
+	player: { id, name, address, imageUri, description },
 	submitCreateAuctionTransaction,
-	handleSignTransactionXDR,
-	createAuctionTransactionXDR,
+
 	auctions,
 	isSubmittingCreateAuctionTransaction,
 	onMintPlayer,
 }: IPlayerCardProps) {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [isImageLoaded, setIsImageLoaded] = useState<boolean>(false);
 	const [isOpenCreateAuctionModal, setIsOpenCreateAuctionModal] =
 		useState<boolean>(false);
 	const [auctionTimeLeft, setAuctionTimeLeft] = useState<number>(0);
 	const auctionFound = auctions?.data.find(
-		(auction) => auction.attributes.playerAddress === playerAddress,
+		(auction) => auction.attributes.playerAddress === address,
 	);
 	const getTimeLeft = (auction: IAuction) => {
 		const endTime = auction.endTime;
@@ -87,19 +67,26 @@ export default function PlayerCard({
 	const handleSubmitAddSac = async () => {
 		try {
 			setIsLoading(true);
-			await onMintPlayer(playerId);
-		} catch (error) {
+			await onMintPlayer(id);
+		} catch {
 			notificationService.error(SUBMIT_MINT_PLAYER_SAC_ERROR_MESSAGE);
 		} finally {
 			setIsLoading(false);
 		}
 	};
+	const handleSubmitCreateAuction = async (
+		values: ICreateAuctionFormValues,
+		playerId: string,
+	) => {
+		await submitCreateAuctionTransaction(values, playerId);
+		setIsOpenCreateAuctionModal(false);
+	};
 
 	const renderButton = () => {
-		if (!playerAddress) {
+		if (!address) {
 			return (
 				<button
-					className={`bg-blue-500 text-white p-2 my-3 rounded-md w-full h-10 ${
+					className={`bg-blue-500 text-white p-2 my-3 rounded-full w-full h-10 ${
 						isLoading ? 'opacity-50' : ''
 					}`}
 					onClick={handleSubmitAddSac}
@@ -107,7 +94,7 @@ export default function PlayerCard({
 					disabled={isLoading}
 				>
 					<div className="flex justify-center items-center h-full">
-						{isLoading ? <Loading /> : 'Enable Auction'}
+						{isLoading ? <Loading /> : 'Enable for Auction'}
 					</div>
 				</button>
 			);
@@ -115,7 +102,7 @@ export default function PlayerCard({
 
 		return (
 			<button
-				className="bg-blue-500 text-white p-2 my-3 rounded-md w-full h-10"
+				className="bg-blue-500 text-white p-2 my-3 rounded-full w-full h-10"
 				onClick={() => setIsOpenCreateAuctionModal(true)}
 				data-test="create-auction-btn"
 			>
@@ -128,30 +115,62 @@ export default function PlayerCard({
 
 	return (
 		<div
-			className="max-w-sm rounded overflow-hidden shadow-lg p-2 pb-0"
+			className="max-w-[200px] w-full rounded-xl border-[1px] border-gray-300 overflow-hidden shadow-lg p-2 pb-0"
 			data-test="card"
 		>
-			<div className="px-6 py-4">
-				<div className="font-bold text-md mb-2">{name}</div>
+			<div className="w-full h-48 bg-gray-200 relative z-0">
+				{imageUri && !isImageLoaded && (
+					<div className="w-full max-h-48 h-full absolute inset-0 animate-pulse bg-gray-400 rounded-lg" />
+				)}
+				{imageUri ? (
+					<img
+						src={imageUri}
+						alt="NFT Player"
+						loading="lazy"
+						onLoad={() => {
+							setIsImageLoaded(true);
+						}}
+						className={`w-full max-h-48 h-full object-cover rounded-lg transition-opacity duration-300 ${
+							isImageLoaded ? 'opacity-100' : 'opacity-0'
+						}`}
+					/>
+				) : (
+					<div className="w-full h-full bg-gray-600 flex justify-center rounded-lg items-center z-0">
+						<p className="text-white text-center">No image</p>
+					</div>
+				)}
+			</div>
+
+			<div className="flex items-center gap-3 py-2">
+				<Tooltip id={`${id}-player-description`} />
+				<p className="w-fit font-bold text-md capitalize">{name}</p>
+				<div
+					className="flex h-4 justify-end"
+					data-tooltip-content={description}
+					data-tooltip-id={`${id}-player-description`}
+					data-tooltip-place="bottom-end"
+				>
+					<DescriptionIcon />
+				</div>
 			</div>
 
 			{auctionTimeLeft > 0 ? (
 				<div
-					className="text-sm text-red-500 pl-6 pb-2 font-bold"
+					className="pb-2 font-bold text-center"
 					data-test="auction-time-left"
 				>
-					Auction Time Left: {auctionTimeLeft} hours
+					<p className="text-red-500 text-sm">Auction Time Left:</p>
+					<p className="text-red-600 text-md" data-test="auction-time-left">
+						{auctionTimeLeft} {auctionTimeLeft === 1 ? 'hour' : 'hours'}
+					</p>
 				</div>
 			) : (
 				renderButton()
 			)}
 
 			<CreateAuctionModal
-				playerId={playerId}
-				createAuctionTransaction={createAuctionTransaction}
-				submitCreateAuctionTransaction={submitCreateAuctionTransaction}
-				handleSignTransactionXDR={handleSignTransactionXDR}
-				createAuctionTransactionXDR={createAuctionTransactionXDR}
+				playerId={id}
+				submitCreateAuctionTransaction={handleSubmitCreateAuction}
 				isOpen={isOpenCreateAuctionModal}
 				onHide={() => setIsOpenCreateAuctionModal(false)}
 				isSubmittingCreateAuctionTransaction={

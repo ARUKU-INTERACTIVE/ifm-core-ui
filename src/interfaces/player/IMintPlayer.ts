@@ -1,9 +1,15 @@
 import { ITransactionNFTData } from './ITransactionNFT';
 
-export interface IMintPlayerParams {
-	file: File | null;
+interface IMintPlayer {
 	name: string;
 	description: string;
+}
+export interface IMintPlayerParams extends IMintPlayer {
+	file: File | null;
+}
+
+export interface IMintPlayerFormValues extends IMintPlayer {
+	file: FileList | null;
 }
 
 export interface ISubmitMintPlayerParams extends ITransactionNFTData {
