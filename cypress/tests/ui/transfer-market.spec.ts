@@ -4,8 +4,10 @@ import {
 	TRANSACTION_SIGNED_MESSAGE,
 } from '@context/auth-messages';
 
+import auctionFixture from '../../fixtures/auction/auctions-response.json';
+
 import {
-	SUBMIT_CREATE_AUCTION_ERROR_MESSAGE,
+	CREATE_AUCTION_TRANSACTION_ERROR_MESSAGE,
 	SUBMIT_CREATE_AUCTION_SUCCESS_MESSAGE,
 } from '@/interfaces/auction/auction-messages';
 
@@ -343,7 +345,7 @@ describe('Transfer Market', () => {
 			'/player',
 			{ method: 'GET' },
 			{ fixture: 'player/players-response.json' },
-		);
+		).as('get-players');
 		cy.interceptApi(
 			'/auction/create/transaction',
 			{ method: 'POST' },
@@ -352,13 +354,33 @@ describe('Transfer Market', () => {
 		cy.interceptApi(
 			'/auction',
 			{ method: 'GET' },
-			{ fixture: 'auction/auctions-response.json' },
-		);
+			{
+				body: {
+					data: [
+						{
+							...auctionFixture.data[0],
+							attributes: {
+								...auctionFixture.data[0].attributes,
+								playerAddress: 'address_5',
+							},
+						},
+						{
+							...auctionFixture.data[1],
+							attributes: {
+								...auctionFixture.data[1].attributes,
+								playerAddress: 'address_6',
+							},
+						},
+						...auctionFixture.data.slice(2),
+					],
+				},
+			},
+		).as('get-auctions');
 		cy.interceptApi(
 			'/auction/submit/transaction',
 			{ method: 'POST' },
 			{ fixture: 'auction/auction-response.json' },
-		);
+		).as('submit-auction');
 
 		cy.window().then((window) => {
 			cy.stub(window, 'open')
@@ -390,15 +412,30 @@ describe('Transfer Market', () => {
 			win.dispatchEvent(signEvent);
 		});
 
+		cy.interceptApi(
+			'/auction',
+			{ method: 'GET' },
+			{
+				body: {
+					data: [
+						{
+							...auctionFixture.data[0],
+							attributes: {
+								...auctionFixture.data[0].attributes,
+								playerAddress: 'address_2',
+							},
+						},
+					],
+				},
+			},
+		).as('get-updated-auctions');
+		cy.wait('@get-updated-auctions');
 		cy.getBySel('toast-container').contains(TRANSACTION_SIGNED_MESSAGE);
 		cy.getBySel('toast-container').contains(
 			SUBMIT_CREATE_AUCTION_SUCCESS_MESSAGE,
 		);
 
-		cy.getBySel('auction-time-left').should(
-			'contain',
-			'Auction Time Left: 1 hours',
-		);
+		cy.getBySel('auction-time-left').should('contain', '1 hour');
 	});
 
 	it('should show an error message if create auction fails', () => {
@@ -415,8 +452,28 @@ describe('Transfer Market', () => {
 		cy.interceptApi(
 			'/auction',
 			{ method: 'GET' },
-			{ fixture: 'auction/auctions-response.json' },
-		);
+			{
+				body: {
+					data: [
+						{
+							...auctionFixture.data[0],
+							attributes: {
+								...auctionFixture.data[0].attributes,
+								playerAddress: 'address_5',
+							},
+						},
+						{
+							...auctionFixture.data[1],
+							attributes: {
+								...auctionFixture.data[1].attributes,
+								playerAddress: 'address_6',
+							},
+						},
+						...auctionFixture.data.slice(2),
+					],
+				},
+			},
+		).as('get-auctions');
 		cy.interceptApi(
 			'/auction/submit/transaction',
 			{ method: 'POST' },
@@ -457,7 +514,7 @@ describe('Transfer Market', () => {
 
 		cy.getBySel('toast-container').contains(TRANSACTION_SIGNED_MESSAGE);
 		cy.getBySel('toast-container').contains(
-			SUBMIT_CREATE_AUCTION_ERROR_MESSAGE,
+			CREATE_AUCTION_TRANSACTION_ERROR_MESSAGE,
 		);
 	});
 });
