@@ -14,6 +14,6 @@ export const GET_CLAIM_TRANSACTION_ERROR_MESSAGE =
 export const GET_CLAIM_TRANSACTION_SUCCESS_MESSAGE =
 	'Claim transaction obtained successfully';
 export const SUBMIT_CLAIM_TRANSACTION_SUCCESS_MESSAGE =
-	'Claim submitted successfully';
+	'Auction rewards claimed successfully';
 export const SUBMIT_CLAIM_TRANSACTION_ERROR_MESSAGE =
 	'There was an error at submitting the claim transaction';
