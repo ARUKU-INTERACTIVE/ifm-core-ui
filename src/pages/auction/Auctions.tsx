@@ -28,7 +28,7 @@ import {
 	SUBMIT_PLACE_BID_ERROR_MESSAGE,
 } from '@/interfaces/auction/auction-messages';
 import { notificationService } from '@/services/notification.service';
-import { getCurrentTime } from '@/utils/getCurrentTime';
+import { getCurrentTimestampInSeconds } from '@/utils/getCurrentTimestampInSeconds';
 
 const Auctions = () => {
 	const [playerName, setPlayerName] = useState<string>('');
@@ -47,7 +47,7 @@ const Auctions = () => {
 		mutateAsync: submitPlaceBidTransaction,
 		isPending: isSubmitPlaceBidTransactionPending,
 	} = useSubmitPlaceBidTransaction();
-	const currentTime = getCurrentTime();
+	const currentTime = getCurrentTimestampInSeconds();
 
 	const {
 		handleCreateAddTrustlineTransactionXDR,
