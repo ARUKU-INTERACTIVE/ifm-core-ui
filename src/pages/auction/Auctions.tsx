@@ -95,7 +95,7 @@ const Auctions = () => {
 			});
 
 			return transactionXDR;
-		} catch (error) {
+		} catch {
 			notificationService.error(GET_PLACE_BID_ERROR_MESSAGE);
 		}
 	};
@@ -109,7 +109,7 @@ const Auctions = () => {
 				xdr: signedXDR,
 				auctionId,
 			});
-		} catch (error) {
+		} catch {
 			notificationService.error(SUBMIT_PLACE_BID_ERROR_MESSAGE);
 		}
 	};
@@ -166,7 +166,7 @@ const Auctions = () => {
 			const transactionXDR = await getClaimTransaction({ auctionId });
 
 			return transactionXDR;
-		} catch (error) {
+		} catch {
 			notificationService.error(GET_CLAIM_TRANSACTION_ERROR_MESSAGE);
 		}
 	};
@@ -180,7 +180,7 @@ const Auctions = () => {
 				xdr: signedXDR,
 				auctionId,
 			});
-		} catch (error) {
+		} catch {
 			notificationService.error(SUBMIT_CLAIM_TRANSACTION_ERROR_MESSAGE);
 		}
 	};
