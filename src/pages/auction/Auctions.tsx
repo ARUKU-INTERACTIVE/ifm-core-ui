@@ -46,7 +46,7 @@ const Auctions = () => {
 		mutateAsync: submitPlaceBidTransaction,
 		isPending: isSubmitPlaceBidTransactionPending,
 	} = useSubmitPlaceBidTransaction();
-	const currentTime = Math.floor(Date.now() / 1000);
+	const currentTime = getCurrentTime();
 
 	const {
 		handleCreateAddTrustlineTransactionXDR,
