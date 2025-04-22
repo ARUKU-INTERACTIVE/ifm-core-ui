@@ -7,13 +7,12 @@ import {
 
 import { ApiRequestConfig, apiService } from './api.service';
 
-import { IApiService } from '@/interfaces/services/IApiService';
-import { IStellarService } from '@/interfaces/services/IStellarService';
-
 import {
 	STELLAR_HORIZON_URL,
 	STELLAR_NETWORK_PASSPHRASE,
-} from '@configs/environment';
+} from '@/constants/environment';
+import { IApiService } from '@/interfaces/services/IApiService';
+import { IStellarService } from '@/interfaces/services/IStellarService';
 
 class StellarService implements IStellarService {
 	api: IApiService<ApiRequestConfig>;

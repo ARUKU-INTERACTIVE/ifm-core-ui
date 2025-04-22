@@ -2,7 +2,7 @@ import { Keypair } from '@stellar/stellar-sdk';
 import { useCallback, useState } from 'react';
 import { connectWallet, signTransaction } from 'simple-stellar-signer-api';
 
-import { SIMPLE_SIGNER_URL } from '@/configs/environment';
+import { SIMPLE_SIGNER_URL } from '@/constants/environment';
 import {
 	SIMPLE_SIGNER_CONNECT_ERROR,
 	SIMPLE_SIGNER_SIGN_ERROR,

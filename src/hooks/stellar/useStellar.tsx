@@ -6,7 +6,7 @@ import {
 	SUBMIT_TRANSACTION_XDR_ERROR_MESSAGE,
 } from './stellar-messages';
 
-import { STELLAR_DEFAULT_PLAYER_CODE } from '@/configs/environment';
+import { STELLAR_DEFAULT_PLAYER_CODE } from '@/constants/environment';
 import { notificationService } from '@/services/notification.service';
 import { stellarService } from '@/services/stellar.service';
 
