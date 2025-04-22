@@ -28,6 +28,7 @@ import {
 	SUBMIT_PLACE_BID_ERROR_MESSAGE,
 } from '@/interfaces/auction/auction-messages';
 import { notificationService } from '@/services/notification.service';
+import { getCurrentTime } from '@/utils/getCurrentTime';
 
 const Auctions = () => {
 	const [playerName, setPlayerName] = useState<string>('');
