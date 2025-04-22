@@ -295,17 +295,13 @@ describe('Auctions Page', () => {
 			{ method: 'POST' },
 			{ fixture: 'auction/claimed-auction-response.json' },
 		);
-		cy.interceptApi(
-			'/auction',
-			{ method: 'GET' },
-			{ fixture: 'auction/auctions-response.json' },
-		).as('get-auctions');
 
 		cy.window().then((window) => {
 			cy.stub(window, 'open')
 				.as('claim-auction')
 				.callsFake(() => null);
 		});
+		cy.wait('@get-claim-auctions');
 
 		cy.getBySel('auction-card')
 			.last()
@@ -330,6 +326,11 @@ describe('Auctions Page', () => {
 		cy.window().then((win) => {
 			win.dispatchEvent(signEvent);
 		});
+		cy.interceptApi(
+			'/auction',
+			{ method: 'GET' },
+			{ fixture: 'auction/auctions-response.json' },
+		).as('get-auctions');
 
 		cy.getBySel('toast-container').contains(TRANSACTION_SIGNED_MESSAGE);
 		cy.getBySel('toast-container').contains(
