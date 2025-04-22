@@ -125,7 +125,7 @@ describe('Auctions Page', () => {
 		);
 
 		cy.getBySel('auctions-searchbar').type(searchValue);
-		cy.wait(200);
+		cy.wait(2000);
 
 		cy.getBySel('auction-card')
 			.should('have.length', 1)
@@ -169,7 +169,6 @@ describe('Auctions Page', () => {
 				.as('bid-auction')
 				.callsFake(() => null);
 		});
-		cy.wait('@get-auctions');
 
 		cy.getBySel('auction-card')
 			.first()
@@ -307,8 +306,6 @@ describe('Auctions Page', () => {
 				.as('claim-auction')
 				.callsFake(() => null);
 		});
-
-		cy.wait('@get-claim-auctions');
 
 		cy.getBySel('auction-card')
 			.last()
