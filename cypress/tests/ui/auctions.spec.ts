@@ -5,6 +5,8 @@ import {
 } from '@context/auth-messages';
 
 import {
+	SUBMIT_CLAIM_TRANSACTION_ERROR_MESSAGE,
+	SUBMIT_CLAIM_TRANSACTION_SUCCESS_MESSAGE,
 	SUBMIT_PLACE_BID_ERROR_MESSAGE,
 	SUBMIT_PLACE_BID_SUCCESS_MESSAGE,
 } from '@/interfaces/auction/auction-messages';
@@ -266,5 +268,143 @@ describe('Auctions Page', () => {
 
 		cy.getBySel('toast-container').contains(TRANSACTION_SIGNED_MESSAGE);
 		cy.getBySel('toast-container').contains(SUBMIT_PLACE_BID_ERROR_MESSAGE);
+	});
+
+	it('should claim an auction', () => {
+		cy.interceptApi(
+			'/auction',
+			{ method: 'GET' },
+			{ fixture: 'auction/claim-auctions-response.json' },
+		).as('get-claim-auctions');
+		cy.interceptApi(
+			'/user/me',
+			{ method: 'GET' },
+			{ fixture: 'user/my-user.json' },
+		);
+		cy.interceptApi(
+			'/player',
+			{ method: 'GET' },
+			{ fixture: 'auction/auction-page-players-response.json' },
+		);
+		cy.interceptApi(
+			'/auction/create/transaction/claim',
+			{ method: 'POST' },
+			{ fixture: 'xdr-response.json' },
+		);
+		cy.interceptApi(
+			'/auction/submit/transaction/claim',
+			{ method: 'POST' },
+			{ fixture: 'auction/claimed-auction-response.json' },
+		);
+		cy.interceptApi(
+			'/auction',
+			{ method: 'GET' },
+			{ fixture: 'auction/auctions-response.json' },
+		).as('get-auctions');
+
+		cy.window().then((window) => {
+			cy.stub(window, 'open')
+				.as('claim-auction')
+				.callsFake(() => null);
+		});
+
+		cy.wait('@get-claim-auctions');
+
+		cy.getBySel('auction-card')
+			.last()
+			.then((card) => {
+				cy.wrap(card).find('button').click();
+			});
+
+		cy.get('@claim-auction').should('be.called');
+
+		const signEvent = new MessageEvent('message', {
+			data: {
+				type: 'onSign',
+				page: `${simpleSignerUrl}/sign`,
+				message: {
+					signedXDR:
+						'AAAAAGrj5kK0Xb3d3c3NvZ2Z3YXJpZ2F0ZQAAAAAAAAAAABiGAAAAQAAAAAEAAAAAAAAAZQ==',
+				},
+			},
+			origin: simpleSignerUrl,
+		});
+
+		cy.window().then((win) => {
+			win.dispatchEvent(signEvent);
+		});
+
+		cy.getBySel('toast-container').contains(TRANSACTION_SIGNED_MESSAGE);
+		cy.getBySel('toast-container').contains(
+			SUBMIT_CLAIM_TRANSACTION_SUCCESS_MESSAGE,
+		);
+
+		cy.wait('@get-auctions');
+		cy.getBySel('auction-card').should('have.length', 3);
+	});
+
+	it('should throw an error if fails to claim an auction', () => {
+		cy.interceptApi(
+			'/auction',
+			{ method: 'GET' },
+			{ fixture: 'auction/claim-auctions-response.json' },
+		).as('get-claim-auctions');
+		cy.interceptApi(
+			'/user/me',
+			{ method: 'GET' },
+			{ fixture: 'user/my-user.json' },
+		);
+		cy.interceptApi(
+			'/player',
+			{ method: 'GET' },
+			{ fixture: 'auction/auction-page-players-response.json' },
+		);
+		cy.interceptApi(
+			'/auction/create/transaction/claim',
+			{ method: 'POST' },
+			{ fixture: 'xdr-response.json' },
+		);
+		cy.interceptApi(
+			'/auction/submit/transaction/claim',
+			{ method: 'POST' },
+			{ statusCode: 500 },
+		);
+
+		cy.window().then((window) => {
+			cy.stub(window, 'open')
+				.as('claim-auction')
+				.callsFake(() => null);
+		});
+
+		cy.wait('@get-claim-auctions');
+
+		cy.getBySel('auction-card')
+			.last()
+			.then((card) => {
+				cy.wrap(card).find('button').click();
+			});
+
+		cy.get('@claim-auction').should('be.called');
+
+		const signEvent = new MessageEvent('message', {
+			data: {
+				type: 'onSign',
+				page: `${simpleSignerUrl}/sign`,
+				message: {
+					signedXDR:
+						'AAAAAGrj5kK0Xb3d3c3NvZ2Z3YXJpZ2F0ZQAAAAAAAAAAABiGAAAAQAAAAAEAAAAAAAAAZQ==',
+				},
+			},
+			origin: simpleSignerUrl,
+		});
+
+		cy.window().then((win) => {
+			win.dispatchEvent(signEvent);
+		});
+
+		cy.getBySel('toast-container').contains(TRANSACTION_SIGNED_MESSAGE);
+		cy.getBySel('toast-container').contains(
+			SUBMIT_CLAIM_TRANSACTION_ERROR_MESSAGE,
+		);
 	});
 });

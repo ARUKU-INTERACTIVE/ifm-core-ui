@@ -3,24 +3,32 @@ import { useEffect, useState } from 'react';
 import { useAuctions } from '../transfer-market/hooks/useAuctions';
 import { usePlayers } from '../transfer-market/hooks/usePlayers';
 import AuctionList from './components/AuctionList';
+import { useGetClaimTransaction } from './hooks/useGetClaimTransaction';
 import { useGetPlaceBidTransaction } from './hooks/useGetPlaceBidTransaction';
+import { useSubmitClaimTransaction } from './hooks/useSubmitClaimTransaction';
 import { useSubmitPlaceBidTransaction } from './hooks/useSubmitPlaceBidTransaction';
 
 import Loading from '@/components/ui/Loading';
 import { useGetMe } from '@/hooks/auth/useGetMe';
 import { useWallet } from '@/hooks/auth/useWallet';
+import { SUBMIT_TRANSACTION_XDR_SUCCESS_MESSAGE } from '@/hooks/stellar/stellar-messages';
+import { useStellar } from '@/hooks/stellar/useStellar';
 import {
 	IListResponse,
 	ISingleResponse,
 } from '@/interfaces/api/IApiBaseResponse';
 import { ITransactionResponse } from '@/interfaces/api/ITransactionResponse';
-import { IAuction } from '@/interfaces/auction/IAuction';
+import { AuctionStatus, IAuction } from '@/interfaces/auction/IAuction';
+import { IGetClaimTransactionParams } from '@/interfaces/auction/IGetClaimTransaction';
 import { IGetPlaceBidTransactionParams } from '@/interfaces/auction/IGetPlaceBidTransaction';
 import {
+	GET_CLAIM_TRANSACTION_ERROR_MESSAGE,
 	GET_PLACE_BID_ERROR_MESSAGE,
+	SUBMIT_CLAIM_TRANSACTION_ERROR_MESSAGE,
 	SUBMIT_PLACE_BID_ERROR_MESSAGE,
 } from '@/interfaces/auction/auction-messages';
 import { notificationService } from '@/services/notification.service';
+import { getCurrentTimestampInSeconds } from '@/utils/getCurrentTimestampInSeconds';
 
 const Auctions = () => {
 	const [playerName, setPlayerName] = useState<string>('');
@@ -39,15 +47,34 @@ const Auctions = () => {
 		mutateAsync: submitPlaceBidTransaction,
 		isPending: isSubmitPlaceBidTransactionPending,
 	} = useSubmitPlaceBidTransaction();
+	const currentTime = getCurrentTimestampInSeconds();
+
+	const {
+		handleCreateAddTrustlineTransactionXDR,
+		handleSubmitTransactionXDR,
+		isLoading: isStellarLoading,
+	} = useStellar();
+	const {
+		mutateAsync: getClaimTransaction,
+		isPending: isGetClaimTransactionPending,
+	} = useGetClaimTransaction();
+	const {
+		mutateAsync: submitClaimTransaction,
+		isPending: isSubmitClaimTransactionPending,
+	} = useSubmitClaimTransaction();
 
 	useEffect(() => {
 		if (auctions && players) {
-			const filteredAuctionsData = auctions?.data.filter((auction) =>
-				players?.data.find(
+			const filteredAuctionsData = auctions?.data.filter((auction) => {
+				if (auction.attributes.status === AuctionStatus.NFTTransferred) {
+					return false;
+				}
+
+				return players?.data.find(
 					(player) =>
 						player.attributes.address === auction.attributes.playerAddress,
-				),
-			);
+				);
+			});
 
 			setFilteredAuctions({
 				...auctions,
@@ -87,8 +114,30 @@ const Auctions = () => {
 		}
 	};
 
+	const handleAddTrustline = async (
+		accountAddress: string,
+		tokenIssuer: string,
+	) => {
+		const transactionXDR = await handleCreateAddTrustlineTransactionXDR(
+			accountAddress,
+			tokenIssuer,
+		);
+
+		if (transactionXDR) {
+			const signedXDR = await handleSignTransactionXDR(transactionXDR);
+
+			if (signedXDR) {
+				await handleSubmitTransactionXDR(signedXDR);
+			}
+
+			notificationService.success(SUBMIT_TRANSACTION_XDR_SUCCESS_MESSAGE);
+		}
+	};
+
 	const handleSubmitBid = async (
 		getPlaceBidTransactionParams: IGetPlaceBidTransactionParams,
+		accountAddress: string,
+		tokenIssuer: string,
 	) => {
 		const { bidAmount, auctionId } = getPlaceBidTransactionParams;
 
@@ -104,6 +153,52 @@ const Auctions = () => {
 
 			if (signedXDR) {
 				await handleSubmitPlaceBidTransaction(signedXDR, auctionId);
+			}
+
+			await handleAddTrustline(accountAddress, tokenIssuer);
+		}
+	};
+
+	const handleGetClaimTransaction = async (
+		auctionId: number,
+	): Promise<ISingleResponse<ITransactionResponse> | undefined> => {
+		try {
+			const transactionXDR = await getClaimTransaction({ auctionId });
+
+			return transactionXDR;
+		} catch (error) {
+			notificationService.error(GET_CLAIM_TRANSACTION_ERROR_MESSAGE);
+		}
+	};
+
+	const handleSubmitClaimTransaction = async (
+		signedXDR: string,
+		auctionId: number,
+	) => {
+		try {
+			await submitClaimTransaction({
+				xdr: signedXDR,
+				auctionId,
+			});
+		} catch (error) {
+			notificationService.error(SUBMIT_CLAIM_TRANSACTION_ERROR_MESSAGE);
+		}
+	};
+
+	const handleSubmitClaim = async (
+		getClaimTransactionParams: IGetClaimTransactionParams,
+	) => {
+		const { auctionId } = getClaimTransactionParams;
+
+		const transactionXDR = await handleGetClaimTransaction(auctionId);
+
+		if (transactionXDR?.data.attributes.xdr) {
+			const signedXDR = await handleSignTransactionXDR(
+				transactionXDR.data.attributes.xdr,
+			);
+
+			if (signedXDR) {
+				await handleSubmitClaimTransaction(signedXDR, auctionId);
 			}
 		}
 	};
@@ -135,6 +230,11 @@ const Auctions = () => {
 						isSubmitPlaceBidTransactionPending
 					}
 					user={user}
+					handleSubmitClaim={handleSubmitClaim}
+					currentTime={currentTime}
+					isStellarLoading={isStellarLoading}
+					isGetClaimTransactionPending={isGetClaimTransactionPending}
+					isSubmitClaimTransactionPending={isSubmitClaimTransactionPending}
 				/>
 			)}
 		</div>

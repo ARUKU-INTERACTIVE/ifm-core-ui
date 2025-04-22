@@ -6,11 +6,16 @@ interface ICreateBidModalProps {
 	isOpen: boolean;
 	onHide: () => void;
 	isGetPlaceBidTransactionPending: boolean;
-	handleSubmitBid(
+	handleSubmitBid: (
 		getPlaceBidTransactionParams: IGetPlaceBidTransactionParams,
-	): Promise<void>;
+		accountAddress: string,
+		tokenIssuer: string,
+	) => Promise<void>;
 	auctionId: string;
 	isSubmitPlaceBidTransactionPending: boolean;
+	isStellarLoading: boolean;
+	publicKey: string;
+	playerIssuer: string;
 }
 
 const CreateBidModal = ({
@@ -20,6 +25,9 @@ const CreateBidModal = ({
 	handleSubmitBid,
 	auctionId,
 	isSubmitPlaceBidTransactionPending,
+	isStellarLoading,
+	publicKey,
+	playerIssuer,
 }: ICreateBidModalProps) => {
 	if (!isOpen) {
 		return null;
@@ -40,6 +48,9 @@ const CreateBidModal = ({
 					isSubmitPlaceBidTransactionPending={
 						isSubmitPlaceBidTransactionPending
 					}
+					isStellarLoading={isStellarLoading}
+					publicKey={publicKey}
+					playerIssuer={playerIssuer}
 				/>
 			</div>
 		</div>

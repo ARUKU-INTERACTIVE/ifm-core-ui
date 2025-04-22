@@ -2,14 +2,18 @@ name: CI Workflow
 
 on:
   push:
-    branches: ["main", "staging"]
+    branches: ['main', 'staging']
   pull_request:
-    branches: ["*"]
+    branches: ['*']
 
 env:
   PORT: 3500
   CYPRESS_HOST_PORT: 4000
   CYPRESS_BASE_URL_PREFIX: http://localhost:3500
+  VITE_SIMPLE_SIGNER_URL: https://sign-testnet.bigger.systems
+  VITE_STELLAR_HORIZON_URL: https://horizon-testnet.stellar.org
+  VITE_STELLAR_NETWORK_PASSPHRASE: test_passphrase
+  VITE_STELLAR_DEFAULT_PLAYER_CODE: NFT
 
 jobs:
   build:

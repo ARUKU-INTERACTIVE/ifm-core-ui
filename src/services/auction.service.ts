@@ -7,7 +7,9 @@ import {
 import { ITransactionResponse } from '@/interfaces/api/ITransactionResponse';
 import { IAuction } from '@/interfaces/auction/IAuction';
 import { ICreateAuctionTransactionParams } from '@/interfaces/auction/ICreateAuctionTransaction';
+import { IGetClaimTransactionParams } from '@/interfaces/auction/IGetClaimTransaction';
 import { IGetPlaceBidTransactionParams } from '@/interfaces/auction/IGetPlaceBidTransaction';
+import { ISubmitClaimTransactionParams } from '@/interfaces/auction/ISubmitClaimTransaction';
 import { ISubmitCreateAuctionTransactionParams } from '@/interfaces/auction/ISubmitCreateAuction';
 import { ISubmitPlaceBidTransactionParams } from '@/interfaces/auction/ISubmitPlaceBidTransaction';
 import { IApiService } from '@/interfaces/services/IApiService';
@@ -56,6 +58,24 @@ class AuctionService implements IAuctionService {
 		return await this.api.post<ISingleResponse<IAuction>>(
 			'/auction/submit/transaction/place-bid',
 			submitPlaceBidTransactionParams,
+		);
+	}
+
+	async getClaimTransaction(
+		getClaimTransactionParams: IGetClaimTransactionParams,
+	): Promise<ISingleResponse<ITransactionResponse>> {
+		return await this.api.post<ISingleResponse<ITransactionResponse>>(
+			'/auction/create/transaction/claim',
+			getClaimTransactionParams,
+		);
+	}
+
+	async submitClaimTransaction(
+		submitClaimTransactionParams: ISubmitClaimTransactionParams,
+	): Promise<ISingleResponse<IAuction>> {
+		return await this.api.post<ISingleResponse<IAuction>>(
+			'/auction/submit/transaction/claim',
+			submitClaimTransactionParams,
 		);
 	}
 }
