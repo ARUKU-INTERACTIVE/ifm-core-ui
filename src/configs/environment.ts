@@ -2,4 +2,5 @@ export const SIMPLE_SIGNER_URL = import.meta.env.VITE_SIMPLE_SIGNER_URL;
 export const STELLAR_HORIZON_URL = import.meta.env.VITE_STELLAR_HORIZON_URL;
 export const STELLAR_NETWORK_PASSPHRASE = import.meta.env
 	.VITE_STELLAR_NETWORK_PASSPHRASE;
-export const STELLAR_TOKEN_CODE = import.meta.env.VITE_STELLAR_TOKEN_CODE;
+export const STELLAR_DEFAULT_PLAYER_CODE = import.meta.env
+	.VITE_STELLAR_DEFAULT_PLAYER_CODE;

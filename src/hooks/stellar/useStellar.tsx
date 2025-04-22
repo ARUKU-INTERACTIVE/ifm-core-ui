@@ -6,13 +6,13 @@ import {
 	SUBMIT_TRANSACTION_XDR_ERROR_MESSAGE,
 } from './stellar-messages';
 
-import { STELLAR_TOKEN_CODE } from '@/configs/environment';
+import { STELLAR_DEFAULT_PLAYER_CODE } from '@/configs/environment';
 import { notificationService } from '@/services/notification.service';
 import { stellarService } from '@/services/stellar.service';
 
 export const useStellar = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const tokenCode = STELLAR_TOKEN_CODE;
+	const tokenCode = STELLAR_DEFAULT_PLAYER_CODE;
 
 	const handleCreateAddTrustlineTransactionXDR = async (
 		accountAddress: string,
