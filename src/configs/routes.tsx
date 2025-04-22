@@ -12,6 +12,7 @@ import SignIn from '@/pages/auth/SignIn';
 import SignOut from '@/pages/auth/SignOut';
 import SignUp from '@/pages/auth/SignUp';
 import Home from '@/pages/home/Home';
+import Team from '@/pages/team/Team';
 import TransferMarket from '@/pages/transfer-market/TransferMarket';
 
 export const authRoutes: RouteObject[] = [
@@ -61,6 +62,10 @@ export const privateRoutes: RouteObject[] = [
 			{
 				path: '/auctions',
 				element: <Auctions />,
+			},
+			{
+				path: '/team',
+				element: <Team />,
 			},
 		],
 	},

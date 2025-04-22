@@ -19,6 +19,9 @@ export default function NavBar() {
 				<Link to="/auctions" className="text-sm font-bold">
 					Auctions
 				</Link>
+				<Link to="/team" className="text-sm font-bold">
+					Team
+				</Link>
 			</div>
 			<Action connected={connected} />
 		</div>
