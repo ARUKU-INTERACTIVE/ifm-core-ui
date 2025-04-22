@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useAuctions } from './hooks/useAuctions';
 import { useCreateAuctionTransaction } from './hooks/useCreateAuctionTransaction';
 import useGetPlayerSacTransaction from './hooks/useGetPlayerSacTransaction';
-import { useMintPlayer } from './hooks/useMintPlayer';
 import { usePlayers } from './hooks/usePlayers';
 import { useSubmitCreateAuctionTransaction } from './hooks/useSubmitCreateAuctionTransaction';
 import { useSubmitMintPlayer } from './hooks/useSubmitMintPlayer';
@@ -11,17 +10,20 @@ import useSubmitMintPlayerSac from './hooks/useSubmitMintPlayerSac';
 
 import MintPlayerModal from '@/components/player/MintPlayerModal';
 import PlayerList from '@/components/player/PlayerList';
+import { PLAYER_REQUIRED_ERROR } from '@/components/player/player-messages';
 import Loading from '@/components/ui/Loading';
 import { useWallet } from '@/hooks/auth/useWallet';
 import { IListResponse } from '@/interfaces/api/IApiBaseResponse';
+import { ICreateAuctionFormValues } from '@/interfaces/auction/ICreateAuctionTransaction';
+import { CREATE_AUCTION_TRANSACTION_ERROR_MESSAGE } from '@/interfaces/auction/auction-messages';
+import { IMintPlayerFormValues } from '@/interfaces/player/IMintPlayer';
 import { IPlayer } from '@/interfaces/player/IPlayer';
+import { notificationService } from '@/services/notification.service';
+import { playerService } from '@/services/player.service';
+import { convertPriceToStroops } from '@/utils/convertPriceToStroops';
+import { convertTimeToSeconds } from '@/utils/convertTimeToSeconds';
 
 export default function TransferMarket() {
-	const {
-		mutate: mintPlayer,
-		isPending: isMintPlayerPending,
-		data: mintPlayerData,
-	} = useMintPlayer();
 	const { mutate: submitMintPlayer, isPending: isSubmitMintPlayerPending } =
 		useSubmitMintPlayer({ onSuccess: () => handleCloseMintPlayerModal() });
 	const { handleSignTransactionXDR } = useWallet();
@@ -35,16 +37,15 @@ export default function TransferMarket() {
 	const { data: auctions } = useAuctions();
 	const [isMintPlayerModalOpen, setIsMintPlayerModalOpen] = useState(false);
 
-	const {
-		mutateAsync: createAuctionTransaction,
-		data: createAuctionTransactionXDR,
-	} = useCreateAuctionTransaction();
-	const {
-		mutateAsync: submitCreateAuctionTransaction,
-		isPending: isSubmittingCreateAuctionTransaction,
-	} = useSubmitCreateAuctionTransaction();
+	const { mutateAsync: createAuctionTransaction } =
+		useCreateAuctionTransaction();
+	const { mutateAsync: submitCreateAuctionTransaction } =
+		useSubmitCreateAuctionTransaction();
 
-	const handleMintPlayer = async (playerId: string) => {
+	const [isMintPlayerPending, setIsMintPlayerPending] = useState(false);
+	const [isCreateAuctionPending, setIsCreateAuctionPending] = useState(false);
+
+	const handleDeployPlayerSac = async (playerId: string) => {
 		const mintResponse = await getPlayerSacTransaction(playerId);
 		if (mintResponse?.data?.attributes?.xdr) {
 			const signedXDR = await handleSignTransactionXDR(
@@ -62,6 +63,73 @@ export default function TransferMarket() {
 
 	const handleCloseMintPlayerModal = () => {
 		setIsMintPlayerModalOpen(false);
+	};
+
+	const handleSubmitMintPlayer = async (values: IMintPlayerFormValues) => {
+		setIsMintPlayerPending(true);
+		if (!values.file) {
+			notificationService.error(PLAYER_REQUIRED_ERROR);
+			return;
+		}
+		const file = values.file[0];
+
+		const {
+			data: {
+				attributes: { xdr, ...mintPlayerData },
+			},
+		} = await playerService.mintPlayer({
+			file,
+			name: values.name,
+			description: values.description,
+		});
+
+		const signedTransactionXdr = await handleSignTransactionXDR(xdr);
+
+		if (signedTransactionXdr) {
+			submitMintPlayer({
+				xdr: signedTransactionXdr,
+				metadataCid: mintPlayerData.metadataCid,
+				imageCid: mintPlayerData.imageCid,
+				issuer: mintPlayerData.issuer,
+				name: values.name,
+				description: values.description,
+			});
+		}
+		setIsMintPlayerPending(false);
+	};
+
+	const handleSubmitAuction = async (
+		values: ICreateAuctionFormValues,
+		playerId: string,
+	) => {
+		setIsCreateAuctionPending(true);
+		const { startingPrice, auctionTimeInHours } = values;
+
+		try {
+			const {
+				data: {
+					attributes: { xdr },
+					id: auctionId,
+				},
+			} = await createAuctionTransaction({
+				playerId,
+				startingPrice: convertPriceToStroops(startingPrice),
+				auctionTimeMs: convertTimeToSeconds(auctionTimeInHours),
+			});
+			const signedXDR = await handleSignTransactionXDR(xdr);
+
+			if (signedXDR) {
+				await submitCreateAuctionTransaction({
+					externalId: Number(auctionId),
+					playerId: Number(playerId),
+					xdr: signedXDR,
+				});
+			}
+		} catch {
+			notificationService.error(CREATE_AUCTION_TRANSACTION_ERROR_MESSAGE);
+		} finally {
+			setIsCreateAuctionPending(false);
+		}
 	};
 
 	return (
@@ -95,12 +163,9 @@ export default function TransferMarket() {
 			<MintPlayerModal
 				isOpen={isMintPlayerModalOpen}
 				onHide={handleCloseMintPlayerModal}
-				mintPlayer={mintPlayer}
+				mintPlayer={handleSubmitMintPlayer}
 				isMintPlayerPending={isMintPlayerPending}
-				mintPlayerData={mintPlayerData}
-				submitMintPlayer={submitMintPlayer}
 				isSubmitMintPlayerPending={isSubmitMintPlayerPending}
-				handleSignTransactionXDR={handleSignTransactionXDR}
 			/>
 
 			{isLoading ? (
@@ -108,15 +173,10 @@ export default function TransferMarket() {
 			) : (
 				<PlayerList
 					players={players as IListResponse<IPlayer>}
-					createAuctionTransaction={createAuctionTransaction}
-					submitCreateAuctionTransaction={submitCreateAuctionTransaction}
-					handleSignTransactionXDR={handleSignTransactionXDR}
-					createAuctionTransactionXDR={createAuctionTransactionXDR}
+					submitCreateAuctionTransaction={handleSubmitAuction}
 					auctions={auctions}
-					isSubmittingCreateAuctionTransaction={
-						isSubmittingCreateAuctionTransaction
-					}
-					onMintPlayer={handleMintPlayer}
+					isSubmittingCreateAuctionTransaction={isCreateAuctionPending}
+					onMintPlayer={handleDeployPlayerSac}
 				/>
 			)}
 		</>
