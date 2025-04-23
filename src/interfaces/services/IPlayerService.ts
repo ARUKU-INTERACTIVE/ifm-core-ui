@@ -26,4 +26,5 @@ export interface IPlayerService {
 		playerId: string,
 		transactionXDR: string,
 	): Promise<ISingleResponse<IPlayer>>;
+	syncPlayers(): Promise<void>;
 }
