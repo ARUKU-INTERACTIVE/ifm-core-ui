@@ -34,21 +34,6 @@ class TeamService implements ITeamService {
 			throw new Error(err.message);
 		}
 	}
-
-	async updateTeamById(
-		teamId: string,
-		updateTeamParams: Partial<ICreateTeamParams>,
-	): Promise<ISingleResponse<ITeam>> {
-		try {
-			return await this.api.put<ISingleResponse<ITeam>>(
-				`/team/${teamId}`,
-				updateTeamParams,
-			);
-		} catch (error) {
-			const err = error as Error;
-			throw new Error(err.message);
-		}
-	}
 }
 
 export const teamService = new TeamService(apiService);
