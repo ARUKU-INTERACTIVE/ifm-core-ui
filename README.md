@@ -25,9 +25,13 @@ Web App using React + Vite.
 2. `npm run dev:prepare` to copy contents of `.env.dist` into a `.env` file and populate it. Ensure that environment variables have the prefix `VITE_`.
 
 # Environment Variables
-* PORT: Port on which the Vite development server will run.
-* API_URL: API base URL.
-* SIMPLE_SIGNER_URL: Simple Signer service URL. 
+
+- PORT: Port on which the Vite development server will run.
+- API_URL: API base URL.
+- SIMPLE_SIGNER_URL: Simple Signer service URL.
+- STELLAR_HORIZON_URL: Horizon's server URL.
+- STELLAR_NETWORK_PASSPHRASE: Stellar Network's security passphrase.
+- STELLAR_DEFAULT_PLAYER_CODE: Default asset code for Player.
 
 # How to run
 
