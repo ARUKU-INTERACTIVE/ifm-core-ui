@@ -90,7 +90,7 @@ const CreateTeamForm = ({
 									isLoading ? 'opacity-50' : ''
 								}`}
 								type="submit"
-								data-test="submit-bid-btn"
+								data-test="submit-create-team-btn"
 								disabled={isLoading}
 							>
 								{isLoading ? (
