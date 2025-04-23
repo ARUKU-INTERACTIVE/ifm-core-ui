@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import PlayerCard from '../transfer-market/components/PlayerCard';
 import CreateTeamModal from './components/CreateTeamModal';
 
 import Loading from '@/components/ui/Loading';
@@ -87,7 +88,7 @@ export default function Team() {
 				/>
 				<h1
 					className="text-3xl font-bold underline text-center"
-					data-test="home-msg"
+					data-test="team-home-msg"
 				>
 					You don't have a team yet
 				</h1>
@@ -95,7 +96,7 @@ export default function Team() {
 					className={`bg-blue-500 text-white p-2 my-3 rounded-md h-10 ${
 						isLoading ? 'opacity-50' : ''
 					}`}
-					data-test="enable-auction-btn"
+					data-test="create-team-btn"
 					disabled={isLoading || isCreateTeamModalOpen}
 					onClick={() => setIsCreateTeamModalOpen(true)}
 				>
@@ -121,17 +122,15 @@ export default function Team() {
 				</h2>
 			</div>
 
-			<div className="flex w-full flex-col items-start">
+			<div className="flex w-full flex-col items-start p-4">
 				<h2 className="text-3xl font-bold text-center">Players: </h2>
 				{teamPlayers?.length ? (
 					teamPlayers.map((player) => (
 						<div
 							key={player.id}
-							className="flex items-center justify-between w-full"
+							className="flex items-center justify-between w-full pt-3"
 						>
-							<div className="flex items-center">
-								<span className="font-semibold">{player.name}</span>
-							</div>
+							<PlayerCard player={player} isInTeam={true} />
 						</div>
 					))
 				) : (
