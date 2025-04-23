@@ -11,8 +11,8 @@ import ResendConfirmationCode from '@/pages/auth/ResendConfirmationCode';
 import SignIn from '@/pages/auth/SignIn';
 import SignOut from '@/pages/auth/SignOut';
 import SignUp from '@/pages/auth/SignUp';
-import Users from '@/pages/example-users/Users';
 import Home from '@/pages/home/Home';
+import Team from '@/pages/team/Team';
 import TransferMarket from '@/pages/transfer-market/TransferMarket';
 
 export const authRoutes: RouteObject[] = [
@@ -63,6 +63,10 @@ export const privateRoutes: RouteObject[] = [
 				path: '/auctions',
 				element: <Auctions />,
 			},
+			{
+				path: '/team',
+				element: <Team />,
+			},
 		],
 	},
 ];
@@ -72,10 +76,6 @@ export const publicRoutes: RouteObject[] = [
 		index: true,
 		path: '/',
 		element: <Home />,
-	},
-	{
-		path: '/users',
-		element: <Users />,
 	},
 	{
 		path: '/auth/sign-out',

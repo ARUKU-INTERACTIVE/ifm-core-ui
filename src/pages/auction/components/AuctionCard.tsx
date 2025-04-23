@@ -2,6 +2,8 @@ import { useState } from 'react';
 
 import CreateBidModal from './CreateBidModal';
 
+import Loading from '@/components/ui/Loading';
+import { IGetClaimTransactionParams } from '@/interfaces/auction/IGetClaimTransaction';
 import { IGetPlaceBidTransactionParams } from '@/interfaces/auction/IGetPlaceBidTransaction';
 
 interface IAuctionCardProps {
@@ -11,11 +13,22 @@ interface IAuctionCardProps {
 	isGetPlaceBidTransactionPending: boolean;
 	handleSubmitBid: (
 		getPlaceBidTransactionParams: IGetPlaceBidTransactionParams,
+		accountAddress: string,
+		tokenIssuer: string,
 	) => Promise<void>;
 	auctionId: string;
 	isSubmitPlaceBidTransactionPending: boolean;
 	publicKey: string;
 	highestBidderAddress: string;
+	ownerAddress: string;
+	isAuctionEnded: boolean;
+	handleSubmitClaim: (
+		getClaimTransactionParams: IGetClaimTransactionParams,
+	) => Promise<void>;
+	isStellarLoading: boolean;
+	playerIssuer: string;
+	isGetClaimTransactionPending: boolean;
+	isSubmitClaimTransactionPending: boolean;
 }
 
 const AuctionCard = ({
@@ -28,9 +41,21 @@ const AuctionCard = ({
 	isSubmitPlaceBidTransactionPending,
 	publicKey,
 	highestBidderAddress,
+	ownerAddress,
+	isAuctionEnded,
+	handleSubmitClaim,
+	isStellarLoading,
+	playerIssuer,
+	isGetClaimTransactionPending,
+	isSubmitClaimTransactionPending,
 }: IAuctionCardProps) => {
 	const [isCreateBidModalOpen, setIsCreateBidModalOpen] =
 		useState<boolean>(false);
+	const isLoading =
+		isGetClaimTransactionPending || isSubmitClaimTransactionPending;
+	const auctionStatus = highestBidderAddress
+		? 'Claim Rewards'
+		: 'Cancel Auction';
 
 	return (
 		<div
@@ -48,7 +73,9 @@ const AuctionCard = ({
 						</span>{' '}
 						<br />
 						<span className="font-bold text-red-600">
-							Auction time left: {timeLeft} hours{' '}
+							{isAuctionEnded
+								? 'The auction has ended'
+								: `Auction time left: ${timeLeft} hours`}
 						</span>
 					</p>
 				</div>
@@ -67,12 +94,28 @@ const AuctionCard = ({
 			</div>
 
 			<div className="flex justify-center items-center w-full">
-				<button
-					className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded m-3 w-full"
-					onClick={() => setIsCreateBidModalOpen(true)}
-				>
-					Create a Bid
-				</button>
+				{(publicKey === ownerAddress || publicKey === highestBidderAddress) &&
+				isAuctionEnded ? (
+					<button
+						className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-3 w-full"
+						onClick={() => handleSubmitClaim({ auctionId: Number(auctionId) })}
+					>
+						{isLoading ? (
+							<div className="flex justify-center items-center h-[30px]">
+								<Loading />
+							</div>
+						) : (
+							auctionStatus
+						)}
+					</button>
+				) : (
+					<button
+						className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded m-3 w-full"
+						onClick={() => setIsCreateBidModalOpen(true)}
+					>
+						Create a Bid
+					</button>
+				)}
 			</div>
 
 			<CreateBidModal
@@ -82,6 +125,9 @@ const AuctionCard = ({
 				handleSubmitBid={handleSubmitBid}
 				auctionId={auctionId}
 				isSubmitPlaceBidTransactionPending={isSubmitPlaceBidTransactionPending}
+				isStellarLoading={isStellarLoading}
+				publicKey={publicKey}
+				playerIssuer={playerIssuer}
 			/>
 		</div>
 	);

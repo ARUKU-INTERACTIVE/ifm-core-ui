@@ -12,12 +12,15 @@ export default function NavBar() {
 	return (
 		<div className="flex p-2 shadow-md justify-between items-center">
 			<div className="flex gap-4 items-center">
-				<Logo width={100} height={50} />
+				<Logo width={80} height={100} />
 				<Link to="/transfer-market" className="text-sm font-bold">
 					Transfer Market
 				</Link>
 				<Link to="/auctions" className="text-sm font-bold">
 					Auctions
+				</Link>
+				<Link to="/team" className="text-sm font-bold">
+					Team
 				</Link>
 			</div>
 			<Action connected={connected} />

@@ -1,51 +1,22 @@
-import { UseMutateAsyncFunction } from '@tanstack/react-query';
 import { Field, Form, Formik } from 'formik';
-import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { auctionPlayerSchema } from '@/components/player/schemas/auction-player.schema';
 import Loading from '@/components/ui/Loading';
-import { ISingleResponse } from '@/interfaces/api/IApiBaseResponse';
-import { ITransactionResponse } from '@/interfaces/api/ITransactionResponse';
-import { IAuction } from '@/interfaces/auction/IAuction';
-import { ICreateAuctionTransactionParams } from '@/interfaces/auction/ICreateAuctionTransaction';
-import { ISubmitCreateAuctionTransactionParams } from '@/interfaces/auction/ISubmitCreateAuction';
-import {
-	CREATE_AUCTION_TRANSACTION_ERROR_MESSAGE,
-	SUBMIT_CREATE_AUCTION_ERROR_MESSAGE,
-} from '@/interfaces/auction/auction-messages';
-import { notificationService } from '@/services/notification.service';
-import { convertPriceToStroops } from '@/utils/convertPriceToStroops';
-import { convertTimeToMs } from '@/utils/convertTimeToMs';
+import { ICreateAuctionFormValues } from '@/interfaces/auction/ICreateAuctionTransaction';
 
 interface IPlayerAuctionFormProps {
 	playerId: string;
-	createAuctionTransaction: UseMutateAsyncFunction<
-		ISingleResponse<ITransactionResponse>,
-		Error,
-		ICreateAuctionTransactionParams,
-		unknown
-	>;
-	submitCreateAuctionTransaction: UseMutateAsyncFunction<
-		ISingleResponse<IAuction>,
-		Error,
-		ISubmitCreateAuctionTransactionParams,
-		unknown
-	>;
-	handleSignTransactionXDR: (
-		transactionXDR: string,
-	) => Promise<string | undefined>;
-	createAuctionTransactionXDR:
-		| ISingleResponse<ITransactionResponse>
-		| undefined;
+	submitCreateAuctionTransaction: (
+		values: ICreateAuctionFormValues,
+		playerId: string,
+	) => Promise<void>;
 	onHide: () => void;
 	isSubmittingCreateAuctionTransaction: boolean;
 }
+
 const PlayerAuctionForm = ({
 	playerId,
-	createAuctionTransaction,
 	submitCreateAuctionTransaction,
-	handleSignTransactionXDR,
-	createAuctionTransactionXDR,
 	onHide,
 	isSubmittingCreateAuctionTransaction,
 }: IPlayerAuctionFormProps) => {
@@ -53,68 +24,10 @@ const PlayerAuctionForm = ({
 		startingPrice: 0,
 		auctionTimeInHours: 0,
 	};
-	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const processedXdrRef = useRef<string | null>(null);
-
-	const handleSubmitCreateAuction = useCallback(async () => {
-		if (createAuctionTransactionXDR?.data.attributes.xdr) {
-			const currentXDR = createAuctionTransactionXDR.data.attributes.xdr;
-			if (processedXdrRef.current === currentXDR) {
-				return;
-			}
-
-			const signedTransactionXDR = await handleSignTransactionXDR(currentXDR);
-
-			if (signedTransactionXDR) {
-				processedXdrRef.current = currentXDR;
-
-				try {
-					await submitCreateAuctionTransaction({
-						externalId: Number(createAuctionTransactionXDR?.data.id),
-						playerId: Number(playerId),
-						xdr: signedTransactionXDR,
-					});
-				} catch (error) {
-					notificationService.error(SUBMIT_CREATE_AUCTION_ERROR_MESSAGE);
-				} finally {
-					setIsLoading(false);
-				}
-			}
-		}
-	}, [
-		handleSignTransactionXDR,
-		submitCreateAuctionTransaction,
-		createAuctionTransactionXDR,
-		playerId,
-	]);
-
-	useEffect(() => {
-		if (createAuctionTransactionXDR?.data.attributes.xdr) {
-			handleSubmitCreateAuction();
-		}
-	}, [createAuctionTransactionXDR, handleSubmitCreateAuction]);
-
-	const handleSubmitAuction = async (values: typeof initialValues) => {
-		setIsLoading(true);
-		const { startingPrice, auctionTimeInHours } = values;
-
-		try {
-			await createAuctionTransaction({
-				playerId: playerId,
-				startingPrice: convertPriceToStroops(startingPrice),
-				auctionTimeMs: convertTimeToMs(auctionTimeInHours),
-			});
-		} catch (error) {
-			notificationService.error(CREATE_AUCTION_TRANSACTION_ERROR_MESSAGE);
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
 	return (
 		<Formik
 			initialValues={initialValues}
-			onSubmit={handleSubmitAuction}
+			onSubmit={(values) => submitCreateAuctionTransaction(values, playerId)}
 			validationSchema={auctionPlayerSchema}
 		>
 			{({ errors, touched }) => (
@@ -177,15 +90,13 @@ const PlayerAuctionForm = ({
 
 							<button
 								className={`bg-blue-500 text-white p-2 my-3 rounded-md w-full h-10 ${
-									isLoading || isSubmittingCreateAuctionTransaction
-										? 'opacity-50'
-										: ''
+									isSubmittingCreateAuctionTransaction ? 'opacity-50' : ''
 								}`}
 								type="submit"
 								data-test="submit-auction-btn"
-								disabled={isLoading || isSubmittingCreateAuctionTransaction}
+								disabled={isSubmittingCreateAuctionTransaction}
 							>
-								{isLoading || isSubmittingCreateAuctionTransaction ? (
+								{isSubmittingCreateAuctionTransaction ? (
 									<div className="flex justify-center items-center h-full">
 										<Loading />
 									</div>

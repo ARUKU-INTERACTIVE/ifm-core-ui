@@ -1,0 +1,84 @@
+{
+	"data": [
+		{
+			"type": "auction",
+			"id": "1",
+			"attributes": {
+				"uuid": "550e8400-e29b-41d4-a716-446655440001",
+				"externalId": 2,
+				"highestBidAmount": 1000,
+				"endTime": 1711472400000,
+				"startTime": 1711468800000,
+				"status": "Open",
+				"highestBidderAddress": "GBXGQJWVLWOYHFLVTKWV5FGHA3LNYY2JQKM7OAJAUEQFU6LPCSEFVXON",
+				"playerAddress": "address_2",
+				"createdAt": "2024-03-19T15:30:00Z",
+				"updatedAt": "2024-03-19T15:30:00Z",
+				"deletedAt": null
+			}
+		},
+		{
+			"type": "auction",
+			"id": "2",
+			"attributes": {
+				"uuid": "550e8400-e29b-41d4-a716-446655440002",
+				"externalId": 3,
+				"highestBidAmount": 1500,
+				"endTime": 1711472400,
+				"startTime": 1711468800,
+				"status": "Open",
+				"highestBidderAddress": "GBXGQJWVLWOYHFLVTKWV5FGHA3LNYY2JQKM7OAJAUEQFU6LPCSEFVXON",
+				"playerAddress": "address_2",
+				"createdAt": "2024-03-19T15:30:00Z",
+				"updatedAt": "2024-03-19T15:30:00Z",
+				"deletedAt": null
+			}
+		},
+		{
+			"type": "auction",
+			"id": "3",
+			"attributes": {
+				"uuid": "550e8400-e29b-41d4-a716-446655440003",
+				"externalId": 4,
+				"highestBidAmount": 2500,
+				"endTime": 1745268398,
+				"startTime": 1745268598,
+				"status": "Open",
+				"highestBidderAddress": "GBXGQJWVLWOYHFLVTKWV5FGHA3LNYY2JQKM7OAJAUEQFU6LPCSEFVXON",
+				"playerAddress": "address_3",
+				"createdAt": "2024-03-19T15:30:00Z",
+				"updatedAt": "2024-03-19T15:30:00Z",
+				"deletedAt": null
+			}
+		},
+		{
+			"type": "auction",
+			"id": "4",
+			"attributes": {
+				"uuid": "550e8400-e29b-41d4-a716-446655440004",
+				"externalId": 5,
+				"highestBidAmount": 3000,
+				"endTime": 1745268398,
+				"startTime": 1745268598,
+				"status": "Open",
+				"highestBidderAddress": "GCIFA5TO3C43J24C46MKPZEELRPOG3WKPUCTZX3JRLNG2IPHAECRXUY5",
+				"playerAddress": "address_3",
+				"createdAt": "2024-03-19T15:30:00Z",
+				"updatedAt": "2024-03-19T15:30:00Z",
+				"deletedAt": null
+			}
+		}
+	],
+	"links": {
+		"self": "https://example.com/api/auctions",
+		"last": "https://example.com/api/auctions?page=2",
+		"next": null
+	},
+	"meta": {
+		"pageNumber": 1,
+		"pageSize": 10,
+		"pageCount": 1,
+		"itemCount": 2
+	},
+	"included": []
+}

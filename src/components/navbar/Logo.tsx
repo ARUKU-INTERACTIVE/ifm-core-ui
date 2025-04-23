@@ -1,21 +1,16 @@
 import { Link } from 'react-router-dom';
 
-import biggerSvg from '../../assets/bigger.svg';
+import logo from '../../assets/ifm.png';
 
-type PropTypes = {
+interface ILogoProps {
 	width: number;
 	height: number;
-};
-export default function Logo({ width, height }: PropTypes) {
+}
+
+export default function Logo({ width, height }: ILogoProps) {
 	return (
 		<Link to="/">
-			<img
-				className={`bg-black p-2`}
-				src={biggerSvg}
-				width={width}
-				height={height}
-				alt="Bigger Logo"
-			/>
+			<img src={logo} width={width} height={height} alt="IFM Logo" />
 		</Link>
 	);
 }

@@ -11,14 +11,15 @@ export interface IAuction {
 	status: AuctionStatus;
 	highestBidderAddress: string;
 	playerAddress: string;
+	ownerAddress: string;
 	createdAt: string;
 	updatedAt: string;
 	deletedAt?: string;
 }
 
-enum AuctionStatus {
-	Open,
-	Cancelled,
-	Completed,
-	NFTTransferred,
+export enum AuctionStatus {
+	Open = 'Open',
+	Cancelled = 'Cancelled',
+	Completed = 'Completed',
+	NFTTransferred = 'NFTTransferred',
 }

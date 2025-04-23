@@ -1,33 +1,14 @@
-import { UseMutateAsyncFunction } from '@tanstack/react-query';
-
 import PlayerAuctionForm from './PlayerAuctionForm';
 
-import { ISingleResponse } from '@/interfaces/api/IApiBaseResponse';
-import { ITransactionResponse } from '@/interfaces/api/ITransactionResponse';
-import { IAuction } from '@/interfaces/auction/IAuction';
-import { ICreateAuctionTransactionParams } from '@/interfaces/auction/ICreateAuctionTransaction';
-import { ISubmitCreateAuctionTransactionParams } from '@/interfaces/auction/ISubmitCreateAuction';
+import { ICreateAuctionFormValues } from '@/interfaces/auction/ICreateAuctionTransaction';
 
 interface ICreateAuctionModalProps {
 	playerId: string;
-	createAuctionTransaction: UseMutateAsyncFunction<
-		ISingleResponse<ITransactionResponse>,
-		Error,
-		ICreateAuctionTransactionParams,
-		unknown
-	>;
-	submitCreateAuctionTransaction: UseMutateAsyncFunction<
-		ISingleResponse<IAuction>,
-		Error,
-		ISubmitCreateAuctionTransactionParams,
-		unknown
-	>;
-	handleSignTransactionXDR: (
-		transactionXDR: string,
-	) => Promise<string | undefined>;
-	createAuctionTransactionXDR:
-		| ISingleResponse<ITransactionResponse>
-		| undefined;
+
+	submitCreateAuctionTransaction: (
+		values: ICreateAuctionFormValues,
+		playerId: string,
+	) => Promise<void>;
 	isOpen: boolean;
 	onHide: () => void;
 	isSubmittingCreateAuctionTransaction: boolean;
@@ -35,10 +16,7 @@ interface ICreateAuctionModalProps {
 
 const CreateAuctionModal = ({
 	playerId,
-	createAuctionTransaction,
 	submitCreateAuctionTransaction,
-	handleSignTransactionXDR,
-	createAuctionTransactionXDR,
 	isOpen,
 	onHide,
 	isSubmittingCreateAuctionTransaction,
@@ -55,10 +33,7 @@ const CreateAuctionModal = ({
 				</h6>
 				<PlayerAuctionForm
 					playerId={playerId}
-					createAuctionTransaction={createAuctionTransaction}
 					submitCreateAuctionTransaction={submitCreateAuctionTransaction}
-					handleSignTransactionXDR={handleSignTransactionXDR}
-					createAuctionTransactionXDR={createAuctionTransactionXDR}
 					onHide={onHide}
 					isSubmittingCreateAuctionTransaction={
 						isSubmittingCreateAuctionTransaction
