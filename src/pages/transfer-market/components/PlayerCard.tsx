@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Tooltip } from 'react-tooltip';
 
 import CreateAuctionModal from './CreateAuctionModal';
+import { RosterOperationButton } from './RosterOperationButton';
 
 import { DescriptionIcon } from '@/components/icon/DescriptionIcon';
 import { SUBMIT_MINT_PLAYER_SAC_ERROR_MESSAGE } from '@/components/player/player-messages';
@@ -23,15 +24,21 @@ interface IPlayerCardProps {
 	readonly isSubmittingCreateAuctionTransaction?: boolean;
 	readonly onMintPlayer?: (playerId: string) => Promise<void>;
 	readonly isInTeam?: boolean;
+	readonly addPlayerToRoster?: (playerId: number) => Promise<void>;
+	readonly removePlayerFromRoster?: (playerId: number) => Promise<void>;
+	readonly isLoadingOperation: boolean;
 }
 
 export default function PlayerCard({
-	player: { id, name, address, imageUri, description },
+	player: { id, name, address, imageUri, description, rosterId },
 	submitCreateAuctionTransaction,
 	auctions,
 	isSubmittingCreateAuctionTransaction,
 	onMintPlayer,
 	isInTeam,
+	addPlayerToRoster,
+	removePlayerFromRoster,
+	isLoadingOperation = false,
 }: IPlayerCardProps) {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [isImageLoaded, setIsImageLoaded] = useState<boolean>(false);
@@ -114,7 +121,7 @@ export default function PlayerCard({
 
 	return (
 		<div
-			className="max-w-[200px] w-full rounded-xl border-[1px] border-gray-300 overflow-hidden shadow-lg p-2 pb-0"
+			className="w-[200px] rounded-xl border-[1px] border-gray-300 overflow-hidden shadow-lg p-2 pb-0"
 			data-test="card"
 		>
 			<div className="w-full h-48 bg-gray-200 relative z-0">
@@ -167,7 +174,25 @@ export default function PlayerCard({
 				) : (
 					renderButton()
 				))}
+			{addPlayerToRoster && !rosterId && (
+				<RosterOperationButton
+					label="Add to Roster"
+					onClick={() => addPlayerToRoster(Number(id))}
+					isLoading={isLoadingOperation}
+					disabled={isLoadingOperation}
+					type="add"
+				/>
+			)}
 
+			{removePlayerFromRoster && rosterId && (
+				<RosterOperationButton
+					label="Remove from Roster"
+					onClick={() => removePlayerFromRoster(Number(id))}
+					isLoading={isLoadingOperation}
+					disabled={isLoadingOperation}
+					type="remove"
+				/>
+			)}
 			<CreateAuctionModal
 				playerId={id}
 				submitCreateAuctionTransaction={handleSubmitCreateAuction}
