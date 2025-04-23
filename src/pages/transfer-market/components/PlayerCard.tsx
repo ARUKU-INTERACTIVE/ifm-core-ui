@@ -15,24 +15,23 @@ import { getAuctionTimeLeft } from '@/utils/getAuctionTimeLeft';
 
 interface IPlayerCardProps {
 	readonly player: IPlayer;
-
-	readonly submitCreateAuctionTransaction: (
+	readonly submitCreateAuctionTransaction?: (
 		values: ICreateAuctionFormValues,
 		playerId: string,
 	) => Promise<void>;
-
-	readonly auctions: IListResponse<IAuction> | undefined;
-	readonly isSubmittingCreateAuctionTransaction: boolean;
-	readonly onMintPlayer: (playerId: string) => Promise<void>;
+	readonly auctions?: IListResponse<IAuction>;
+	readonly isSubmittingCreateAuctionTransaction?: boolean;
+	readonly onMintPlayer?: (playerId: string) => Promise<void>;
+	readonly isInTeam?: boolean;
 }
 
 export default function PlayerCard({
 	player: { id, name, address, imageUri, description },
 	submitCreateAuctionTransaction,
-
 	auctions,
 	isSubmittingCreateAuctionTransaction,
 	onMintPlayer,
+	isInTeam,
 }: IPlayerCardProps) {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [isImageLoaded, setIsImageLoaded] = useState<boolean>(false);
@@ -67,7 +66,7 @@ export default function PlayerCard({
 	const handleSubmitAddSac = async () => {
 		try {
 			setIsLoading(true);
-			await onMintPlayer(id);
+			await onMintPlayer?.(id);
 		} catch {
 			notificationService.error(SUBMIT_MINT_PLAYER_SAC_ERROR_MESSAGE);
 		} finally {
@@ -78,7 +77,7 @@ export default function PlayerCard({
 		values: ICreateAuctionFormValues,
 		playerId: string,
 	) => {
-		await submitCreateAuctionTransaction(values, playerId);
+		await submitCreateAuctionTransaction?.(values, playerId);
 		setIsOpenCreateAuctionModal(false);
 	};
 
@@ -154,19 +153,20 @@ export default function PlayerCard({
 				</div>
 			</div>
 
-			{auctionTimeLeft > 0 ? (
-				<div
-					className="pb-2 font-bold text-center"
-					data-test="auction-time-left"
-				>
-					<p className="text-red-500 text-sm">Auction Time Left:</p>
-					<p className="text-red-600 text-md" data-test="auction-time-left">
-						{auctionTimeLeft} {auctionTimeLeft === 1 ? 'hour' : 'hours'}
-					</p>
-				</div>
-			) : (
-				renderButton()
-			)}
+			{!isInTeam &&
+				(auctionTimeLeft > 0 ? (
+					<div
+						className="pb-2 font-bold text-center"
+						data-test="auction-time-left"
+					>
+						<p className="text-red-500 text-sm">Auction Time Left:</p>
+						<p className="text-red-600 text-md" data-test="auction-time-left">
+							{auctionTimeLeft} {auctionTimeLeft === 1 ? 'hour' : 'hours'}
+						</p>
+					</div>
+				) : (
+					renderButton()
+				))}
 
 			<CreateAuctionModal
 				playerId={id}
@@ -174,7 +174,7 @@ export default function PlayerCard({
 				isOpen={isOpenCreateAuctionModal}
 				onHide={() => setIsOpenCreateAuctionModal(false)}
 				isSubmittingCreateAuctionTransaction={
-					isSubmittingCreateAuctionTransaction
+					isSubmittingCreateAuctionTransaction as boolean
 				}
 			/>
 		</div>
