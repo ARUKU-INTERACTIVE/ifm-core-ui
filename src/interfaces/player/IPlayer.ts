@@ -17,4 +17,5 @@ export interface IPlayer {
 	isInAuction?: boolean;
 	auctions?: IAuction[];
 	address?: string;
+	rosterId?: number;
 }
