@@ -1,0 +1,15 @@
+{
+	"data": {
+		"type": "team",
+		"id": "1",
+		"attributes": {
+			"uuid": "550e8400-e29b-41d4-a716-446655440000",
+			"name": "Team One",
+			"logoUri": "https://example.com/logo1.png",
+			"rosterId": 1,
+			"createdAt": "2024-03-20T10:00:00Z",
+			"updatedAt": "2024-03-20T10:00:00Z",
+			"deletedAt": null
+		}
+	}
+}

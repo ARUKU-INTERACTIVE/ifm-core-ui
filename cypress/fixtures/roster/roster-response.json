@@ -1,0 +1,14 @@
+{
+	"data": {
+		"type": "roster",
+		"id": "1",
+		"attributes": {
+			"uuid": "550e8400-e29b-41d4-a716-446655440000",
+			"teamId": 1,
+			"players": [],
+			"createdAt": "2024-03-19T15:30:00Z",
+			"updatedAt": "2024-03-19T15:30:00Z",
+			"deletedAt": null
+		}
+	}
+}
