@@ -257,7 +257,7 @@ describe('Team Page', () => {
 		);
 
 		cy.interceptApi(
-			'/roster/add/roster/1/player/550e8400-e29b-41d4-a716-446655440001',
+			'/roster/1/player/550e8400-e29b-41d4-a716-446655440001',
 			{ method: 'PATCH' },
 			{ fixture: 'player/team-players-in-roster-response.json' },
 		);
@@ -316,7 +316,7 @@ describe('Team Page', () => {
 		);
 
 		cy.interceptApi(
-			'/roster/add/roster/1/player/550e8400-e29b-41d4-a716-446655440001',
+			'/roster/1/player/550e8400-e29b-41d4-a716-446655440001',
 			{ method: 'PATCH' },
 			{ statusCode: 500 },
 		);
@@ -360,8 +360,8 @@ describe('Team Page', () => {
 		);
 
 		cy.interceptApi(
-			'/roster/remove/roster/1/player/550e8400-e29b-41d4-a716-446655440001',
-			{ method: 'PATCH' },
+			'/roster/1/player/550e8400-e29b-41d4-a716-446655440001',
+			{ method: 'DELETE' },
 			{ fixture: 'player/team-players-in-roster-response.json' },
 		);
 		cy.interceptApi(
@@ -421,8 +421,8 @@ describe('Team Page', () => {
 		);
 
 		cy.interceptApi(
-			'/roster/remove/roster/1/player/550e8400-e29b-41d4-a716-446655440001',
-			{ method: 'PATCH' },
+			'/roster/1/player/550e8400-e29b-41d4-a716-446655440001',
+			{ method: 'DELETE' },
 			{ statusCode: 500 },
 		);
 
