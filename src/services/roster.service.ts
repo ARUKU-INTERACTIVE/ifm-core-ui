@@ -6,7 +6,7 @@ import { IRoster } from '@/interfaces/roster/IRoster';
 import { IApiService } from '@/interfaces/services/IApiService';
 import { IRosterService } from '@/interfaces/services/IRosterService';
 
-class RoosterService implements IRosterService {
+class RosterService implements IRosterService {
 	api: IApiService<ApiRequestConfig>;
 	constructor(api: IApiService<ApiRequestConfig>) {
 		this.api = api;
@@ -16,10 +16,7 @@ class RoosterService implements IRosterService {
 		playerId: string,
 		rosterId: string,
 	): Promise<ISingleResponse<IPlayer>> {
-		return await this.api.patch(
-			`/roster/add/roster/${rosterId}/player/${playerId}`,
-			{},
-		);
+		return await this.api.patch(`/roster/${rosterId}/player/${playerId}`, {});
 	}
 
 	async getAllPlayersFromRoster(
@@ -37,11 +34,8 @@ class RoosterService implements IRosterService {
 		playerId: string,
 		rosterId: string,
 	): Promise<ISingleResponse<IPlayer>> {
-		return await this.api.patch(
-			`/roster/remove/roster/${rosterId}/player/${playerId}`,
-			{},
-		);
+		return await this.api.delete(`/roster/${rosterId}/player/${playerId}`);
 	}
 }
 
-export const rosterService = new RoosterService(apiService);
+export const rosterService = new RosterService(apiService);
