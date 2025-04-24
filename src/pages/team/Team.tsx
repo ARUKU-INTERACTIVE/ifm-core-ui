@@ -112,11 +112,11 @@ export default function Team() {
 		}
 	};
 
-	const handleAddPlayerToRoster = async (playerId: number) => {
+	const handleAddPlayerToRoster = async (playerId: string) => {
 		try {
 			setIsLoadingRosterOperation(true);
 			if (team?.rosterId) {
-				await rosterService.addPlayerToRoster(playerId, team?.rosterId);
+				await rosterService.addPlayerToRoster(playerId, team.rosterId);
 				await handleGetRosterPlayers();
 				await handleGetTeamPlayers();
 			}
@@ -128,11 +128,11 @@ export default function Team() {
 		}
 	};
 
-	const handleRemovePlayerFromRoster = async (playerId: number) => {
+	const handleRemovePlayerFromRoster = async (playerId: string) => {
 		try {
 			setIsLoadingRosterOperation(true);
 			if (team?.rosterId) {
-				await rosterService.removePlayerFromRoster(playerId, team?.rosterId);
+				await rosterService.removePlayerFromRoster(playerId, team.rosterId);
 				await handleGetRosterPlayers();
 				await handleGetTeamPlayers();
 			}

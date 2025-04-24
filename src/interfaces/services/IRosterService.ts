@@ -4,12 +4,12 @@ import { IRoster } from '../roster/IRoster';
 
 export interface IRosterService {
 	addPlayerToRoster(
-		playerId: number,
+		playerId: string,
 		rosterId: string,
 	): Promise<ISingleResponse<IPlayer>>;
 	getAllPlayersFromRoster(rosterId: string): Promise<ISingleResponse<IRoster>>;
 	removePlayerFromRoster(
-		playerId: number,
+		playerId: string,
 		rosterId: string,
 	): Promise<ISingleResponse<IPlayer>>;
 }

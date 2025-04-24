@@ -13,13 +13,13 @@ class RoosterService implements IRosterService {
 	}
 
 	async addPlayerToRoster(
-		playerId: number,
+		playerId: string,
 		rosterId: string,
 	): Promise<ISingleResponse<IPlayer>> {
-		return await this.api.patch(`/player/add/roster`, {
-			playerId,
-			rosterId,
-		});
+		return await this.api.patch(
+			`/roster/add/roster/${rosterId}/player/${playerId}`,
+			{},
+		);
 	}
 
 	async getAllPlayersFromRoster(
@@ -34,13 +34,13 @@ class RoosterService implements IRosterService {
 	}
 
 	async removePlayerFromRoster(
-		playerId: number,
+		playerId: string,
 		rosterId: string,
 	): Promise<ISingleResponse<IPlayer>> {
-		return await this.api.patch(`/player/remove/roster`, {
-			playerId,
-			rosterId,
-		});
+		return await this.api.patch(
+			`/roster/remove/roster/${rosterId}/player/${playerId}`,
+			{},
+		);
 	}
 }
 

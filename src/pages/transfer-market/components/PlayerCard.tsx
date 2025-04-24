@@ -24,13 +24,13 @@ interface IPlayerCardProps {
 	readonly isSubmittingCreateAuctionTransaction?: boolean;
 	readonly onMintPlayer?: (playerId: string) => Promise<void>;
 	readonly isInTeam?: boolean;
-	readonly addPlayerToRoster?: (playerId: number) => Promise<void>;
-	readonly removePlayerFromRoster?: (playerId: number) => Promise<void>;
-	readonly isLoadingOperation: boolean;
+	readonly addPlayerToRoster?: (playerId: string) => Promise<void>;
+	readonly removePlayerFromRoster?: (playerId: string) => Promise<void>;
+	readonly isLoadingOperation?: boolean;
 }
 
 export default function PlayerCard({
-	player: { id, name, address, imageUri, description, rosterId },
+	player: { id, uuid, name, address, imageUri, description, rosterId },
 	submitCreateAuctionTransaction,
 	auctions,
 	isSubmittingCreateAuctionTransaction,
@@ -177,7 +177,7 @@ export default function PlayerCard({
 			{addPlayerToRoster && !rosterId && (
 				<RosterOperationButton
 					label="Add to Roster"
-					onClick={() => addPlayerToRoster(Number(id))}
+					onClick={() => addPlayerToRoster(uuid)}
 					isLoading={isLoadingOperation}
 					disabled={isLoadingOperation}
 					type="add"
@@ -187,7 +187,7 @@ export default function PlayerCard({
 			{removePlayerFromRoster && rosterId && (
 				<RosterOperationButton
 					label="Remove from Roster"
-					onClick={() => removePlayerFromRoster(Number(id))}
+					onClick={() => removePlayerFromRoster(uuid)}
 					isLoading={isLoadingOperation}
 					disabled={isLoadingOperation}
 					type="remove"
