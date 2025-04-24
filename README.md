@@ -2,6 +2,18 @@
 
 Web App using React + Vite.
 
+## Index
+
+- [Features](#features)
+- [Setup](#setup)
+- [Environment Variables](#environment-variables)
+- [How to Run](#how-to-run)
+- [Testing](#testing)
+- [Useful commands](#useful-commands)
+- [File structure for pages](#file-structure-for-pages)
+- [Issues](#issues)
+- [References](#references)
+
 # Features
 
 - React
@@ -24,14 +36,28 @@ Web App using React + Vite.
 1. `npm ci` to install dependencies.
 2. `npm run dev:prepare` to copy contents of `.env.dist` into a `.env` file and populate it. Ensure that environment variables have the prefix `VITE_`.
 
-# Environment Variables
+## Environment Variables
 
-- PORT: Port on which the Vite development server will run.
-- API_URL: API base URL.
-- SIMPLE_SIGNER_URL: Simple Signer service URL.
-- STELLAR_HORIZON_URL: Horizon's server URL.
-- STELLAR_NETWORK_PASSPHRASE: Stellar Network's security passphrase.
-- STELLAR_DEFAULT_PLAYER_CODE: Default asset code for Player.
+#### Application
+
+| Variable       | Description     |
+| -------------- | --------------- |
+| `PORT`         | UI port.        |
+| `VITE_API_URL` | API server url. |
+
+#### Simple Signer
+
+| Variable                 | Description        |
+| ------------------------ | ------------------ |
+| `VITE_SIMPLE_SIGNER_URL` | Simple Signer url. |
+
+#### Stellar
+
+| Variable                          | Description                             |
+| --------------------------------- | --------------------------------------- |
+| `VITE_STELLAR_HORIZON_URL`        | Stellar server url.                     |
+| `VITE_STELLAR_NETWORK_PASSPHRASE` | Stellar Network's security passphrase . |
+| `VITE_STELLAR_TOKEN_CODE`         | Default asset code for Player.          |
 
 # How to run
 
