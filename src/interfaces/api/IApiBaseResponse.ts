@@ -6,6 +6,12 @@ export interface ISingleResponse<T = unknown> extends IBaseResponse<T> {
 export interface IListResponse<T = unknown> extends IBaseResponse<T> {
 	data: IResponseData<T>[];
 	links: ILinks;
+	meta: {
+		pageNumber: number;
+		pageSize: number;
+		pageCount: number;
+		itemCount: number;
+	};
 }
 
 export interface IBaseResponse<T = unknown> {

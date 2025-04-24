@@ -1,0 +1,34 @@
+{
+	"data": {
+		"type": "roster",
+		"id": "1",
+		"attributes": {
+			"uuid": "550e8400-e29b-41d4-a716-446655440000",
+			"teamId": 1,
+			"players": [
+				{
+					"id": "2",
+					"name": "Player Two",
+					"uuid": "550e8400-e29b-41d4-a716-446655440001",
+					"metadataUri": "https://example.com/metadata/player2",
+					"issuer": "issuer_2",
+					"externalId": 1002,
+					"createdAt": "2024-03-19T15:30:00Z",
+					"updatedAt": "2024-03-19T15:30:00Z",
+					"isInAuction": false,
+					"owner": {
+						"id": "user_2",
+						"name": "Jane Smith",
+						"email": "jane@example.com"
+					},
+					"address": "address_2",
+					"teamId": 1,
+					"rosterId": 1
+				}
+			],
+			"createdAt": "2024-03-19T15:30:00Z",
+			"updatedAt": "2024-03-19T15:30:00Z",
+			"deletedAt": null
+		}
+	}
+}

@@ -92,7 +92,7 @@ describe('Auctions Page', () => {
 			{ fixture: 'user/my-user.json' },
 		);
 		cy.interceptApi(
-			'/player',
+			'/player?sort%5BcreatedAt%5D=ASC',
 			{ method: 'GET' },
 			{ fixture: 'auction/auction-page-players-response.json' },
 		);
@@ -109,7 +109,7 @@ describe('Auctions Page', () => {
 			{ fixture: 'auction/auctions-response.json' },
 		);
 		cy.interceptApi(
-			`/player?filter%5Bname%5D=${searchValue}`,
+			`/player?filter%5Bname%5D=${searchValue}&sort%5BcreatedAt%5D=ASC`,
 			{ method: 'GET' },
 			{ fixture: 'auction/search-auction-player-response.json' },
 		);
@@ -144,7 +144,7 @@ describe('Auctions Page', () => {
 			{ fixture: 'user/my-user.json' },
 		);
 		cy.interceptApi(
-			'/player',
+			'/player?sort%5BcreatedAt%5D=ASC',
 			{ method: 'GET' },
 			{ fixture: 'auction/auction-page-players-response.json' },
 		);
@@ -216,7 +216,7 @@ describe('Auctions Page', () => {
 			{ fixture: 'user/my-user.json' },
 		);
 		cy.interceptApi(
-			'/player',
+			'/player?sort%5BcreatedAt%5D=ASC',
 			{ method: 'GET' },
 			{ fixture: 'auction/auction-page-players-response.json' },
 		);
@@ -281,7 +281,7 @@ describe('Auctions Page', () => {
 			{ fixture: 'user/my-user.json' },
 		);
 		cy.interceptApi(
-			'/player',
+			'/player?sort%5BcreatedAt%5D=ASC',
 			{ method: 'GET' },
 			{ fixture: 'auction/auction-page-players-response.json' },
 		);
@@ -353,7 +353,7 @@ describe('Auctions Page', () => {
 			{ fixture: 'user/my-user.json' },
 		);
 		cy.interceptApi(
-			'/player',
+			'/player?sort%5BcreatedAt%5D=ASC',
 			{ method: 'GET' },
 			{ fixture: 'auction/auction-page-players-response.json' },
 		);

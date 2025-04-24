@@ -89,7 +89,7 @@ describe('Transfer Market', () => {
 
 	it('should render correctly', () => {
 		cy.interceptApi(
-			'/player',
+			'/player?sort%5BcreatedAt%5D=ASC',
 			{ method: 'GET' },
 			{ fixture: 'player/players-response.json' },
 		);
@@ -101,7 +101,7 @@ describe('Transfer Market', () => {
 	it('should search a player by its name', () => {
 		const searchValue = 'two';
 		cy.interceptApi(
-			`/player?filter%5Bname%5D=${searchValue}`,
+			`/player?filter%5Bname%5D=${searchValue}&sort%5BcreatedAt%5D=ASC`,
 			{ method: 'GET' },
 			{ fixture: 'player/player-response.json' },
 		);
@@ -117,7 +117,7 @@ describe('Transfer Market', () => {
 
 	it('should mint a player', () => {
 		cy.interceptApi(
-			'/player',
+			'/player?sort%5BcreatedAt%5D=ASC',
 			{ method: 'GET' },
 			{ fixture: 'player/players-response.json' },
 		);
@@ -174,7 +174,7 @@ describe('Transfer Market', () => {
 
 	it('should show an error if the player is not minted', () => {
 		cy.interceptApi(
-			'/player',
+			'/player?sort%5BcreatedAt%5D=ASC',
 			{ method: 'GET' },
 			{ fixture: 'player/players-response.json' },
 		);
@@ -228,7 +228,7 @@ describe('Transfer Market', () => {
 
 	it('should mint and submit a player sac', () => {
 		cy.interceptApi(
-			'/player',
+			'/player?sort%5BcreatedAt%5D=ASC',
 			{ method: 'GET' },
 			{ fixture: 'player/players-response.json' },
 		);
@@ -282,7 +282,7 @@ describe('Transfer Market', () => {
 
 	it('should show an error message if submit player sac fails', () => {
 		cy.interceptApi(
-			'/player',
+			'/player?sort%5BcreatedAt%5D=ASC',
 			{ method: 'GET' },
 			{ fixture: 'player/players-response.json' },
 		);
@@ -342,7 +342,7 @@ describe('Transfer Market', () => {
 
 	it('should create and submit an auction', () => {
 		cy.interceptApi(
-			'/player',
+			'/player?sort%5BcreatedAt%5D=ASC',
 			{ method: 'GET' },
 			{ fixture: 'player/players-response.json' },
 		).as('get-players');
@@ -440,7 +440,7 @@ describe('Transfer Market', () => {
 
 	it('should show an error message if create auction fails', () => {
 		cy.interceptApi(
-			'/player',
+			'/player?sort%5BcreatedAt%5D=ASC',
 			{ method: 'GET' },
 			{ fixture: 'player/players-response.json' },
 		);

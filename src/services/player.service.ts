@@ -24,6 +24,7 @@ class PlayerService implements IPlayerService {
 
 	async getAll({
 		filters,
+		page,
 	}: IGetAllConfig<IGetAllPlayersFilters>): Promise<IListResponse<IPlayer>> {
 		const queryParams = new URLSearchParams();
 
@@ -34,6 +35,13 @@ class PlayerService implements IPlayerService {
 				}
 			});
 		}
+
+		if (page) {
+			queryParams.append('page[number]', page.number.toString());
+			queryParams.append('page[size]', page.size.toString());
+		}
+
+		queryParams.append('sort[createdAt]', 'ASC');
 
 		return await this.api.get<IListResponse<IPlayer>>('/player', {
 			params: queryParams,
@@ -99,6 +107,10 @@ class PlayerService implements IPlayerService {
 			'/player/submit/mint',
 			submitMintPlayerParams,
 		);
+	}
+
+	async syncPlayers(): Promise<void> {
+		await this.api.patch<ISingleResponse<IPlayer>>('/player/sync/team', {});
 	}
 }
 

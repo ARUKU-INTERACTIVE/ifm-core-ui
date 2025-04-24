@@ -3,3 +3,7 @@ export const GET_TEAM_ERROR_MESSAGE =
 export const CREATE_TEAM_SUCCESS_MESSAGE = 'Team created successfully';
 export const CREATE_TEAM_ERROR_MESSAGE =
 	'An error occurred while creating the team. Please try again later.';
+export const ADD_PLAYER_TO_ROSTER_ERROR_MESSAGE =
+	'An error occurred while adding the player to the roster. Please try again later.';
+export const REMOVE_PLAYER_FROM_ROSTER_ERROR_MESSAGE =
+	'An error occurred while removing the player from the roster. Please try again later.';
