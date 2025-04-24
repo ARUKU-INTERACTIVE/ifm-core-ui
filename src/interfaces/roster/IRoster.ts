@@ -1,9 +1,6 @@
+import { IBaseEntity } from '../api/IBaseEntity';
 import { IPlayer } from '../player/IPlayer';
 
-export interface IRoster {
-	id: number;
-	uuid: string;
+export interface IRoster extends IBaseEntity {
 	players: IPlayer[];
-	createdAt: string;
-	updatedAt: string;
 }
