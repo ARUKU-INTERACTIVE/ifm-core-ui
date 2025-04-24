@@ -164,7 +164,7 @@ export default function Team() {
 		if (userData?.data.attributes.teamId) {
 			playerService.syncPlayers();
 		}
-	}, []);
+	}, [userData?.data.attributes.teamId]);
 
 	if (!userData?.data.attributes.teamId || !team) {
 		return (
