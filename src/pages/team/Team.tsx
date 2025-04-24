@@ -161,7 +161,9 @@ export default function Team() {
 	}, [handleGetRosterPlayers]);
 
 	useEffect(() => {
-		playerService.syncPlayers();
+		if (userData?.data.attributes.teamId) {
+			playerService.syncPlayers();
+		}
 	}, []);
 
 	if (!userData?.data.attributes.teamId || !team) {
