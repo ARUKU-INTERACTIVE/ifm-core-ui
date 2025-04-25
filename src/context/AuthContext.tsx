@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }: PropTypes) => {
 					cookieService.setRefreshTokenCookie(refreshToken);
 					apiService.setAuthentication(accessToken);
 					notificationService.success(SIGN_IN_SUCCESS_MESSAGE);
-					navigate('/about');
+					navigate('/team');
 				} catch (error: unknown) {
 					if (error instanceof Error) {
 						notificationService.error(error.message);
