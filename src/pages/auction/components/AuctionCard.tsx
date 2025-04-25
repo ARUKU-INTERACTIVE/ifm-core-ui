@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 import CreateBidModal from './CreateBidModal';
 
@@ -8,6 +8,9 @@ import { IGetPlaceBidTransactionParams } from '@/interfaces/auction/IGetPlaceBid
 
 interface IAuctionCardProps {
 	playerName: string;
+	playerImage: string;
+	isImageLoaded?: boolean;
+	setIsImageLoaded: Dispatch<SetStateAction<boolean>>;
 	highestBidAmount: string;
 	timeLeft: number;
 	isGetPlaceBidTransactionPending: boolean;
@@ -33,6 +36,9 @@ interface IAuctionCardProps {
 
 const AuctionCard = ({
 	playerName,
+	playerImage,
+	setIsImageLoaded,
+	isImageLoaded,
 	highestBidAmount,
 	timeLeft,
 	isGetPlaceBidTransactionPending,
@@ -59,10 +65,32 @@ const AuctionCard = ({
 
 	return (
 		<div
-			className="max-w-sm rounded overflow-hidden shadow-lg p-3 h-auto flex justify-between items-center flex-col"
+			className="w-[220px] rounded-xl border-[1px] border-gray-300 overflow-hidden shadow-lg p-2 pb-0"
 			data-test="auction-card"
 		>
 			<div>
+				<div className="w-full h-48 bg-gray-200 relative z-0 mb-2">
+					{playerImage && !isImageLoaded && (
+						<div className="w-full max-h-48 h-full absolute inset-0 animate-pulse bg-gray-400 rounded-lg" />
+					)}
+					{playerImage ? (
+						<img
+							src={playerImage}
+							alt="NFT Player"
+							loading="lazy"
+							onLoad={() => {
+								setIsImageLoaded(true);
+							}}
+							className={`w-full max-h-48 h-full object-cover rounded-lg transition-opacity duration-300 ${
+								isImageLoaded ? 'opacity-100' : 'opacity-0'
+							}`}
+						/>
+					) : (
+						<div className="w-full h-full bg-gray-600 flex justify-center rounded-lg items-center z-0">
+							<p className="text-white text-center">No image</p>
+						</div>
+					)}
+				</div>
 				<div className="text-center">
 					<div className="font-bold text-md mb-4">{playerName}</div>
 				</div>

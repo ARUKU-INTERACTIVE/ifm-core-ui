@@ -5,12 +5,13 @@ import { StoredCookies } from '@/interfaces/auth/cookies.enum';
 
 export default function AuthLayout() {
 	const [cookies] = useCookies([
-		StoredCookies.USERNAME,
+		StoredCookies.PUBLIC_KEY,
 		StoredCookies.REFRESH_TOKEN,
 	]);
 
 	const isAuthenticated =
-		!!cookies[StoredCookies.REFRESH_TOKEN] && !!cookies[StoredCookies.USERNAME];
+		!!cookies[StoredCookies.REFRESH_TOKEN] &&
+		!!cookies[StoredCookies.PUBLIC_KEY];
 
 	if (isAuthenticated) {
 		return <Navigate to="/" replace />;

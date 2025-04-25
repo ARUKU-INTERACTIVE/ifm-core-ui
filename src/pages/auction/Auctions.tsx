@@ -204,10 +204,12 @@ const Auctions = () => {
 	};
 
 	return (
-		<div className="text-xl font-bold text-center p-3">
-			<h1 data-test="auctions-title">Auctions</h1>
+		<div className="flex flex-col justify-center items-center pt-3 w-full text-center">
+			<h1 className="text-xl font-bold text-center" data-test="auctions-title">
+				Auctions
+			</h1>
 
-			<div className="flex justify-center items-center">
+			<div className="flex justify-center items-center w-full">
 				<input
 					type="text"
 					placeholder="Search..."

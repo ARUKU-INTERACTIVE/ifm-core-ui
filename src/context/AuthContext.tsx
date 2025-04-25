@@ -38,6 +38,7 @@ export const AuthProvider = ({ children }: PropTypes) => {
 
 					cookieService.setAccessTokenCookie(accessToken);
 					cookieService.setRefreshTokenCookie(refreshToken);
+					cookieService.setPublicKeyCookie(publicKey);
 					apiService.setAuthentication(accessToken);
 					notificationService.success(SIGN_IN_SUCCESS_MESSAGE);
 					navigate('/team');
@@ -67,18 +68,19 @@ export const AuthProvider = ({ children }: PropTypes) => {
 		async function refreshSession() {
 			setLoadingState('refreshSession', true);
 			try {
-				const username = cookieService.getCookie(StoredCookies.USERNAME) || '';
+				const publicKey =
+					cookieService.getCookie(StoredCookies.PUBLIC_KEY) || '';
 				const accessToken =
 					cookieService.getCookie(StoredCookies.ACCESS_TOKEN) || '';
 				const refreshToken =
 					cookieService.getCookie(StoredCookies.REFRESH_TOKEN) || '';
-				if (!username || !refreshToken) {
+				if (!publicKey || !refreshToken) {
 					throw new Error(SESSION_EXPIRED_ERROR);
 				}
 
 				if (!accessToken) {
 					const { data } = await authService.refreshToken(
-						username,
+						publicKey,
 						refreshToken,
 					);
 					cookieService.setAccessTokenCookie(accessToken);
