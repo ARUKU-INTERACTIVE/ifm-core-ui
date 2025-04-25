@@ -15,12 +15,15 @@ class CookieService<T extends ITokenPayload> implements ICookieService<T> {
 	constructor() {
 		this.cookies = new Cookies({ path: '/' });
 	}
-	setUsernameCookie(
+	setPublicKeyCookie(
 		username: string,
 		expiresIn = this.THIRTY_DAYS_IN_MILISECONDS,
 	) {
 		const expires = new Date(Date.now() + expiresIn);
-		this.cookies.set(StoredCookies.USERNAME, username, { expires, path: '/' });
+		this.cookies.set(StoredCookies.PUBLIC_KEY, username, {
+			expires,
+			path: '/',
+		});
 	}
 
 	setRefreshTokenCookie(
