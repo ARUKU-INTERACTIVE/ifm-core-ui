@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }: PropTypes) => {
 					cookieService.setPublicKeyCookie(publicKey);
 					apiService.setAuthentication(accessToken);
 					notificationService.success(SIGN_IN_SUCCESS_MESSAGE);
-					navigate('/team');
+					navigate('/');
 				} catch (error: unknown) {
 					if (error instanceof Error) {
 						notificationService.error(error.message);
