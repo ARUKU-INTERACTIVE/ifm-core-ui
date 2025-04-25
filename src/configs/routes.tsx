@@ -11,6 +11,7 @@ import ResendConfirmationCode from '@/pages/auth/ResendConfirmationCode';
 import SignIn from '@/pages/auth/SignIn';
 import SignOut from '@/pages/auth/SignOut';
 import SignUp from '@/pages/auth/SignUp';
+import Formation from '@/pages/formation/Formation';
 import Home from '@/pages/home/Home';
 import Team from '@/pages/team/Team';
 import TransferMarket from '@/pages/transfer-market/TransferMarket';
@@ -66,6 +67,10 @@ export const privateRoutes: RouteObject[] = [
 			{
 				path: '/team',
 				element: <Team />,
+			},
+			{
+				path: '/formation',
+				element: <Formation />,
 			},
 		],
 	},
