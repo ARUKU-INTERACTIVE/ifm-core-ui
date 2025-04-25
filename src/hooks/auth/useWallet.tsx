@@ -15,8 +15,7 @@ import { notificationService } from '@/services/notification.service';
 
 export function useWallet() {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const { handleConnectWallet, handleSignTransaction, publicKey } =
-		useSimpleSigner();
+	const { handleConnectWallet, handleSignTransaction } = useSimpleSigner();
 	const { handleSignIn } = useAuthProvider();
 
 	const connectWallet = async () => {
@@ -80,7 +79,6 @@ export function useWallet() {
 
 	return {
 		isLoading,
-		publicKey,
 		connectWallet,
 		handleSignInWithTransaction,
 		handleSignTransactionXDR,

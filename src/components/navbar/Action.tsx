@@ -3,23 +3,28 @@ import { useEffect } from 'react';
 import LoadingButton from '../ui/LoadingButton';
 import Button from './Button';
 
-import { useWallet } from '@/hooks/auth/useWallet';
+interface IActionProps {
+	connected: boolean;
+	publicKey?: string;
+	isLoading: boolean;
+	handleSignInWithTransaction: (publicKey: string) => void;
+	handleConnectWallet: () => void;
+}
 
-type PropTypes = {
-	readonly connected: boolean;
-};
-
-export default function Action({ connected }: PropTypes) {
-	const { isLoading, connectWallet, handleSignInWithTransaction, publicKey } =
-		useWallet();
-
+export default function Action({
+	connected,
+	publicKey,
+	isLoading,
+	handleConnectWallet,
+	handleSignInWithTransaction,
+}: IActionProps) {
 	useEffect(() => {
-		if (!publicKey) {
+		if (!publicKey || connected) {
 			return;
 		}
 
 		handleSignInWithTransaction(publicKey);
-	}, [publicKey, handleSignInWithTransaction]);
+	}, [publicKey, handleSignInWithTransaction, connected]);
 
 	if (connected) {
 		return (
@@ -32,7 +37,7 @@ export default function Action({ connected }: PropTypes) {
 	) : (
 		<button
 			className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-			onClick={() => connectWallet()}
+			onClick={() => handleConnectWallet()}
 			data-test="sign-in-btn"
 		>
 			Sign In

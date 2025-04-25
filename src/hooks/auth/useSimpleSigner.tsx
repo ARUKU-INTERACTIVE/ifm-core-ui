@@ -1,5 +1,5 @@
 import { Keypair } from '@stellar/stellar-sdk';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { connectWallet, signTransaction } from 'simple-stellar-signer-api';
 
 import { SIMPLE_SIGNER_URL } from '@/constants/environment';
@@ -7,16 +7,15 @@ import {
 	SIMPLE_SIGNER_CONNECT_ERROR,
 	SIMPLE_SIGNER_SIGN_ERROR,
 } from '@/context/auth-messages';
+import { cookieService } from '@/services/cookie.service';
 
 export const useSimpleSigner = () => {
-	const [publicKey, setPublicKey] = useState<string>('');
-
 	const handleConnectWallet = async () => {
 		try {
 			const { publicKey } = await connectWallet(SIMPLE_SIGNER_URL);
 
 			if (Keypair.fromPublicKey(publicKey)) {
-				setPublicKey(publicKey);
+				cookieService.setPublicKeyCookie(publicKey);
 			}
 		} catch (error) {
 			const err = error as Error;
@@ -49,7 +48,6 @@ export const useSimpleSigner = () => {
 	);
 
 	return {
-		publicKey,
 		handleConnectWallet,
 		handleSignTransaction,
 	};
