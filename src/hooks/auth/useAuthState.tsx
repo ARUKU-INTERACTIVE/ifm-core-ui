@@ -13,11 +13,6 @@ interface Action {
 
 const initialState: ILoadingState = {
 	signIn: false,
-	signUp: false,
-	forgotPassword: false,
-	resendConfirmationCode: false,
-	confirmUser: false,
-	confirmPassword: false,
 	refreshSession: false,
 };
 
