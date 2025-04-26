@@ -292,7 +292,10 @@ const Formation = () => {
 			/>
 
 			<div className="bg-white p-4 rounded-lg shadow-lg w-[512px]">
-				<div className="flex w-full flex-col items-start p-4">
+				<div
+					className="flex w-full flex-col items-start p-4"
+					data-test="formation-players-list"
+				>
 					<h2 className="text-3xl font-bold text-center pb-2">Players: </h2>
 					<FormationPlayersList
 						rosterPlayers={rosterPlayers}

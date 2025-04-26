@@ -17,6 +17,7 @@ const PlayerFormationCard = ({
 		<button
 			className="flex flex-row gap-2 bg-white rounded-md border-gray-500 border-solid border justify-start items-center w-full h-[50px] max-w-[250px] p-1"
 			onClick={handleClick}
+			data-test="player-formation-card"
 		>
 			<div className="w-10 h-10 rounded-full bg-gray-200 relative z-0">
 				{player.imageUri && !isImageLoaded && (
