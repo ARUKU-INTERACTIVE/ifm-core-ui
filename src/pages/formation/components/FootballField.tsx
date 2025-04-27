@@ -10,6 +10,29 @@ interface IFootballFieldProps {
 	) => void;
 	selectedSpot: IFormationSpot | null;
 }
+interface IGoalAreaProps {
+	isRight?: boolean;
+}
+const GoalArea = ({ isRight }: IGoalAreaProps) => {
+	return (
+		<div
+			className={`flex flex-row items-center justify-between border-4 border-l-0 w-20 h-32 border-white ${
+				isRight && 'transform rotate-180'
+			}`}
+		>
+			<div className="border-4 border-l-0 w-8 h-14 border-white" />
+			<div className="rounded-[0_100px_100px_0] border-4 border-l-0 w-8 h-14 border-white translate-x-8" />
+		</div>
+	);
+};
+
+const CenterSpot = () => {
+	return (
+		<div className="h-full w-1 bg-white flex justify-center items-center">
+			<div className="w-16 h-16 absolute rounded-full border-4 border-white" />
+		</div>
+	);
+};
 
 const FootballField = ({
 	players,
@@ -18,116 +41,88 @@ const FootballField = ({
 	selectedSpot,
 }: IFootballFieldProps) => {
 	return (
-		<div
-			className="relative w-full max-w-lg h-64 bg-green-700 border-4 border-white"
-			data-test="football-field"
-		>
-			{/* Línea de medio campo */}
-			<div className="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white transform -translate-x-1/2" />
-
-			{/* Círculo central */}
-			<div className="absolute w-16 h-16 border-2 border-white rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-
-			{/* Áreas */}
-			<div className="absolute left-0 top-1/2 w-20 h-32 border-2 border-white transform -translate-y-1/2" />
-			<div className="absolute right-0 top-1/2 w-20 h-32 border-2 border-white transform -translate-y-1/2" />
-
-			{/* Arcos */}
-			<div className="absolute left-0 top-1/2 w-4 h-16 border-2 border-l-0 border-white transform -translate-y-1/2" />
-			<div className="absolute right-0 top-1/2 w-4 h-16 border-2 border-r-0 border-white transform -translate-y-1/2" />
-
-			{/* Puntos de penal
-			<div className="absolute w-1.5 h-1.5 bg-white rounded-full left-16 top-1/2 transform -translate-y-1/2" />
-			<div className="absolute w-1.5 h-1.5 bg-white rounded-full right-16 top-1/2 transform -translate-y-1/2" />
-			 */}
-
-			{/* Renderiza portero */}
-			<div className="flex flex-row h-full">
-				<div className="flex flex-1 justify-start items-center">
-					{players.goalkeeper.map((formationSpot, idx) => (
-						<PlayerPosition
-							key={`goal-${idx}`}
-							formationSpot={formationSpot}
-							backgroundColor={
-								formationSpot.player
-									? PlayerPositionColor.YELLOW
-									: PlayerPositionColor.NON_SELECTED
-							}
-							handleSelectSpot={() => {
-								handleSelectSpot(formationSpot);
-							}}
-							handleRemovePlayerFromSpot={() => {
-								handleRemovePlayerFromFormationLayout(formationSpot);
-							}}
-							isPositionSelected={selectedSpot === formationSpot}
-						/>
-					))}
-				</div>
-				{/* Renderiza jugadores de campo */}
-				<div className="flex flex-col h-full justify-center items-center gap-8 flex-1">
-					{players.defenders.map((formationSpot, idx) => (
-						<PlayerPosition
-							handleSelectSpot={() => {
-								handleSelectSpot(formationSpot);
-							}}
-							handleRemovePlayerFromSpot={() => {
-								handleRemovePlayerFromFormationLayout(formationSpot);
-							}}
-							key={`def-${idx}`}
-							formationSpot={formationSpot}
-							backgroundColor={
-								formationSpot.player
-									? PlayerPositionColor.BLUE
-									: PlayerPositionColor.NON_SELECTED
-							}
-							isPositionSelected={selectedSpot === formationSpot}
-						/>
-					))}
+		<div className="bg-green-700 flex justify-center w-full p-4 rounded-md">
+			<div
+				className="relative w-full max-w-lg h-72 border-4 border-white"
+				data-test="football-field"
+			>
+				<div className="absolute top-0 flex flex-row justify-between w-full h-full items-center">
+					<GoalArea />
+					<CenterSpot />
+					<GoalArea isRight />
 				</div>
 
-				<div className="flex flex-col h-full justify-center items-center gap-6 flex-1" />
-				<div className="flex flex-col h-full justify-center items-center gap-8 flex-1">
-					{players.midFielders.map((formationSpot, idx) => (
-						<PlayerPosition
-							handleSelectSpot={() => {
-								handleSelectSpot(formationSpot);
-							}}
-							handleRemovePlayerFromSpot={() => {
-								handleRemovePlayerFromFormationLayout(formationSpot);
-							}}
-							key={`mid-${idx}`}
-							formationSpot={formationSpot}
-							backgroundColor={
-								formationSpot.player
-									? PlayerPositionColor.GREEN
-									: PlayerPositionColor.NON_SELECTED
-							}
-							isPositionSelected={selectedSpot === formationSpot}
-						/>
-					))}
+				<div className="flex flex-row h-full">
+					<div className="flex flex-1 justify-start items-center">
+						{players.goalkeeper.map((formationSpot, idx) => (
+							<PlayerPosition
+								key={`goal-${idx}`}
+								formationSpot={formationSpot}
+								backgroundColor={PlayerPositionColor.YELLOW}
+								handleSelectSpot={() => {
+									handleSelectSpot(formationSpot);
+								}}
+								handleRemovePlayerFromSpot={() => {
+									handleRemovePlayerFromFormationLayout(formationSpot);
+								}}
+								isPositionSelected={selectedSpot === formationSpot}
+							/>
+						))}
+					</div>
+					{/* Renderiza jugadores de campo */}
+					<div className="flex flex-col h-full justify-center items-center gap-8 flex-1">
+						{players.defenders.map((formationSpot, idx) => (
+							<PlayerPosition
+								handleSelectSpot={() => {
+									handleSelectSpot(formationSpot);
+								}}
+								handleRemovePlayerFromSpot={() => {
+									handleRemovePlayerFromFormationLayout(formationSpot);
+								}}
+								key={`def-${idx}`}
+								formationSpot={formationSpot}
+								backgroundColor={PlayerPositionColor.BLUE}
+								isPositionSelected={selectedSpot === formationSpot}
+							/>
+						))}
+					</div>
+
+					<div className="flex flex-col h-full justify-center items-center gap-6 flex-1" />
+					<div className="flex flex-col h-full justify-center items-center gap-8 flex-1">
+						{players.midFielders.map((formationSpot, idx) => (
+							<PlayerPosition
+								handleSelectSpot={() => {
+									handleSelectSpot(formationSpot);
+								}}
+								handleRemovePlayerFromSpot={() => {
+									handleRemovePlayerFromFormationLayout(formationSpot);
+								}}
+								key={`mid-${idx}`}
+								formationSpot={formationSpot}
+								backgroundColor={PlayerPositionColor.GREEN}
+								isPositionSelected={selectedSpot === formationSpot}
+							/>
+						))}
+					</div>
+					<div className="flex flex-col h-full justify-center items-start gap-6 flex-1" />
+					<div className="flex flex-col h-full justify-center items-center gap-10 flex-1">
+						{players.forwards.map((formationSpot, idx) => (
+							<PlayerPosition
+								handleSelectSpot={() => {
+									handleSelectSpot(formationSpot);
+								}}
+								handleRemovePlayerFromSpot={() => {
+									handleRemovePlayerFromFormationLayout(formationSpot);
+								}}
+								key={`fwd-${idx}`}
+								formationSpot={formationSpot}
+								backgroundColor={PlayerPositionColor.RED}
+								isPositionSelected={selectedSpot === formationSpot}
+							/>
+						))}
+					</div>
+					<div className="flex flex-col h-full justify-center items-center gap-6 flex-1" />
 				</div>
-				<div className="flex flex-col h-full justify-center items-start gap-6 flex-1" />
-				<div className="flex flex-col h-full justify-center items-center gap-10 flex-1">
-					{players.forwards.map((formationSpot, idx) => (
-						<PlayerPosition
-							handleSelectSpot={() => {
-								handleSelectSpot(formationSpot);
-							}}
-							handleRemovePlayerFromSpot={() => {
-								handleRemovePlayerFromFormationLayout(formationSpot);
-							}}
-							key={`fwd-${idx}`}
-							formationSpot={formationSpot}
-							backgroundColor={
-								formationSpot.player
-									? PlayerPositionColor.RED
-									: PlayerPositionColor.NON_SELECTED
-							}
-							isPositionSelected={selectedSpot === formationSpot}
-						/>
-					))}
-				</div>
-				<div className="flex flex-col h-full justify-center items-center gap-6 flex-1" />
 			</div>
 		</div>
 	);

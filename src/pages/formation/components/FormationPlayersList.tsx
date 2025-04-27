@@ -17,14 +17,13 @@ const FormationPlayersList = ({
 	selectedSpot,
 }: IFormationPlayersListProps) => {
 	return (
-		<section className="grid grid-cols-2 flex-wrap gap-2 h-64 overflow-scroll w-full">
+		<section className="grid grid-cols-2 grid-rows-[50px] auto-rows-[50px] flex-wrap gap-2 h-64 overflow-scroll w-full">
 			{rosterPlayers?.length ? (
 				rosterPlayers.map((player) => (
 					<div
 						key={player.id}
-						className="flex items-flex-start justify-between pt-3 group relative"
+						className="flex items-flex-start justify-between group relative w-full"
 					>
-						<button className="cursor-pointer"></button>
 						<PlayerFormationCard
 							player={player}
 							handleClick={() => {
@@ -36,8 +35,11 @@ const FormationPlayersList = ({
 					</div>
 				))
 			) : (
-				<span className="font-semibold" data-test="team-players">
-					No players
+				<span
+					className="text-black col-span-2 inline-block text-center"
+					data-test="team-players"
+				>
+					You don't have any players added to your roster
 				</span>
 			)}
 		</section>

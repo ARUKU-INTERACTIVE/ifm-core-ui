@@ -1,25 +1,33 @@
 import { Field, Form, Formik, FormikHelpers } from 'formik';
+import { ReactNode } from 'react';
 
 import { saveFormationSchema } from './schemas/saveFormationSchema';
 
+import SwitchButton from '@/components/ui/SwitchButton';
+
+export interface IFormationValues {
+	formationName: string;
+	isActiveFormation: boolean;
+}
 interface ISaveFormationFormProps {
-	handleSaveFormation: (formationName: string) => Promise<void>;
+	children: ReactNode;
+	handleSaveFormation: (formationValues: IFormationValues) => Promise<void>;
 }
 
 const SaveFormationForm = ({
 	handleSaveFormation,
+	children,
 }: ISaveFormationFormProps) => {
 	const initialValues = {
 		formationName: '',
+		isActiveFormation: false,
 	};
 
 	const handleSubmit = async (
 		values: typeof initialValues,
-		{ resetForm }: FormikHelpers<typeof initialValues>,
+		{ resetForm }: FormikHelpers<IFormationValues>,
 	) => {
-		const { formationName } = values;
-
-		await handleSaveFormation(formationName);
+		await handleSaveFormation(values);
 
 		resetForm();
 	};
@@ -30,29 +38,44 @@ const SaveFormationForm = ({
 			onSubmit={handleSubmit}
 			validationSchema={saveFormationSchema}
 		>
-			{({ errors, touched }) => (
+			{({ errors, touched, setFieldValue, values }) => (
 				<Form
-					className="flex flex-row gap-4 w-[512px]"
+					className="flex flex-col justify-center items-center gap-6 w-full"
 					data-test="save-formation-form"
 				>
-					{errors.formationName && touched.formationName && (
-						<span className="text-red-500 text-sm">{errors.formationName}</span>
-					)}
-					<Field
-						type="text"
-						name="formationName"
-						className={`w-full p-2 pl-7 border ${
-							errors.formationName && touched.formationName
-								? 'border-red-500'
-								: 'border-gray-300'
-						} rounded-md mb-5`}
-						placeholder="Enter formation name..."
-					/>
+					<div className="relative flex flex-col gap-1 w-full">
+						<Field
+							type="text"
+							name="formationName"
+							className={`w-full p-2 border ${
+								errors.formationName && touched.formationName
+									? 'border-red-500'
+									: 'border-gray-300'
+							} rounded-md`}
+							placeholder="Enter formation name..."
+						/>
+						{errors.formationName && touched.formationName && (
+							<span className="absolute top-[100%] text-red-500 text-sm">
+								{errors.formationName}
+							</span>
+						)}
+					</div>
+					<article className="w-full flex flex-grow justify-between gap-1">
+						<span>Set the formation to active</span>
+						<SwitchButton
+							handleSwitchToggle={() => {
+								setFieldValue('isActiveFormation', !values.isActiveFormation);
+								console.log('HOLA ');
+							}}
+							isActive={values.isActiveFormation}
+						/>
+					</article>
+					{children}
 					<button
 						type="submit"
-						className={`bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded-lg text-sm h-11`}
+						className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded-lg text-sm h-11 self-end"
 					>
-						Save Formation
+						<span className="">Save formation</span>
 					</button>
 				</Form>
 			)}

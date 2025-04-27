@@ -28,7 +28,7 @@ const PlayerPosition = ({
 		.split(' ')
 		.map((word) => word.charAt(0).toUpperCase())
 		.join('');
-
+	console.log(backgroundColor, 'backgroundColor');
 	return (
 		<div
 			className="relative w-full h-6 flex items-center justify-center text-white text-xs font-bold"
@@ -48,7 +48,10 @@ const PlayerPosition = ({
 					isPositionSelected ? 'border-orange-500' : 'border-white'
 				}`}
 				style={{
-					backgroundColor: backgroundColor,
+					backgroundColor: player
+						? backgroundColor
+						: PlayerPositionColor.NON_SELECTED,
+					borderColor: isPositionSelected ? backgroundColor : 'white',
 				}}
 			>
 				{playerInitials}

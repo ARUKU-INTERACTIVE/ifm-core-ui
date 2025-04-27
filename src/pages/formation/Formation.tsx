@@ -2,7 +2,9 @@ import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 
 import FootballField from './components/FootballField';
 import FormationPlayersList from './components/FormationPlayersList';
-import SaveFormationForm from './components/SaveFormationForm';
+import SaveFormationForm, {
+	IFormationValues,
+} from './components/SaveFormationForm';
 import { IFormationStructure } from './interfaces/IFormationStructure';
 import { IFormationSpot } from './interfaces/coordinates.interface';
 import { IFormationLayout } from './interfaces/formation-players.interface';
@@ -10,6 +12,7 @@ import { calculatePlayerPositions } from './utils/calculatePlayerPositions';
 import { calculatePlayerSavedPositions } from './utils/calculatePlayerSavedPositions';
 import { formationsStructure } from './utils/formationsStructure';
 
+import SwitchButton from '@/components/ui/SwitchButton';
 import { GET_TEAM_ERROR_MESSAGE } from '@/constants/messages/team-messages';
 import { useGetMe } from '@/hooks/auth/useGetMe';
 import { ICreateFormation } from '@/interfaces/formation/ICreateFormation.interface';
@@ -37,7 +40,8 @@ const Formation = () => {
 	});
 	const [formationDescription, setFormationDescription] = useState<string>('');
 
-	const handleSaveFormation = async (formationName: string) => {
+	const handleSaveFormation = async (formationValues: IFormationValues) => {
+		const { formationName, isActiveFormation } = formationValues;
 		const { goalkeeper, midFielders, defenders, forwards } = formationLayout;
 		const formationPlayers = [
 			...goalkeeper,
@@ -48,6 +52,7 @@ const Formation = () => {
 
 		const createFormation: ICreateFormation = {
 			name: formationName,
+			//isActive:isActiveFormation,
 			description: formationDescription,
 			formationPlayers: formationPlayers.map(
 				({ position, positionIndex: order, player }) => ({
@@ -243,67 +248,72 @@ const Formation = () => {
 	};
 
 	return (
-		<div className="flex flex-col gap-6 items-center min-h-screen bg-green-800 p-4 pt-10">
-			<h1 className="text-white text-2xl font-bold" data-test="formation-title">
-				Tactical Formation: {selectedFormation.name}
-			</h1>
-			<div className="flex flex-row gap-4 w-[512px]">
-				<select
-					id="formation"
-					className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-					value={selectedFormation.id}
-					onChange={handleFormationChange}
-					data-test="formation-select"
+		<div className="flex flex-col gap-6 items-center justify-center bg-white">
+			<div className="w-full max-w-[550px] flex flex-col justify-center items-center gap-6">
+				<h1
+					className="text-black w-full block text-left text-2xl font-bold"
+					data-test="formation-title"
 				>
-					{formationsStructure.map((formation) => (
-						<option key={formation.id} value={formation.id}>
-							{formation.name} ({formation.defenders}-{formation.midFielders}-
-							{formation.forwards})
+					Tactical Formation: {selectedFormation.name}
+				</h1>
+				<div className="flex flex-row justify-between gap-4 w-full">
+					<select
+						id="formation"
+						className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 bg-white focus:ring-blue-500"
+						value={selectedFormation.id}
+						onChange={handleFormationChange}
+						data-test="formation-select"
+					>
+						{formationsStructure.map((formation) => (
+							<option key={formation.id} value={formation.id}>
+								{formation.defenders}-{formation.midFielders}-
+								{formation.forwards}
+							</option>
+						))}
+					</select>
+					<select
+						id="formation"
+						className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 bg-white focus:ring-blue-500"
+						onChange={handleSavedFormationChange}
+						data-test="saved-formations-select"
+					>
+						<option value="" disabled selected>
+							Saved formations
 						</option>
-					))}
-				</select>
-				<select
-					id="formation"
-					className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-					onChange={handleSavedFormationChange}
-					data-test="saved-formations-select"
-				>
-					<option value="" disabled selected>
-						Select one formation
-					</option>
-					{formations.map((formation) => (
-						<option key={formation.uuid} value={formation.uuid}>
-							{formation.name} ({formation.defenders}-{formation.midfielders}-
-							{formation.forwards})
-						</option>
-					))}
-				</select>
-			</div>
+						{formations.map((formation) => (
+							<option key={formation.uuid} value={formation.uuid}>
+								{formation.name} ({formation.defenders}-{formation.midfielders}-
+								{formation.forwards})
+							</option>
+						))}
+					</select>
+				</div>
 
-			<SaveFormationForm handleSaveFormation={handleSaveFormation} />
-
-			<FootballField
-				players={formationLayout}
-				handleRemovePlayerFromFormationLayout={
-					handleRemovePlayerFromFormationLayout
-				}
-				handleSelectSpot={handleSelectSpot}
-				selectedSpot={selectedSpot}
-			/>
-
-			<div className="bg-white p-4 rounded-lg shadow-lg w-[512px]">
-				<div
-					className="flex w-full flex-col items-start p-4"
-					data-test="formation-players-list"
-				>
-					<h2 className="text-3xl font-bold text-center pb-2">Players: </h2>
-					<FormationPlayersList
-						rosterPlayers={rosterPlayers}
-						selectedSpot={selectedSpot}
-						handleUpdateFormationSpotInLayout={
-							handleUpdateFormationSpotInLayout
+				<SaveFormationForm handleSaveFormation={handleSaveFormation}>
+					<FootballField
+						players={formationLayout}
+						handleRemovePlayerFromFormationLayout={
+							handleRemovePlayerFromFormationLayout
 						}
+						handleSelectSpot={handleSelectSpot}
+						selectedSpot={selectedSpot}
 					/>
+				</SaveFormationForm>
+
+				<div className="bg-white p-2 rounded-lg shadow-lg w-full">
+					<div
+						className="flex w-full flex-col items-start"
+						data-test="formation-players-list"
+					>
+						<h2 className="text-2xl font-bold text-center">Players</h2>
+						<FormationPlayersList
+							rosterPlayers={rosterPlayers}
+							selectedSpot={selectedSpot}
+							handleUpdateFormationSpotInLayout={
+								handleUpdateFormationSpotInLayout
+							}
+						/>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -15,7 +15,7 @@ const PlayerFormationCard = ({
 
 	return (
 		<button
-			className="flex flex-row gap-2 bg-white rounded-md border-gray-500 border-solid border justify-start items-center w-full h-[50px] max-w-[250px] p-1"
+			className="flex flex-row gap-2 bg-white rounded-md border-gray-500 border-solid border justify-start items-center w-full h-[50px] max-w-[275px] p-1"
 			onClick={handleClick}
 			data-test="player-formation-card"
 		>
