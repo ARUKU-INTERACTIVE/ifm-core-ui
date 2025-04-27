@@ -12,7 +12,7 @@ export const calculatePlayerSavedPositions = (
 ): IFormationLayout => {
 	const formationDraftLayout: IFormationLayout = {
 		defenders: [],
-		midFielders: [],
+		midfielders: [],
 		forwards: [],
 		goalkeeper: [],
 	};
@@ -37,10 +37,10 @@ export const calculatePlayerSavedPositions = (
 	}
 
 	for (let i = 0; i < formation.midfielders; i++) {
-		const midfielder = formationSavedLayout.midFielders.find(
+		const midfielder = formationSavedLayout.midfielders.find(
 			(midfielder) => midfielder.positionIndex === positionIndex,
 		);
-		formationDraftLayout.midFielders.push({
+		formationDraftLayout.midfielders.push({
 			positionIndex,
 			position: Position.Defender,
 			player: midfielder?.player,

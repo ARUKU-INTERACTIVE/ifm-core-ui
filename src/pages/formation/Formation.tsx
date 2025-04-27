@@ -35,18 +35,18 @@ const Formation = () => {
 	const [formationLayout, setFormationLayout] = useState<IFormationLayout>({
 		goalkeeper: [],
 		defenders: [],
-		midFielders: [],
+		midfielders: [],
 		forwards: [],
 	});
 	const [formationDescription, setFormationDescription] = useState<string>('');
 
 	const handleSaveFormation = async (formationValues: IFormationValues) => {
 		const { formationName, isActiveFormation } = formationValues;
-		const { goalkeeper, midFielders, defenders, forwards } = formationLayout;
+		const { goalkeeper, midfielders, defenders, forwards } = formationLayout;
 		const formationPlayers = [
 			...goalkeeper,
 			...defenders,
-			...midFielders,
+			...midfielders,
 			...forwards,
 		];
 
@@ -63,7 +63,7 @@ const Formation = () => {
 			),
 			defenders: selectedFormation.defenders,
 			forwards: selectedFormation.forwards,
-			midfielders: selectedFormation.midFielders,
+			midfielders: selectedFormation.midfielders,
 			rosterUuid: team?.rosterId ?? '',
 		};
 
@@ -166,7 +166,7 @@ const Formation = () => {
 			return {
 				goalkeeper: updateLine(prev.goalkeeper),
 				defenders: updateLine(prev.defenders),
-				midFielders: updateLine(prev.midFielders),
+				midfielders: updateLine(prev.midfielders),
 				forwards: updateLine(prev.forwards),
 			};
 		});
@@ -193,7 +193,7 @@ const Formation = () => {
 			return {
 				goalkeeper: updateLine(prev.goalkeeper),
 				defenders: updateLine(prev.defenders),
-				midFielders: updateLine(prev.midFielders),
+				midfielders: updateLine(prev.midfielders),
 				forwards: updateLine(prev.forwards),
 			};
 		});
@@ -232,7 +232,7 @@ const Formation = () => {
 			const draftFormation = {
 				goalkeeper: mappedFormation.Goalkeeper,
 				defenders: mappedFormation.Defender,
-				midFielders: mappedFormation.Midfielder,
+				midfielders: mappedFormation.Midfielder,
 				forwards: mappedFormation.Forward,
 			};
 			setFormationLayout(
@@ -266,7 +266,7 @@ const Formation = () => {
 					>
 						{formationsStructure.map((formation) => (
 							<option key={formation.id} value={formation.id}>
-								{formation.defenders}-{formation.midFielders}-
+								{formation.defenders}-{formation.midfielders}-
 								{formation.forwards}
 							</option>
 						))}

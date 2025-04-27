@@ -89,7 +89,7 @@ const FootballField = ({
 
 					<div className="flex flex-col h-full justify-center items-center gap-6 flex-1" />
 					<div className="flex flex-col h-full justify-center items-center gap-8 flex-1">
-						{players.midFielders.map((formationSpot, idx) => (
+						{players.midfielders.map((formationSpot, idx) => (
 							<PlayerPosition
 								handleSelectSpot={() => {
 									handleSelectSpot(formationSpot);

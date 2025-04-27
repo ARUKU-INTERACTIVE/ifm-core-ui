@@ -2,6 +2,6 @@ export interface IFormationStructure {
 	id: number;
 	name: string;
 	defenders: number;
-	midFielders: number;
+	midfielders: number;
 	forwards: number;
 }

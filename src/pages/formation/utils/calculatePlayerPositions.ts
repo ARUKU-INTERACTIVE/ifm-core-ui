@@ -8,7 +8,7 @@ export const calculatePlayerPositions = (
 ): IFormationLayout => {
 	const formationLayout: IFormationLayout = {
 		defenders: [],
-		midFielders: [],
+		midfielders: [],
 		forwards: [],
 		goalkeeper: [],
 	};
@@ -27,8 +27,8 @@ export const calculatePlayerPositions = (
 		positionIndex += 1;
 	}
 
-	for (let i = 0; i < formation.midFielders; i++) {
-		formationLayout.midFielders.push({
+	for (let i = 0; i < formation.midfielders; i++) {
+		formationLayout.midfielders.push({
 			positionIndex,
 			position: Position.Midfielder,
 		});

@@ -6,12 +6,12 @@ export interface IFormationLayout {
 	goalkeeper: IFormationSpot[];
 	forwards: IFormationSpot[];
 	defenders: IFormationSpot[];
-	midFielders: IFormationSpot[];
+	midfielders: IFormationSpot[];
 }
 
 export interface IFormationSavedLayout {
 	goalkeeper: IFormationPlayer[];
 	forwards: IFormationPlayer[];
 	defenders: IFormationPlayer[];
-	midFielders: IFormationPlayer[];
+	midfielders: IFormationPlayer[];
 }
