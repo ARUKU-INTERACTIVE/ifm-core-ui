@@ -1,6 +1,6 @@
-import { IFormationStructure } from '../interfaces/IFormationStructure';
+import { IFormationSubset } from '../interfaces/IFormationSubset';
 
-export const formationsStructure: IFormationStructure[] = [
+export const presetFormations: IFormationSubset[] = [
 	{ id: 1, name: '4-4-2', defenders: 4, midfielders: 4, forwards: 2 },
 	{ id: 2, name: '4-3-3', defenders: 4, midfielders: 3, forwards: 3 },
 	{ id: 3, name: '4-5-1', defenders: 4, midfielders: 5, forwards: 1 },

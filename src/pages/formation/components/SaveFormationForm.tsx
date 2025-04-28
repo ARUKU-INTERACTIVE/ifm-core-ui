@@ -1,9 +1,10 @@
 import { Field, Form, Formik, FormikHelpers } from 'formik';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 
 import { saveFormationSchema } from './schemas/saveFormationSchema';
 
 import SwitchButton from '@/components/ui/SwitchButton';
+import { IFormation } from '@/interfaces/formation/IFormation.interface';
 
 export interface IFormationValues {
 	formationName: string;
@@ -11,31 +12,47 @@ export interface IFormationValues {
 }
 interface ISaveFormationFormProps {
 	children: ReactNode;
+	selectedSavedFormation: IFormation | null;
 	handleSaveFormation: (formationValues: IFormationValues) => Promise<void>;
+	handleUpdateFormation: (formationValues: IFormationValues) => Promise<void>;
 }
+
+const initialValues: IFormationValues = {
+	formationName: '',
+	isActiveFormation: false,
+};
 
 const SaveFormationForm = ({
 	handleSaveFormation,
+	handleUpdateFormation,
 	children,
+	selectedSavedFormation,
 }: ISaveFormationFormProps) => {
-	const initialValues = {
-		formationName: '',
-		isActiveFormation: false,
-	};
-
 	const handleSubmit = async (
-		values: typeof initialValues,
+		values: IFormationValues,
 		{ resetForm }: FormikHelpers<IFormationValues>,
 	) => {
-		await handleSaveFormation(values);
+		if (selectedSavedFormation) {
+			await handleUpdateFormation(values);
+		} else {
+			await handleSaveFormation(values);
+		}
 
-		resetForm();
+		// resetForm();
 	};
 
 	return (
 		<Formik
-			initialValues={initialValues}
+			initialValues={
+				selectedSavedFormation
+					? ({
+							formationName: selectedSavedFormation.name,
+							isActiveFormation: selectedSavedFormation.isActive,
+					  } as IFormationValues)
+					: initialValues
+			}
 			onSubmit={handleSubmit}
+			enableReinitialize={true}
 			validationSchema={saveFormationSchema}
 		>
 			{({ errors, touched, setFieldValue, values }) => (
@@ -65,7 +82,6 @@ const SaveFormationForm = ({
 						<SwitchButton
 							handleSwitchToggle={() => {
 								setFieldValue('isActiveFormation', !values.isActiveFormation);
-								console.log('HOLA ');
 							}}
 							isActive={values.isActiveFormation}
 						/>
@@ -75,7 +91,11 @@ const SaveFormationForm = ({
 						type="submit"
 						className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded-lg text-sm h-11 self-end"
 					>
-						<span className="">Save formation</span>
+						{selectedSavedFormation ? (
+							<span>Update formation</span>
+						) : (
+							<span className="">Save formation</span>
+						)}
 					</button>
 				</Form>
 			)}

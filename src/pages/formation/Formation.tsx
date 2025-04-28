@@ -5,14 +5,16 @@ import FormationPlayersList from './components/FormationPlayersList';
 import SaveFormationForm, {
 	IFormationValues,
 } from './components/SaveFormationForm';
-import { IFormationStructure } from './interfaces/IFormationStructure';
+import { IFormationSubset } from './interfaces/IFormationSubset';
 import { IFormationSpot } from './interfaces/coordinates.interface';
 import { IFormationLayout } from './interfaces/formation-players.interface';
-import { calculatePlayerPositions } from './utils/calculatePlayerPositions';
+import {
+	calculatePlayerPosition,
+	calculatePlayerPositions,
+} from './utils/calculatePlayerPositions';
 import { calculatePlayerSavedPositions } from './utils/calculatePlayerSavedPositions';
-import { formationsStructure } from './utils/formationsStructure';
+import { presetFormations } from './utils/presetFormations';
 
-import SwitchButton from '@/components/ui/SwitchButton';
 import { GET_TEAM_ERROR_MESSAGE } from '@/constants/messages/team-messages';
 import { useGetMe } from '@/hooks/auth/useGetMe';
 import { ICreateFormation } from '@/interfaces/formation/ICreateFormation.interface';
@@ -28,8 +30,11 @@ const Formation = () => {
 	const { data: userData } = useGetMe();
 	const [team, setTeam] = useState<ITeam | null>(null);
 	const [rosterPlayers, setRosterPlayers] = useState<IPlayer[]>([]);
-	const [selectedFormation, setSelectedFormation] =
-		useState<IFormationStructure>(formationsStructure[0]);
+	const [selectedFormation, setSelectedFormation] = useState<IFormationSubset>(
+		presetFormations[0],
+	);
+	const [selectedSavedFormation, setSelectedSavedFormation] =
+		useState<IFormation | null>(null);
 	const [formations, setFormations] = useState<IFormation[]>([]);
 	const [selectedSpot, setSelectedSpot] = useState<IFormationSpot | null>(null);
 	const [formationLayout, setFormationLayout] = useState<IFormationLayout>({
@@ -39,6 +44,7 @@ const Formation = () => {
 		forwards: [],
 	});
 	const [formationDescription, setFormationDescription] = useState<string>('');
+	console.log(formations, 'formations');
 
 	const handleSaveFormation = async (formationValues: IFormationValues) => {
 		const { formationName, isActiveFormation } = formationValues;
@@ -49,10 +55,9 @@ const Formation = () => {
 			...midfielders,
 			...forwards,
 		];
-
 		const createFormation: ICreateFormation = {
 			name: formationName,
-			//isActive:isActiveFormation,
+			isActive: isActiveFormation,
 			description: formationDescription,
 			formationPlayers: formationPlayers.map(
 				({ position, positionIndex: order, player }) => ({
@@ -73,6 +78,40 @@ const Formation = () => {
 			`${createFormation.defenders}-${createFormation.midfielders}-${createFormation.forwards} formation named ${createFormation.name} was successfully created. `,
 		);
 		setFormations((prev) => [...prev, formation.data.attributes]);
+	};
+
+	const handleUpdateFormation = async (formationValues: IFormationValues) => {
+		const { formationName, isActiveFormation } = formationValues;
+		const { goalkeeper, midfielders, defenders, forwards } = formationLayout;
+		const formationPlayers = [
+			...goalkeeper,
+			...defenders,
+			...midfielders,
+			...forwards,
+		];
+		const createFormation: ICreateFormation = {
+			name: formationName,
+			isActive: isActiveFormation,
+			description: formationDescription,
+			formationPlayers: formationPlayers.map(
+				({ position, positionIndex: order, player }) => ({
+					position,
+					playerUuid: player?.uuid ?? '',
+					positionIndex: order,
+				}),
+			),
+			defenders: selectedFormation.defenders,
+			forwards: selectedFormation.forwards,
+			midfielders: selectedFormation.midfielders,
+			rosterUuid: team?.rosterId ?? '',
+		};
+
+		//const formation = await formationService.saveFormation(createFormation);
+		//
+		notificationService.success(
+			`${createFormation.defenders}-${createFormation.midfielders}-${createFormation.forwards} formation named ${createFormation.name} was successfully updated. `,
+		);
+		//setFormations((prev) => [...prev, formation.data.attributes]);
 	};
 
 	const handleGetTeam = useCallback(async () => {
@@ -143,7 +182,9 @@ const Formation = () => {
 	}, [handleGetFormations, team]);
 
 	useEffect(() => {
-		setFormationLayout(calculatePlayerPositions(selectedFormation));
+		setFormationLayout(
+			calculatePlayerPosition(selectedFormation, formationLayout as any),
+		);
 		setFormationDescription(selectedFormation.name);
 	}, [selectedFormation]);
 
@@ -203,9 +244,22 @@ const Formation = () => {
 
 	const handleFormationChange = (evt: ChangeEvent<HTMLSelectElement>) => {
 		const formationId = parseInt(evt.target.value);
-		const formation = formationsStructure.find((f) => f.id === formationId);
+		const formation = presetFormations.find((f) => f.id === formationId);
 		if (formation) {
+			//setRosterPlayers((prev) => [
+			//	...prev,
+			//	...formationLayout.defenders
+			//		.map(({ player }) => player)
+			//		.filter((player) => player !== undefined && player !== null),
+			//]);
 			setSelectedFormation(formation);
+			setSelectedSavedFormation(null);
+			//setFormationLayout((prev) => ({
+			//	defenders: [...prev.defenders,],
+			//	forwards: [...prev.forwards],
+			//	goalkeeper: [...prev.goalkeeper],
+			//	midfielders: [...prev.midfielders],
+			//}));
 		}
 	};
 
@@ -213,7 +267,10 @@ const Formation = () => {
 		evt: ChangeEvent<HTMLSelectElement>,
 	) => {
 		const { value } = evt.target;
+		// const formation = formations.find((formation)=>formation.uuid === value)
+
 		const formation = await formationService.getFormationByUuid(value);
+		setSelectedSavedFormation(formation.data.attributes);
 
 		const mappedFormation = Object.groupBy(
 			formation.data.attributes.formationPlayers,
@@ -236,10 +293,7 @@ const Formation = () => {
 				forwards: mappedFormation.Forward,
 			};
 			setFormationLayout(
-				calculatePlayerSavedPositions(
-					formation.data.attributes,
-					draftFormation,
-				),
+				calculatePlayerPosition(formation.data.attributes, draftFormation),
 			);
 			setRosterPlayers((prev) =>
 				prev.filter((player) => !playersUuIds.includes(player.uuid)),
@@ -264,7 +318,7 @@ const Formation = () => {
 						onChange={handleFormationChange}
 						data-test="formation-select"
 					>
-						{formationsStructure.map((formation) => (
+						{presetFormations.map((formation) => (
 							<option key={formation.id} value={formation.id}>
 								{formation.defenders}-{formation.midfielders}-
 								{formation.forwards}
@@ -275,6 +329,7 @@ const Formation = () => {
 						id="formation"
 						className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 bg-white focus:ring-blue-500"
 						onChange={handleSavedFormationChange}
+						value={selectedSavedFormation?.uuid}
 						data-test="saved-formations-select"
 					>
 						<option value="" disabled selected>
@@ -283,13 +338,17 @@ const Formation = () => {
 						{formations.map((formation) => (
 							<option key={formation.uuid} value={formation.uuid}>
 								{formation.name} ({formation.defenders}-{formation.midfielders}-
-								{formation.forwards})
+								{formation.forwards}) {formation.isActive && '(Active)'}
 							</option>
 						))}
 					</select>
 				</div>
 
-				<SaveFormationForm handleSaveFormation={handleSaveFormation}>
+				<SaveFormationForm
+					handleUpdateFormation={handleUpdateFormation}
+					handleSaveFormation={handleSaveFormation}
+					selectedSavedFormation={selectedSavedFormation}
+				>
 					<FootballField
 						players={formationLayout}
 						handleRemovePlayerFromFormationLayout={

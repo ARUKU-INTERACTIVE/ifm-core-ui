@@ -1,13 +1,13 @@
+import { IFormationSubset } from '../interfaces/IFormationSubset';
 import {
 	IFormationLayout,
 	IFormationSavedLayout,
 } from '../interfaces/formation-players.interface';
 
 import { Position } from '@/interfaces/formation-player/IFormationPlayer.interface';
-import { IFormation } from '@/interfaces/formation/IFormation.interface';
 
 export const calculatePlayerSavedPositions = (
-	formation: IFormation,
+	formation: IFormationSubset,
 	formationSavedLayout: IFormationSavedLayout,
 ): IFormationLayout => {
 	const formationDraftLayout: IFormationLayout = {

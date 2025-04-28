@@ -9,5 +9,6 @@ export interface IFormation extends IBaseEntity {
 	defenders: number;
 	roster: any;
 	rosterId: number;
+	isActive?: boolean;
 	formationPlayers: IFormationPlayer[];
 }

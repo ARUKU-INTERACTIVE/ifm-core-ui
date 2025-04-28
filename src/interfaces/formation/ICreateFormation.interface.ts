@@ -12,5 +12,6 @@ export interface ICreateFormation {
 	forwards: number;
 	midfielders: number;
 	defenders: number;
+	isActive?: boolean;
 	formationPlayers: ICreateFormationPlayer[];
 }
