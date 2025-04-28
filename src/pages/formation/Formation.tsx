@@ -98,14 +98,13 @@ const Formation = () => {
 		notificationService.success(
 			`${createFormation.defenders}-${createFormation.midfielders}-${createFormation.forwards} formation named ${createFormation.name} was successfully created. `,
 		);
-		if (isActiveFormation) {
-			setFormations((prev) => [
-				...prev.map((formation) => ({ ...formation, isActive: false })),
-				formation.data.attributes,
-			]);
-		} else {
-			setFormations((prev) => [...prev, formation.data.attributes]);
-		}
+		setFormations((prev) => {
+			const updatedFormations = isActiveFormation
+				? prev.map((formation) => ({ ...formation, isActive: false }))
+				: prev;
+
+			return [...updatedFormations, formation.data.attributes];
+		});
 		if (selectedSavedFormation.uuid) {
 			setSelectedSavedFormation(selectedSavedFormation);
 		}
@@ -144,9 +143,9 @@ const Formation = () => {
 					formationPlayerUuid: uuid,
 				}),
 			),
-			defenders: selectedFormation.defenders,
-			forwards: selectedFormation.forwards,
-			midfielders: selectedFormation.midfielders,
+			defenders: selectedSavedFormation.defenders,
+			forwards: selectedSavedFormation.forwards,
+			midfielders: selectedSavedFormation.midfielders,
 			formationUuid: selectedSavedFormation?.uuid ?? '',
 			newFormationPlayers: newFormationPlayers.map(
 				({ position, positionIndex, player, uuid }) => ({
@@ -162,15 +161,17 @@ const Formation = () => {
 		notificationService.success(
 			`${updateFormation.defenders}-${updateFormation.midfielders}-${updateFormation.forwards} formation named ${updateFormation.name} was successfully updated. `,
 		);
-		if (isActiveFormation) {
-			setFormations((prev) =>
-				prev.map((formation) =>
-					formation.uuid === selectedSavedFormation.uuid
-						? { ...formation, isActive: isActiveFormation }
-						: { ...formation, isActive: false },
-				),
-			);
-		}
+		setFormations((prev) =>
+			prev.map((formation) => {
+				if (formation.uuid === selectedSavedFormation.uuid) {
+					return { ...formation, isActive: isActiveFormation };
+				}
+				if (isActiveFormation) {
+					return { ...formation, isActive: false };
+				}
+				return { ...formation };
+			}),
+		);
 	};
 
 	const handleGetTeam = useCallback(async () => {
