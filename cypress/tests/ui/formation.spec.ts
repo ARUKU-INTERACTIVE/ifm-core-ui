@@ -306,7 +306,7 @@ describe('Formation Page', () => {
 		cy.getBySel('save-formation-btn').click();
 		cy.wait('@update-formation');
 		cy.getBySel('toast-container').contains(
-			'4-4-2 formation named Updated Formation was successfully updated.',
+			'3-5-2 formation named Updated Formation was successfully updated.',
 		);
 	});
 
