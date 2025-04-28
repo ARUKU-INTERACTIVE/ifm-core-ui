@@ -27,6 +27,9 @@ export default function NavBar() {
 				<Link to="/team" className="text-sm font-bold">
 					Team
 				</Link>
+				<Link to="/formation" className="text-sm font-bold">
+					Formation
+				</Link>
 			</div>
 			<Action
 				connected={!!cookies[StoredCookies.REFRESH_TOKEN]}
