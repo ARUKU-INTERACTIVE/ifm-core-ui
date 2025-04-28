@@ -14,6 +14,7 @@ interface IPlayerPositionProps {
 	handleSelectSpot: () => void;
 	handleRemovePlayerFromSpot: () => void;
 	isPositionSelected: boolean;
+	dataTest: string;
 }
 
 const PlayerPosition = ({
@@ -22,6 +23,7 @@ const PlayerPosition = ({
 	handleSelectSpot,
 	handleRemovePlayerFromSpot,
 	isPositionSelected,
+	dataTest,
 }: IPlayerPositionProps) => {
 	const { player } = formationPlayer;
 	const playerInitials = player?.name
@@ -54,6 +56,7 @@ const PlayerPosition = ({
 						: PlayerPositionColor.NON_SELECTED,
 					borderColor: isPositionSelected ? backgroundColor : 'white',
 				}}
+				data-test={dataTest}
 			>
 				{playerInitials}
 			</button>

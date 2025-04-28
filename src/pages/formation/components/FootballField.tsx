@@ -59,6 +59,7 @@ const FootballField = ({
 						{players.goalkeeper.map((formationPlayer, idx) => (
 							<PlayerPosition
 								key={`goal-${idx}`}
+								dataTest={`goalkeeper-position-spot-${idx}`}
 								formationPlayer={formationPlayer}
 								backgroundColor={PlayerPositionColor.YELLOW}
 								handleSelectSpot={() => {
@@ -80,6 +81,7 @@ const FootballField = ({
 								handleRemovePlayerFromSpot={() => {
 									handleRemovePlayerFromFormationLayout(formationPlayer);
 								}}
+								dataTest={`defender-position-spot-${idx}`}
 								key={`def-${idx}`}
 								formationPlayer={formationPlayer}
 								backgroundColor={PlayerPositionColor.BLUE}
@@ -98,6 +100,7 @@ const FootballField = ({
 								handleRemovePlayerFromSpot={() => {
 									handleRemovePlayerFromFormationLayout(formationPlayer);
 								}}
+								dataTest={`midfielder-position-spot-${idx}`}
 								key={`mid-${idx}`}
 								formationPlayer={formationPlayer}
 								backgroundColor={PlayerPositionColor.GREEN}
@@ -115,6 +118,7 @@ const FootballField = ({
 								handleRemovePlayerFromSpot={() => {
 									handleRemovePlayerFromFormationLayout(formationPlayer);
 								}}
+								dataTest={`forward-position-spot-${idx}`}
 								key={`fwd-${idx}`}
 								formationPlayer={formationPlayer}
 								backgroundColor={PlayerPositionColor.RED}
