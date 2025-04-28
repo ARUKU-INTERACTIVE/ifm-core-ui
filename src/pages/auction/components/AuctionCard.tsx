@@ -110,7 +110,7 @@ const AuctionCard = ({
 
 				{highestBidderAddress === publicKey && (
 					<p
-						className="text-gray-700 text-base mt-3"
+						className="text-gray-700 text-base mt-2"
 						data-test="highest-bidder-msg"
 					>
 						<span className="font-bold text-green-600">
@@ -137,12 +137,14 @@ const AuctionCard = ({
 						)}
 					</button>
 				) : (
-					<button
-						className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded m-3 w-full"
-						onClick={() => setIsCreateBidModalOpen(true)}
-					>
-						Create a Bid
-					</button>
+					publicKey !== highestBidderAddress && (
+						<button
+							className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded m-3 w-full"
+							onClick={() => setIsCreateBidModalOpen(true)}
+						>
+							Create a Bid
+						</button>
+					)
 				)}
 			</div>
 
