@@ -14,6 +14,10 @@ import { calculatePlayerPositions } from './utils/calculatePlayerPositions';
 import { presetFormations } from './utils/presetFormations';
 import { updateFormationPlayer } from './utils/updateFormationPlayer';
 
+import {
+	ERROR_CREATING_FORMATION,
+	ERROR_UPDATING_FORMATION,
+} from '@/constants/messages/formation-messages';
 import { GET_TEAM_ERROR_MESSAGE } from '@/constants/messages/team-messages';
 import { useGetMe } from '@/hooks/auth/useGetMe';
 import { Position } from '@/interfaces/formation-player/IFormationPlayer.interface';
@@ -73,40 +77,45 @@ const Formation = () => {
 			rosterUuid: team?.rosterId ?? '',
 		};
 
-		const formation = await formationService.saveFormation(createFormation);
-		const selectedSavedFormation = formation.data.attributes;
-		const formationPlayerOnlyUuid =
-			selectedSavedFormation?.formationPlayers.map((formationPlayer) => ({
-				playerUuid: formationPlayer.player.uuid,
-				formationPlayerUuid: formationPlayer.uuid,
-			}));
+		try {
+			const formation = await formationService.saveFormation(createFormation);
+			const selectedSavedFormation = formation.data.attributes;
+			const formationPlayerOnlyUuid =
+				selectedSavedFormation?.formationPlayers.map((formationPlayer) => ({
+					playerUuid: formationPlayer.player.uuid,
+					formationPlayerUuid: formationPlayer.uuid,
+				}));
 
-		setRosterPlayers((prev) =>
-			prev.map((player) => {
-				const foundPlayer = formationPlayerOnlyUuid?.find(
-					(formationPlayer) => formationPlayer.playerUuid === player.uuid,
-				);
-				if (foundPlayer) {
-					return {
-						...player,
-						formationPlayerUuid: foundPlayer.formationPlayerUuid,
-					};
-				}
-				return player;
-			}),
-		);
-		notificationService.success(
-			`${createFormation.defenders}-${createFormation.midfielders}-${createFormation.forwards} formation named ${createFormation.name} was successfully created. `,
-		);
-		setFormations((prev) => {
-			const updatedFormations = isActiveFormation
-				? prev.map((formation) => ({ ...formation, isActive: false }))
-				: prev;
+			setRosterPlayers((prev) =>
+				prev.map((player) => {
+					const foundPlayer = formationPlayerOnlyUuid?.find(
+						(formationPlayer) => formationPlayer.playerUuid === player.uuid,
+					);
+					if (foundPlayer) {
+						return {
+							...player,
+							formationPlayerUuid: foundPlayer.formationPlayerUuid,
+						};
+					}
+					return player;
+				}),
+			);
+			notificationService.success(
+				`${createFormation.defenders}-${createFormation.midfielders}-${createFormation.forwards} formation named ${createFormation.name} was successfully created. `,
+			);
+			setFormations((prev) => {
+				const updatedFormations = isActiveFormation
+					? prev.map((formation) => ({ ...formation, isActive: false }))
+					: prev;
 
-			return [...updatedFormations, formation.data.attributes];
-		});
-		if (selectedSavedFormation.uuid) {
-			setSelectedSavedFormation(selectedSavedFormation);
+				return [...updatedFormations, formation.data.attributes];
+			});
+			if (selectedSavedFormation.uuid) {
+				setSelectedSavedFormation(selectedSavedFormation);
+			}
+		} catch (error) {
+			console.error(error);
+			notificationService.error(ERROR_CREATING_FORMATION);
 		}
 	};
 
@@ -156,22 +165,26 @@ const Formation = () => {
 				}),
 			),
 		};
-
-		await formationService.updateFormation(updateFormation);
-		notificationService.success(
-			`${updateFormation.defenders}-${updateFormation.midfielders}-${updateFormation.forwards} formation named ${updateFormation.name} was successfully updated. `,
-		);
-		setFormations((prev) =>
-			prev.map((formation) => {
-				if (formation.uuid === selectedSavedFormation.uuid) {
-					return { ...formation, isActive: isActiveFormation };
-				}
-				if (isActiveFormation) {
-					return { ...formation, isActive: false };
-				}
-				return { ...formation };
-			}),
-		);
+		try {
+			await formationService.updateFormation(updateFormation);
+			notificationService.success(
+				`${updateFormation.defenders}-${updateFormation.midfielders}-${updateFormation.forwards} formation named ${updateFormation.name} was successfully updated. `,
+			);
+			setFormations((prev) =>
+				prev.map((formation) => {
+					if (formation.uuid === selectedSavedFormation.uuid) {
+						return { ...formation, isActive: isActiveFormation };
+					}
+					if (isActiveFormation) {
+						return { ...formation, isActive: false };
+					}
+					return { ...formation };
+				}),
+			);
+		} catch (error) {
+			console.error(error);
+			notificationService.error(ERROR_UPDATING_FORMATION);
+		}
 	};
 
 	const handleGetTeam = useCallback(async () => {
@@ -278,7 +291,7 @@ const Formation = () => {
 		formationPlayer: IFormationPlayerPartial,
 	) => {
 		if (!formationPlayer.player) {
-			return console.error('Not found player in formation layout');
+			return notificationService.error('Not found player in formation layout');
 		}
 
 		setFormationLayout((prev) => {
