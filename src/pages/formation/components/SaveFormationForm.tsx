@@ -65,6 +65,7 @@ const SaveFormationForm = ({
 									: 'border-gray-300'
 							} rounded-md`}
 							placeholder="Enter formation name..."
+							data-test="formation-name-input"
 						/>
 						{errors.formationName && touched.formationName && (
 							<span className="absolute top-[100%] text-red-500 text-sm">
@@ -85,6 +86,7 @@ const SaveFormationForm = ({
 					<button
 						type="submit"
 						className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded-lg text-sm h-11 self-end"
+						data-test="save-formation-btn"
 					>
 						{selectedSavedFormation?.name ? (
 							<span>Update formation</span>
