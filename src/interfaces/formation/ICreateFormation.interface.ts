@@ -12,7 +12,7 @@ export interface ICreateFormationPlayerUuid extends ICreateFormationPlayer {
 
 export interface ICreateFormation {
 	name: string;
-	description: string;
+	description?: string;
 	rosterUuid: string;
 	forwards: number;
 	midfielders: number;

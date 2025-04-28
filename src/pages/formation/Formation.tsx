@@ -49,7 +49,6 @@ const Formation = () => {
 		midfielders: [],
 		forwards: [],
 	});
-	const [formationDescription, setFormationDescription] = useState<string>('');
 
 	const handleSaveFormation = async (formationValues: IFormationValues) => {
 		const { formationName, isActiveFormation } = formationValues;
@@ -63,7 +62,6 @@ const Formation = () => {
 		const createFormation: ICreateFormation = {
 			name: formationName,
 			isActive: isActiveFormation,
-			description: formationDescription,
 			formationPlayers: formationPlayers.map(
 				({ position, positionIndex, player }) => ({
 					position: position ?? Position.Goalkeeper,
@@ -144,7 +142,6 @@ const Formation = () => {
 		const updateFormation: IUpdateFormation = {
 			name: formationName,
 			isActive: isActiveFormation,
-			description: formationDescription,
 			formationPlayers: formationPlayersUpdate.map(
 				({ position, positionIndex, uuid }) => ({
 					position: position ?? Position.Goalkeeper,
@@ -173,7 +170,11 @@ const Formation = () => {
 			setFormations((prev) =>
 				prev.map((formation) => {
 					if (formation.uuid === selectedSavedFormation.uuid) {
-						return { ...formation, isActive: isActiveFormation };
+						return {
+							...formation,
+							isActive: isActiveFormation,
+							name: formationName,
+						};
 					}
 					if (isActiveFormation) {
 						return { ...formation, isActive: false };
@@ -257,7 +258,6 @@ const Formation = () => {
 		setFormationLayout(
 			calculatePlayerPositions(selectedFormation, formationLayout),
 		);
-		setFormationDescription(selectedFormation.name);
 	}, [selectedFormation]);
 
 	const handleSelectSpot = (formationPlayer: IFormationPlayerPartial) => {
