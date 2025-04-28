@@ -125,6 +125,21 @@ describe('Auctions Page', () => {
 			{ fixture: 'auction/search-auction-response.json' },
 		);
 
+		cy.intercept(`**/accounts/${walletAddress}`, {
+			id: walletAddress,
+			account_id: walletAddress,
+			sequence: '523470614036490',
+			balances: [
+				{
+					asset_code: 'NFT',
+					balance: '0.0000001',
+					asset_issuer:
+						'GBXGQJWVLWOYHFLVTKWV5FGHA3LNYY2JQKM7OAJAUEQFU6LPCSEFVXOQ',
+					asset_type: 'credit_alphanum4',
+				},
+			],
+		});
+
 		cy.getBySel('auctions-searchbar').type(searchValue);
 		cy.wait(2000);
 
