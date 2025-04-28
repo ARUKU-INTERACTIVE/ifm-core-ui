@@ -83,7 +83,6 @@ const Formation = () => {
 					playerUuid: formationPlayer.player.uuid,
 					formationPlayerUuid: formationPlayer.uuid,
 				}));
-
 			setRosterPlayers((previousRosterPlayers) =>
 				previousRosterPlayers.map((player) => {
 					const foundPlayer = formationPlayersMappedByUuid?.find(
@@ -261,7 +260,9 @@ const Formation = () => {
 	}, [selectedFormation]);
 
 	const handleSelectSpot = (formationPlayer: IFormationPlayerPartial) => {
-		setSelectedSpot(formationPlayer);
+		if (!formationPlayer?.player) {
+			setSelectedSpot(formationPlayer);
+		}
 	};
 
 	const handleUpdateFormationSpotInLayout = (
@@ -340,7 +341,6 @@ const Formation = () => {
 			);
 		}
 	};
-
 	const handleSavedFormationChange = async (
 		event: ChangeEvent<HTMLSelectElement>,
 	) => {

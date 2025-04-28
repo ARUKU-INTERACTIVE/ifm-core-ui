@@ -32,7 +32,7 @@ export const calculatePlayerPositions = (
 
 	if (formationSavedLayout?.goalkeeper?.[0]?.player) {
 		goalkeeper = {
-			...formationLayout.goalkeeper?.[0],
+			...formationSavedLayout.goalkeeper?.[0],
 			positionIndex,
 			position: Position.Goalkeeper,
 			player: formationSavedLayout?.goalkeeper?.[0]?.player,
