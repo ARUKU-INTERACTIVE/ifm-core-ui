@@ -35,7 +35,7 @@ const Formation = () => {
 		presetFormations[0],
 	);
 	const [selectedSavedFormation, setSelectedSavedFormation] =
-		useState<IFormation | null>(null);
+		useState<IFormation>({ uuid: 'Default' } as IFormation);
 	const [formations, setFormations] = useState<IFormation[]>([]);
 	const [selectedSpot, setSelectedSpot] =
 		useState<IFormationPlayerPartial | null>(null);
@@ -106,7 +106,9 @@ const Formation = () => {
 		} else {
 			setFormations((prev) => [...prev, formation.data.attributes]);
 		}
-		setSelectedSavedFormation(selectedSavedFormation);
+		if (selectedSavedFormation.uuid) {
+			setSelectedSavedFormation(selectedSavedFormation);
+		}
 	};
 
 	const handleUpdateFormation = async (formationValues: IFormationValues) => {
@@ -221,7 +223,6 @@ const Formation = () => {
 		},
 		[userData?.data.attributes.teamId],
 	);
-
 	useEffect(() => {
 		handleGetTeam();
 	}, [handleGetTeam]);
@@ -246,7 +247,6 @@ const Formation = () => {
 	}, [selectedFormation]);
 
 	const handleSelectSpot = (formationPlayer: IFormationPlayerPartial) => {
-		console.log('handleSelectSpot', formationPlayer);
 		setSelectedSpot(formationPlayer);
 	};
 
@@ -276,7 +276,6 @@ const Formation = () => {
 	const handleRemovePlayerFromFormationLayout = (
 		formationPlayer: IFormationPlayerPartial,
 	) => {
-		console.log(formationPlayer, 'formationPlayer');
 		if (!formationPlayer.player) {
 			return console.error('Not found player in formation layout');
 		}
@@ -316,10 +315,19 @@ const Formation = () => {
 		evt: ChangeEvent<HTMLSelectElement>,
 	) => {
 		const { value } = evt.target;
+		const foundedFormation = formations.find(
+			(formation) => formation.uuid === value,
+		);
+		setSelectedSavedFormation({
+			uuid: foundedFormation?.uuid,
+			name: foundedFormation?.name,
+		} as IFormation);
 
 		const formation = await formationService.getFormationByUuid(value);
 		const selectedSavedFormation = formation.data.attributes;
-		setSelectedSavedFormation(selectedSavedFormation);
+		if (selectedSavedFormation.uuid) {
+			setSelectedSavedFormation(selectedSavedFormation);
+		}
 		const formationPlayerOnlyUuid =
 			selectedSavedFormation?.formationPlayers.map((formationPlayer) => ({
 				playerUuid: formationPlayer.player.uuid,
@@ -373,6 +381,7 @@ const Formation = () => {
 	const assignedPlayerUuids = allPlayersInFormationLayout.map(
 		(formationPlayer) => formationPlayer?.player?.uuid,
 	);
+	console.log(formations, 'formations');
 	return (
 		<div className="flex flex-col gap-6 items-center justify-center bg-white">
 			<div className="w-full max-w-[550px] flex flex-col justify-center items-center gap-6">
@@ -401,10 +410,10 @@ const Formation = () => {
 						id="formation"
 						className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 bg-white focus:ring-blue-500"
 						onChange={handleSavedFormationChange}
-						value={selectedSavedFormation?.uuid}
+						value={selectedSavedFormation.uuid}
 						data-test="saved-formations-select"
 					>
-						<option value="Default" disabled selected>
+						<option value="Default" disabled>
 							Saved formations
 						</option>
 						{formations.map((formation) => (
