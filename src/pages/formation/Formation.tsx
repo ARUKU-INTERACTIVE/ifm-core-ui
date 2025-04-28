@@ -285,6 +285,7 @@ const Formation = () => {
 				forwards: updateFormationLayout(prev.forwards),
 			};
 		});
+		setSelectedSpot(null);
 	};
 
 	const handleRemovePlayerFromFormationLayout = (
@@ -395,7 +396,6 @@ const Formation = () => {
 	const assignedPlayerUuids = allPlayersInFormationLayout.map(
 		(formationPlayer) => formationPlayer?.player?.uuid,
 	);
-	console.log(formations, 'formations');
 	return (
 		<div className="flex flex-col gap-6 items-center justify-center bg-white">
 			<div className="w-full max-w-[550px] flex flex-col justify-center items-center gap-6">
