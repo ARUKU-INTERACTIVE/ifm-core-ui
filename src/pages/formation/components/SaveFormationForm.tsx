@@ -39,11 +39,11 @@ const SaveFormationForm = ({
 	return (
 		<Formik
 			initialValues={
-				selectedSavedFormation
-					? ({
+				selectedSavedFormation?.name
+					? {
 							formationName: selectedSavedFormation.name,
-							isActiveFormation: selectedSavedFormation.isActive,
-					  } as IFormationValues)
+							isActiveFormation: selectedSavedFormation.isActive ?? false,
+					  }
 					: initialValues
 			}
 			onSubmit={handleSubmit}

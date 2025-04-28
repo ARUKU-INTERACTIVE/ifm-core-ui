@@ -240,7 +240,7 @@ const Formation = () => {
 
 	useEffect(() => {
 		setFormationLayout(
-			calculatePlayerPositions(selectedFormation, formationLayout as any),
+			calculatePlayerPositions(selectedFormation, formationLayout),
 		);
 		setFormationDescription(selectedFormation.name);
 	}, [selectedFormation]);
@@ -305,7 +305,7 @@ const Formation = () => {
 		const formation = presetFormations.find((f) => f.id === formationId);
 		if (formation) {
 			setSelectedFormation(formation);
-			setSelectedSavedFormation({ uuid: 'Default' } as any);
+			setSelectedSavedFormation({ uuid: 'Default' } as IFormation);
 			setRosterPlayers((prev) =>
 				prev.map((player) => ({ ...player, formationPlayerUuid: null })),
 			);
