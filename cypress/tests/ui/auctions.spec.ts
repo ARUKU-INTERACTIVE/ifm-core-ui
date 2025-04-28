@@ -202,6 +202,12 @@ describe('Auctions Page', () => {
 
 		cy.wait('@get-bid-auctions');
 		cy.getBySel('highest-bidder-msg').should('be.visible');
+
+		cy.getBySel('auction-card')
+			.last()
+			.then((card) => {
+				cy.wrap(card).find('button').should('not.exist');
+			});
 	});
 
 	it('should throw an error if submit bid fails', () => {
