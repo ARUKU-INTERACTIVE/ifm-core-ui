@@ -4,10 +4,7 @@ import {
 } from '../interfaces/IFormationPlayers';
 import { IFormationSubset } from '../interfaces/IFormationSubset';
 
-import {
-	IFormationPlayer,
-	Position,
-} from '@/interfaces/formation-player/IFormationPlayer.interface';
+import { Position } from '@/interfaces/formation-player/IFormationPlayer.interface';
 
 export const calculatePlayerPositions = (
 	formation: IFormationSubset,
