@@ -6,7 +6,7 @@ import PlayerPosition, { PlayerPositionColor } from './PlayerPosition';
 
 interface IFootballFieldProps {
 	players: IFormationLayout;
-	handleSelectSpot: (playerCoordinates: IFormationPlayerPartial) => void;
+	handleSelectSpot: (selectedSpot: IFormationPlayerPartial) => void;
 	handleRemovePlayerFromFormationLayout: (
 		formationPlayer: IFormationPlayerPartial,
 	) => void;

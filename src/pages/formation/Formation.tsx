@@ -12,6 +12,7 @@ import {
 } from './interfaces/formation-players.interface';
 import { calculatePlayerPositions } from './utils/calculatePlayerPositions';
 import { presetFormations } from './utils/presetFormations';
+import { updateFormationPlayer } from './utils/updateFormationPlayer';
 
 import { GET_TEAM_ERROR_MESSAGE } from '@/constants/messages/team-messages';
 import { useGetMe } from '@/hooks/auth/useGetMe';
@@ -189,6 +190,7 @@ const Formation = () => {
 	}, [selectedFormation]);
 
 	const handleSelectSpot = (formationPlayer: IFormationPlayerPartial) => {
+		console.log('handleSelectSpot', formationPlayer);
 		setSelectedSpot(formationPlayer);
 	};
 
@@ -197,24 +199,22 @@ const Formation = () => {
 		player: IPlayer,
 	) => {
 		setFormationLayout((prev) => {
-			const updateLine = (line: IFormationPlayerPartial[]) =>
-				line.map((s) =>
-					s.positionIndex === formationPlayer.positionIndex
-						? { ...formationPlayer, player }
-						: s,
+			const updateFormationLayout = (
+				formationPlayerPartial: IFormationPlayerPartial[],
+			) => {
+				return updateFormationPlayer(
+					formationPlayerPartial,
+					formationPlayer,
+					player,
 				);
-
+			};
 			return {
-				goalkeeper: updateLine(prev.goalkeeper),
-				defenders: updateLine(prev.defenders),
-				midfielders: updateLine(prev.midfielders),
-				forwards: updateLine(prev.forwards),
+				goalkeeper: updateFormationLayout(prev.goalkeeper),
+				defenders: updateFormationLayout(prev.defenders),
+				midfielders: updateFormationLayout(prev.midfielders),
+				forwards: updateFormationLayout(prev.forwards),
 			};
 		});
-
-		setRosterPlayers((prev) =>
-			prev.filter((rosterPlayer) => rosterPlayer.uuid !== player.uuid),
-		);
 	};
 
 	const handleRemovePlayerFromFormationLayout = (
@@ -223,23 +223,24 @@ const Formation = () => {
 		if (!formationPlayer.player) {
 			return console.error('Not found player in formation layout');
 		}
-		setFormationLayout((prev) => {
-			const updateLine = (line: IFormationPlayerPartial[]) =>
-				line.map((s) =>
-					s.positionIndex === formationPlayer.positionIndex
-						? { ...line, player: null }
-						: s,
-				);
 
+		setFormationLayout((prev) => {
+			const removePlayerFromFormationLayout = (
+				formationPlayerPartial: IFormationPlayerPartial[],
+			) => {
+				return updateFormationPlayer(
+					formationPlayerPartial,
+					formationPlayer,
+					null,
+				);
+			};
 			return {
-				goalkeeper: updateLine(prev.goalkeeper),
-				defenders: updateLine(prev.defenders),
-				midfielders: updateLine(prev.midfielders),
-				forwards: updateLine(prev.forwards),
+				goalkeeper: removePlayerFromFormationLayout(prev.goalkeeper),
+				defenders: removePlayerFromFormationLayout(prev.defenders),
+				midfielders: removePlayerFromFormationLayout(prev.midfielders),
+				forwards: removePlayerFromFormationLayout(prev.forwards),
 			};
 		});
-
-		setRosterPlayers((prev) => [...prev, formationPlayer.player as IPlayer]);
 	};
 
 	const handleFormationChange = (evt: ChangeEvent<HTMLSelectElement>) => {
@@ -255,7 +256,6 @@ const Formation = () => {
 		evt: ChangeEvent<HTMLSelectElement>,
 	) => {
 		const { value } = evt.target;
-		// const formation = formations.find((formation)=>formation.uuid === value)
 
 		const formation = await formationService.getFormationByUuid(value);
 		setSelectedSavedFormation(formation.data.attributes);
@@ -263,9 +263,6 @@ const Formation = () => {
 		const mappedFormation = Object.groupBy(
 			formation.data.attributes.formationPlayers,
 			(formationPlayer) => formationPlayer.position,
-		);
-		const playersUuIds = formation.data.attributes.formationPlayers.map(
-			(formationPlayer) => formationPlayer.player.uuid,
 		);
 
 		if (
@@ -283,12 +280,17 @@ const Formation = () => {
 			setFormationLayout(
 				calculatePlayerPositions(formation.data.attributes, draftFormation),
 			);
-			setRosterPlayers((prev) =>
-				prev.filter((player) => !playersUuIds.includes(player.uuid)),
-			);
 		}
 	};
-
+	const allPlayersInFormationLayout = [
+		...formationLayout.goalkeeper,
+		...formationLayout.defenders,
+		...formationLayout.midfielders,
+		...formationLayout.forwards,
+	];
+	const assignedPlayerUuids = allPlayersInFormationLayout.map(
+		(formationPlayer) => formationPlayer?.player?.uuid,
+	);
 	return (
 		<div className="flex flex-col gap-6 items-center justify-center bg-white">
 			<div className="w-full max-w-[550px] flex flex-col justify-center items-center gap-6">
@@ -354,6 +356,7 @@ const Formation = () => {
 					>
 						<h2 className="text-2xl font-bold text-center">Players</h2>
 						<FormationPlayersList
+							assignedPlayerUuids={assignedPlayerUuids}
 							rosterPlayers={rosterPlayers}
 							selectedSpot={selectedSpot}
 							handleUpdateFormationSpotInLayout={
