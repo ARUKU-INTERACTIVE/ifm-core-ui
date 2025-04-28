@@ -1,5 +1,11 @@
 /// <reference types="cypress" />
 import {
+	CONNECT_WALLET_MESSAGE,
+	SIGN_IN_SUCCESS_MESSAGE,
+	TRANSACTION_SIGNED_MESSAGE,
+} from '@context/auth-messages';
+
+import {
 	CODE_MIN_LENGTH,
 	CODE_REQUIRED,
 	CODE_TYPE,
@@ -140,4 +146,70 @@ Cypress.Commands.add('signIn', () => {
 	).as('sign-in');
 	cy.getBySel('sign-in-submit').click();
 	cy.wait('@sign-in');
+});
+
+Cypress.Commands.add('signInWithWallet', (simpleSignerUrl, walletAddress) => {
+	cy.visit('/');
+	cy.interceptApi(
+		`/auth/challenge?publicKey=${walletAddress}`,
+		{ method: 'GET' },
+		{ fixture: 'auth/challenge-transaction-response.json' },
+	).as('get-challenge');
+	cy.interceptApi(
+		'/auth/sign-in',
+		{ method: 'POST' },
+		{ fixture: 'auth/sign-in.json' },
+	).as('sign-in');
+
+	cy.window().then((window) => {
+		cy.stub(window, 'open')
+			.as('connect-wallet')
+			.callsFake(() => null);
+	});
+
+	cy.getBySel('sign-in-btn').should('have.text', 'Connect Wallet').click();
+	cy.getBySel('connect-wallet-button').click();
+
+	const connectEvent = new MessageEvent('message', {
+		data: {
+			type: 'onConnect',
+			page: `${simpleSignerUrl}/connect`,
+			message: {
+				publicKey: walletAddress,
+				wallet: 'albedo',
+			},
+		},
+		origin: simpleSignerUrl,
+	});
+
+	cy.window().then((win) => {
+		win.dispatchEvent(connectEvent);
+	});
+
+	cy.getBySel('toast-container').contains(CONNECT_WALLET_MESSAGE);
+
+	cy.wait(4000);
+
+	cy.getBySel('sign-in-btn').should('have.text', 'Sign In');
+	cy.getBySel('sign-in-with-transaction-button').click();
+	cy.wait('@get-challenge');
+
+	const signEvent = new MessageEvent('message', {
+		data: {
+			type: 'onSign',
+			page: `${simpleSignerUrl}/sign`,
+			message: {
+				signedXDR:
+					'AAAAAGrj5kK0Xb3d3c3NvZ2Z3YXJpZ2F0ZQAAAAAAAAAAABiGAAAAQAAAAAEAAAAAAAAAZQ==',
+			},
+		},
+		origin: simpleSignerUrl,
+	});
+
+	cy.window().then((win) => {
+		win.dispatchEvent(signEvent);
+		cy.wait(1000);
+		cy.getBySel('toast-container').contains(TRANSACTION_SIGNED_MESSAGE);
+		cy.getBySel('toast-container').contains(SIGN_IN_SUCCESS_MESSAGE);
+	});
 });
