@@ -13,6 +13,7 @@ export interface IPlayer {
 	updatedAt: string;
 	deletedAt?: string;
 	imageUri?: string;
+	formationPlayerUuid?: string | null;
 	owner?: IUser;
 	isInAuction?: boolean;
 	auctions?: IAuction[];

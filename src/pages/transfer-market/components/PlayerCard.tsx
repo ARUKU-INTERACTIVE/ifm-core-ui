@@ -121,7 +121,7 @@ export default function PlayerCard({
 
 	return (
 		<div
-			className="w-[200px] rounded-xl border-[1px] border-gray-300 overflow-hidden shadow-lg p-2 pb-0"
+			className="w-[200px] rounded-xl border-[1px] border-gray-300 overflow-hidden shadow-lg p-2 pb-0 bg-white"
 			data-test="card"
 		>
 			<div className="w-full h-48 bg-gray-200 relative z-0">

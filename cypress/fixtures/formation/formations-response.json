@@ -1,0 +1,30 @@
+{
+	"data": [
+		{
+			"type": "formation",
+			"id": "1",
+			"attributes": {
+				"uuid": "550e8400-e29b-41d4-a716-446655440000",
+				"forwards": 2,
+				"midfielders": 5,
+				"defenders": 3,
+				"name": "3-5-2",
+				"createdAt": "2024-03-20T10:00:00Z",
+				"updatedAt": "2024-03-20T10:00:00Z",
+				"deletedAt": null
+			}
+		}
+	],
+	"links": {
+		"self": "https://example.com/api/formation",
+		"last": "https://example.com/api/formation?page=2",
+		"next": null
+	},
+	"meta": {
+		"pageNumber": 1,
+		"pageSize": 10,
+		"pageCount": 1,
+		"itemCount": 1
+	},
+	"included": []
+}
