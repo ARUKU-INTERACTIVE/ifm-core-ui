@@ -255,8 +255,8 @@ const Formation = () => {
 	}, [handleGetFormations, team]);
 
 	useEffect(() => {
-		setFormationLayout(
-			calculatePlayerPositions(selectedFormation, formationLayout),
+		setFormationLayout((prevFormationLayout) =>
+			calculatePlayerPositions(selectedFormation, prevFormationLayout),
 		);
 	}, [selectedFormation]);
 
