@@ -1,5 +1,6 @@
 import { IBaseEntity } from '../api/IBaseEntity';
 import { IFormationPlayer } from '../formation-player/IFormationPlayer.interface';
+import { IRoster } from '../roster/IRoster';
 
 export interface IFormation extends IBaseEntity {
 	name: string;
@@ -7,7 +8,7 @@ export interface IFormation extends IBaseEntity {
 	forwards: number;
 	midfielders: number;
 	defenders: number;
-	roster: any;
+	roster: IRoster;
 	rosterId: number;
 	isActive?: boolean;
 	formationPlayers: IFormationPlayer[];
