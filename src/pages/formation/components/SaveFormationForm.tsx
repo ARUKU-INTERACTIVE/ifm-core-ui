@@ -1,5 +1,5 @@
-import { Field, Form, Formik, FormikHelpers } from 'formik';
-import { ReactNode, useEffect } from 'react';
+import { Field, Form, Formik } from 'formik';
+import { ReactNode } from 'react';
 
 import { saveFormationSchema } from './schemas/saveFormationSchema';
 
@@ -28,17 +28,12 @@ const SaveFormationForm = ({
 	children,
 	selectedSavedFormation,
 }: ISaveFormationFormProps) => {
-	const handleSubmit = async (
-		values: IFormationValues,
-		{ resetForm }: FormikHelpers<IFormationValues>,
-	) => {
-		if (selectedSavedFormation) {
+	const handleSubmit = async (values: IFormationValues) => {
+		if (selectedSavedFormation?.name) {
 			await handleUpdateFormation(values);
 		} else {
 			await handleSaveFormation(values);
 		}
-
-		// resetForm();
 	};
 
 	return (
@@ -91,7 +86,7 @@ const SaveFormationForm = ({
 						type="submit"
 						className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded-lg text-sm h-11 self-end"
 					>
-						{selectedSavedFormation ? (
+						{selectedSavedFormation?.name ? (
 							<span>Update formation</span>
 						) : (
 							<span className="">Save formation</span>

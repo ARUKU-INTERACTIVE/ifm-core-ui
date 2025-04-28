@@ -1,7 +1,13 @@
 import { IFormationSubset } from '../interfaces/IFormationSubset';
-import { IFormationLayout } from '../interfaces/formation-players.interface';
+import {
+	IFormationLayout,
+	IFormationPlayerPartial,
+} from '../interfaces/formation-players.interface';
 
-import { Position } from '@/interfaces/formation-player/IFormationPlayer.interface';
+import {
+	IFormationPlayer,
+	Position,
+} from '@/interfaces/formation-player/IFormationPlayer.interface';
 
 export const calculatePlayerPositions = (
 	formation: IFormationSubset,
@@ -22,12 +28,20 @@ export const calculatePlayerPositions = (
 		goalkeeper: [],
 	};
 	let positionIndex = 1;
-
-	formationLayout.goalkeeper.push({
+	let goalkeeper: IFormationPlayerPartial = {
 		positionIndex,
 		position: Position.Goalkeeper,
-		player: formationSavedLayout?.goalkeeper?.[0]?.player,
-	});
+	};
+
+	if (formationSavedLayout?.goalkeeper?.[0]?.player) {
+		goalkeeper = {
+			...formationLayout.goalkeeper?.[0],
+			positionIndex,
+			position: Position.Goalkeeper,
+			player: formationSavedLayout?.goalkeeper?.[0]?.player,
+		};
+	}
+	formationLayout.goalkeeper.push(goalkeeper);
 	positionIndex += 1;
 
 	for (let i = 0; i < formation.defenders; i++) {
@@ -36,11 +50,19 @@ export const calculatePlayerPositions = (
 					(formationPlayer) => formationPlayer.positionIndex === positionIndex,
 			  )
 			: undefined;
-		formationLayout.defenders.push({
+		let defenderDraft: IFormationPlayerPartial = {
 			positionIndex,
 			position: Position.Defender,
-			player: defender?.player,
-		});
+		};
+		if (defender) {
+			defenderDraft = {
+				...defender,
+				positionIndex,
+				position: Position.Defender,
+				player: defender?.player,
+			};
+		}
+		formationLayout.defenders.push(defenderDraft);
 		positionIndex += 1;
 	}
 
@@ -50,11 +72,19 @@ export const calculatePlayerPositions = (
 					(formationPlayer) => formationPlayer.positionIndex === positionIndex,
 			  )
 			: undefined;
-		formationLayout.midfielders.push({
+		let midfielderDraft: IFormationPlayerPartial = {
 			positionIndex,
 			position: Position.Midfielder,
-			player: midfielder?.player,
-		});
+		};
+		if (midfielder) {
+			midfielderDraft = {
+				...midfielder,
+				positionIndex,
+				position: Position.Midfielder,
+				player: midfielder?.player,
+			};
+		}
+		formationLayout.midfielders.push(midfielderDraft);
 		positionIndex += 1;
 	}
 
@@ -64,11 +94,19 @@ export const calculatePlayerPositions = (
 					(formationPlayer) => formationPlayer.positionIndex === positionIndex,
 			  )
 			: undefined;
-		formationLayout.forwards.push({
+		let forwardDraft: IFormationPlayerPartial = {
 			positionIndex,
 			position: Position.Forward,
-			player: forward?.player,
-		});
+		};
+		if (forward) {
+			forwardDraft = {
+				...forward,
+				positionIndex,
+				position: Position.Forward,
+				player: forward?.player,
+			};
+		}
+		formationLayout.forwards.push(forwardDraft);
 		positionIndex += 1;
 	}
 

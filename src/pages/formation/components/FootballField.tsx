@@ -71,8 +71,7 @@ const FootballField = ({
 							/>
 						))}
 					</div>
-					{/* Renderiza jugadores de campo */}
-					<div className="flex flex-col h-full justify-center items-center gap-8 flex-1">
+					<div className="flex flex-col h-full justify-center items-center gap-6 flex-1">
 						{players.defenders.map((formationPlayer, idx) => (
 							<PlayerPosition
 								handleSelectSpot={() => {
@@ -90,7 +89,7 @@ const FootballField = ({
 					</div>
 
 					<div className="flex flex-col h-full justify-center items-center gap-6 flex-1" />
-					<div className="flex flex-col h-full justify-center items-center gap-8 flex-1">
+					<div className="flex flex-col h-full justify-center items-center gap-6 flex-1">
 						{players.midfielders.map((formationPlayer, idx) => (
 							<PlayerPosition
 								handleSelectSpot={() => {
@@ -107,7 +106,7 @@ const FootballField = ({
 						))}
 					</div>
 					<div className="flex flex-col h-full justify-center items-start gap-6 flex-1" />
-					<div className="flex flex-col h-full justify-center items-center gap-10 flex-1">
+					<div className="flex flex-col h-full justify-center items-center gap-6 flex-1">
 						{players.forwards.map((formationPlayer, idx) => (
 							<PlayerPosition
 								handleSelectSpot={() => {

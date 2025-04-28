@@ -2,8 +2,12 @@ import { Position } from '../formation-player/IFormationPlayer.interface';
 
 export interface ICreateFormationPlayer {
 	position: Position;
-	playerUuid: string;
 	positionIndex: number;
+}
+
+export interface ICreateFormationPlayerUuid extends ICreateFormationPlayer {
+	playerUuid: string;
+	formationPlayerUuid?: string;
 }
 
 export interface ICreateFormation {
@@ -14,5 +18,5 @@ export interface ICreateFormation {
 	midfielders: number;
 	defenders: number;
 	isActive?: boolean;
-	formationPlayers: ICreateFormationPlayer[];
+	formationPlayers: ICreateFormationPlayerUuid[];
 }

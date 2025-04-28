@@ -9,7 +9,11 @@ export const updateFormationPlayer = (
 ) => {
 	return formationPlayers.map((currentFormationPlayer) =>
 		currentFormationPlayer.positionIndex === formationPlayer.positionIndex
-			? { ...formationPlayer, player }
+			? {
+					...formationPlayer,
+					uuid: player?.formationPlayerUuid ?? formationPlayer.uuid,
+					player,
+			  }
 			: currentFormationPlayer,
 	);
 };

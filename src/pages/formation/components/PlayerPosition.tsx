@@ -35,6 +35,7 @@ const PlayerPosition = ({
 		>
 			{player && (
 				<button
+					type="button"
 					className="cursor-pointer text-xs text-red-600 absolute bottom-[100%] right-4"
 					onClick={() => handleRemovePlayerFromSpot()}
 				>
@@ -42,6 +43,7 @@ const PlayerPosition = ({
 				</button>
 			)}
 			<button
+				type="button"
 				onClick={() => handleSelectSpot()}
 				className={`cursor-pointer w-8 h-8 rounded-full border-2 ${
 					isPositionSelected ? 'border-orange-500' : 'border-white'
