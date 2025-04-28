@@ -115,6 +115,11 @@ describe('Auctions Page', () => {
 			{ fixture: 'user/my-user.json' },
 		);
 		cy.interceptApi(
+			'/player?sort%5BcreatedAt%5D=ASC',
+			{ method: 'GET' },
+			{ fixture: 'auction/auction-page-players-response.json' },
+		);
+		cy.interceptApi(
 			`/player?filter%5Bname%5D=${searchValue}&sort%5BcreatedAt%5D=ASC`,
 			{ method: 'GET' },
 			{ fixture: 'auction/search-auction-player-response.json' },
@@ -134,7 +139,7 @@ describe('Auctions Page', () => {
 					asset_code: 'NFT',
 					balance: '0.0000001',
 					asset_issuer:
-						'GBXGQJWVLWOYHFLVTKWV5FGHA3LNYY2JQKM7OAJAUEQFU6LPCSEFVXOQ',
+						'GCFK2GVIJDIWVGPCG7OAE54SXSAITK5QCF4OMIQVEI4YIIM2H2N7IPHQ',
 					asset_type: 'credit_alphanum4',
 				},
 			],
