@@ -1,4 +1,4 @@
-import { IFormationPlayerPartial } from '../interfaces/formation-players.interface';
+import { IFormationPlayerPartial } from '../interfaces/IFormationPlayers';
 
 import { IPlayer } from '@/interfaces/player/IPlayer';
 

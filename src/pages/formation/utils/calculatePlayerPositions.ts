@@ -1,8 +1,8 @@
-import { IFormationSubset } from '../interfaces/IFormationSubset';
 import {
 	IFormationLayout,
 	IFormationPlayerPartial,
-} from '../interfaces/formation-players.interface';
+} from '../interfaces/IFormationPlayers';
+import { IFormationSubset } from '../interfaces/IFormationSubset';
 
 import {
 	IFormationPlayer,

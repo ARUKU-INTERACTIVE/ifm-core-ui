@@ -5,11 +5,11 @@ import FormationPlayersList from './components/FormationPlayersList';
 import SaveFormationForm, {
 	IFormationValues,
 } from './components/SaveFormationForm';
-import { IFormationSubset } from './interfaces/IFormationSubset';
 import {
 	IFormationLayout,
 	IFormationPlayerPartial,
-} from './interfaces/formation-players.interface';
+} from './interfaces/IFormationPlayers';
+import { IFormationSubset } from './interfaces/IFormationSubset';
 import { calculatePlayerPositions } from './utils/calculatePlayerPositions';
 import { presetFormations } from './utils/presetFormations';
 import { updateFormationPlayer } from './utils/updateFormationPlayer';
@@ -46,7 +46,7 @@ const Formation = () => {
 		forwards: [],
 	});
 	const [formationDescription, setFormationDescription] = useState<string>('');
-	console.log(formationLayout, 'foramtionLaoyut');
+
 	const handleSaveFormation = async (formationValues: IFormationValues) => {
 		const { formationName, isActiveFormation } = formationValues;
 		const { goalkeeper, midfielders, defenders, forwards } = formationLayout;
@@ -98,11 +98,21 @@ const Formation = () => {
 		notificationService.success(
 			`${createFormation.defenders}-${createFormation.midfielders}-${createFormation.forwards} formation named ${createFormation.name} was successfully created. `,
 		);
-		setFormations((prev) => [...prev, formation.data.attributes]);
+		if (isActiveFormation) {
+			setFormations((prev) => [
+				...prev.map((formation) => ({ ...formation, isActive: false })),
+				formation.data.attributes,
+			]);
+		} else {
+			setFormations((prev) => [...prev, formation.data.attributes]);
+		}
 		setSelectedSavedFormation(selectedSavedFormation);
 	};
 
 	const handleUpdateFormation = async (formationValues: IFormationValues) => {
+		if (!selectedSavedFormation) {
+			return;
+		}
 		const { formationName, isActiveFormation } = formationValues;
 		const { goalkeeper, midfielders, defenders, forwards } = formationLayout;
 		const formationPlayers = [
@@ -111,7 +121,6 @@ const Formation = () => {
 			...midfielders,
 			...forwards,
 		];
-		console.log(formationPlayers, 'formationPlayers');
 		const newFormationPlayers: IFormationPlayerPartial[] = [];
 		const formationPlayersUpdate: IFormationPlayerPartial[] = [];
 		formationPlayers.forEach((formationPlayer) => {
@@ -122,7 +131,7 @@ const Formation = () => {
 			}
 		});
 
-		const createFormation: IUpdateFormation = {
+		const updateFormation: IUpdateFormation = {
 			name: formationName,
 			isActive: isActiveFormation,
 			description: formationDescription,
@@ -147,12 +156,19 @@ const Formation = () => {
 			),
 		};
 
-		const formation = await formationService.updateFormation(createFormation);
-		console.log(formation);
+		await formationService.updateFormation(updateFormation);
 		notificationService.success(
-			`${createFormation.defenders}-${createFormation.midfielders}-${createFormation.forwards} formation named ${createFormation.name} was successfully updated. `,
+			`${updateFormation.defenders}-${updateFormation.midfielders}-${updateFormation.forwards} formation named ${updateFormation.name} was successfully updated. `,
 		);
-		//setFormations((prev) => [...prev, formation.data.attributes]);
+		if (isActiveFormation) {
+			setFormations((prev) =>
+				prev.map((formation) =>
+					formation.uuid === selectedSavedFormation.uuid
+						? { ...formation, isActive: isActiveFormation }
+						: { ...formation, isActive: false },
+				),
+			);
+		}
 	};
 
 	const handleGetTeam = useCallback(async () => {

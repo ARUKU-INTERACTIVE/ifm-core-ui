@@ -1,4 +1,4 @@
-import { IFormationPlayerPartial } from '../interfaces/formation-players.interface';
+import { IFormationPlayerPartial } from '../interfaces/IFormationPlayers';
 
 export enum PlayerPositionColor {
 	YELLOW = '#FFD700',

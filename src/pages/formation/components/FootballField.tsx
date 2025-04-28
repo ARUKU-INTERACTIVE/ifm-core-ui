@@ -1,7 +1,7 @@
 import {
 	IFormationLayout,
 	IFormationPlayerPartial,
-} from '../interfaces/formation-players.interface';
+} from '../interfaces/IFormationPlayers';
 import PlayerPosition, { PlayerPositionColor } from './PlayerPosition';
 
 interface IFootballFieldProps {
