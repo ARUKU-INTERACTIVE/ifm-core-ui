@@ -48,6 +48,27 @@ class StellarService implements IStellarService {
 		const transaction = TransactionBuilder.fromXDR(xdr, 'base64');
 		await this.server.submitTransaction(transaction);
 	}
+
+	async checkTrustline(
+		accountAddress: string,
+		tokenIssuer: string,
+		tokenCode: string,
+	): Promise<boolean> {
+		try {
+			const account = await this.server.loadAccount(accountAddress);
+
+			return account.balances.some(
+				(balance) =>
+					(balance.asset_type === 'credit_alphanum4' ||
+						balance.asset_type === 'credit_alphanum12') &&
+					balance.asset_code === tokenCode &&
+					balance.asset_issuer === tokenIssuer,
+			);
+		} catch (err) {
+			console.error(err);
+			throw new Error('There was an error checking the trustline');
+		}
+	}
 }
 
 export const stellarService = new StellarService(apiService);
