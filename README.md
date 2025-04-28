@@ -57,7 +57,7 @@ Web App using React + Vite.
 | --------------------------------- | --------------------------------------- |
 | `VITE_STELLAR_HORIZON_URL`        | Stellar server url.                     |
 | `VITE_STELLAR_NETWORK_PASSPHRASE` | Stellar Network's security passphrase . |
-| `VITE_STELLAR_TOKEN_CODE`         | Default asset code for Player.          |
+| `VITE_STELLAR_DEFAULT_PLAYER_CODE`| Default asset code for Player.          |
 
 # How to run
 
