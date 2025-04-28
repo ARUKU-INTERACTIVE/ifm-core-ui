@@ -78,15 +78,15 @@ const Formation = () => {
 		try {
 			const formation = await formationService.saveFormation(createFormation);
 			const selectedSavedFormation = formation.data.attributes;
-			const formationPlayerOnlyUuid =
+			const formationPlayersMappedByUuid =
 				selectedSavedFormation?.formationPlayers.map((formationPlayer) => ({
 					playerUuid: formationPlayer.player.uuid,
 					formationPlayerUuid: formationPlayer.uuid,
 				}));
 
-			setRosterPlayers((prev) =>
-				prev.map((player) => {
-					const foundPlayer = formationPlayerOnlyUuid?.find(
+			setRosterPlayers((previousRosterPlayers) =>
+				previousRosterPlayers.map((player) => {
+					const foundPlayer = formationPlayersMappedByUuid?.find(
 						(formationPlayer) => formationPlayer.playerUuid === player.uuid,
 					);
 					if (foundPlayer) {
@@ -268,7 +268,7 @@ const Formation = () => {
 		formationPlayer: IFormationPlayerPartial,
 		player: IPlayer,
 	) => {
-		setFormationLayout((prev) => {
+		setFormationLayout((previousFormationLayout) => {
 			const updateFormationLayout = (
 				formationPlayerPartial: IFormationPlayerPartial[],
 			) => {
@@ -279,10 +279,10 @@ const Formation = () => {
 				);
 			};
 			return {
-				goalkeeper: updateFormationLayout(prev.goalkeeper),
-				defenders: updateFormationLayout(prev.defenders),
-				midfielders: updateFormationLayout(prev.midfielders),
-				forwards: updateFormationLayout(prev.forwards),
+				goalkeeper: updateFormationLayout(previousFormationLayout.goalkeeper),
+				defenders: updateFormationLayout(previousFormationLayout.defenders),
+				midfielders: updateFormationLayout(previousFormationLayout.midfielders),
+				forwards: updateFormationLayout(previousFormationLayout.forwards),
 			};
 		});
 		setSelectedSpot(null);
@@ -292,10 +292,12 @@ const Formation = () => {
 		formationPlayer: IFormationPlayerPartial,
 	) => {
 		if (!formationPlayer.player) {
-			return notificationService.error('Not found player in formation layout');
+			return notificationService.error(
+				"We couldn't find this player in the layout",
+			);
 		}
 
-		setFormationLayout((prev) => {
+		setFormationLayout((previousFormationLayout) => {
 			const removePlayerFromFormationLayout = (
 				formationPlayerPartial: IFormationPlayerPartial[],
 			) => {
@@ -306,30 +308,43 @@ const Formation = () => {
 				);
 			};
 			return {
-				goalkeeper: removePlayerFromFormationLayout(prev.goalkeeper),
-				defenders: removePlayerFromFormationLayout(prev.defenders),
-				midfielders: removePlayerFromFormationLayout(prev.midfielders),
-				forwards: removePlayerFromFormationLayout(prev.forwards),
+				goalkeeper: removePlayerFromFormationLayout(
+					previousFormationLayout.goalkeeper,
+				),
+				defenders: removePlayerFromFormationLayout(
+					previousFormationLayout.defenders,
+				),
+				midfielders: removePlayerFromFormationLayout(
+					previousFormationLayout.midfielders,
+				),
+				forwards: removePlayerFromFormationLayout(
+					previousFormationLayout.forwards,
+				),
 			};
 		});
 	};
 
-	const handleFormationChange = (evt: ChangeEvent<HTMLSelectElement>) => {
-		const formationId = parseInt(evt.target.value);
-		const formation = presetFormations.find((f) => f.id === formationId);
+	const handleFormationChange = (event: ChangeEvent<HTMLSelectElement>) => {
+		const formationId = parseInt(event.target.value);
+		const formation = presetFormations.find(
+			(presetFormation) => presetFormation.id === formationId,
+		);
 		if (formation) {
 			setSelectedFormation(formation);
 			setSelectedSavedFormation({ uuid: 'Default' } as IFormation);
-			setRosterPlayers((prev) =>
-				prev.map((player) => ({ ...player, formationPlayerUuid: null })),
+			setRosterPlayers((previousRosterPlayers) =>
+				previousRosterPlayers.map((player) => ({
+					...player,
+					formationPlayerUuid: null,
+				})),
 			);
 		}
 	};
 
 	const handleSavedFormationChange = async (
-		evt: ChangeEvent<HTMLSelectElement>,
+		event: ChangeEvent<HTMLSelectElement>,
 	) => {
-		const { value } = evt.target;
+		const { value } = event.target;
 		const foundedFormation = formations.find(
 			(formation) => formation.uuid === value,
 		);
@@ -343,15 +358,15 @@ const Formation = () => {
 		if (selectedSavedFormation.uuid) {
 			setSelectedSavedFormation(selectedSavedFormation);
 		}
-		const formationPlayerOnlyUuid =
+		const formationPlayersMappedByUuid =
 			selectedSavedFormation?.formationPlayers.map((formationPlayer) => ({
 				playerUuid: formationPlayer.player.uuid,
 				formationPlayerUuid: formationPlayer.uuid,
 			}));
 
-		setRosterPlayers((prev) =>
-			prev.map((player) => {
-				const foundPlayer = formationPlayerOnlyUuid?.find(
+		setRosterPlayers((previousRosterPlayers) =>
+			previousRosterPlayers.map((player) => {
+				const foundPlayer = formationPlayersMappedByUuid?.find(
 					(formationPlayer) => formationPlayer.playerUuid === player.uuid,
 				);
 				if (foundPlayer) {

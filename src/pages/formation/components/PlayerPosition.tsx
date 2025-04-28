@@ -1,12 +1,7 @@
 import { IFormationPlayerPartial } from '../interfaces/IFormationPlayers';
+import { getPlayerInitials } from '../utils/getPlayerInitials';
 
-export enum PlayerPositionColor {
-	YELLOW = '#FFD700',
-	BLUE = '#1E90FF',
-	RED = '#FF4500',
-	GREEN = '#4CAF50',
-	NON_SELECTED = '#808080',
-}
+import { PlayerPositionColor } from '@/interfaces/formation/player-position-color.enum';
 
 interface IPlayerPositionProps {
 	formationPlayer: IFormationPlayerPartial;
@@ -26,10 +21,7 @@ const PlayerPosition = ({
 	dataTest,
 }: IPlayerPositionProps) => {
 	const { player } = formationPlayer;
-	const playerInitials = player?.name
-		.split(' ')
-		.map((word) => word.charAt(0).toUpperCase())
-		.join('');
+	const playerInitials = getPlayerInitials(player?.name);
 	return (
 		<div
 			className="relative w-full h-6 flex items-center justify-center text-white text-xs font-bold"

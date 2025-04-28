@@ -2,7 +2,9 @@ import {
 	IFormationLayout,
 	IFormationPlayerPartial,
 } from '../interfaces/IFormationPlayers';
-import PlayerPosition, { PlayerPositionColor } from './PlayerPosition';
+import PlayerPosition from './PlayerPosition';
+
+import { PlayerPositionColor } from '@/interfaces/formation/player-position-color.enum';
 
 interface IFootballFieldProps {
 	players: IFormationLayout;
@@ -56,10 +58,10 @@ const FootballField = ({
 
 				<div className="flex flex-row h-full">
 					<div className="flex flex-1 justify-start items-center">
-						{players.goalkeeper.map((formationPlayer, idx) => (
+						{players.goalkeeper.map((formationPlayer, index) => (
 							<PlayerPosition
-								key={`goal-${idx}`}
-								dataTest={`goalkeeper-position-spot-${idx}`}
+								key={`goal-${index}`}
+								dataTest={`goalkeeper-position-spot-${index}`}
 								formationPlayer={formationPlayer}
 								backgroundColor={PlayerPositionColor.YELLOW}
 								handleSelectSpot={() => {
@@ -73,7 +75,7 @@ const FootballField = ({
 						))}
 					</div>
 					<div className="flex flex-col h-full justify-center items-center gap-6 flex-1">
-						{players.defenders.map((formationPlayer, idx) => (
+						{players.defenders.map((formationPlayer, index) => (
 							<PlayerPosition
 								handleSelectSpot={() => {
 									handleSelectSpot(formationPlayer);
@@ -81,8 +83,8 @@ const FootballField = ({
 								handleRemovePlayerFromSpot={() => {
 									handleRemovePlayerFromFormationLayout(formationPlayer);
 								}}
-								dataTest={`defender-position-spot-${idx}`}
-								key={`def-${idx}`}
+								dataTest={`defender-position-spot-${index}`}
+								key={`def-${index}`}
 								formationPlayer={formationPlayer}
 								backgroundColor={PlayerPositionColor.BLUE}
 								isPositionSelected={selectedSpot === formationPlayer}
@@ -92,7 +94,7 @@ const FootballField = ({
 
 					<div className="flex flex-col h-full justify-center items-center gap-6 flex-1" />
 					<div className="flex flex-col h-full justify-center items-center gap-6 flex-1">
-						{players.midfielders.map((formationPlayer, idx) => (
+						{players.midfielders.map((formationPlayer, index) => (
 							<PlayerPosition
 								handleSelectSpot={() => {
 									handleSelectSpot(formationPlayer);
@@ -100,8 +102,8 @@ const FootballField = ({
 								handleRemovePlayerFromSpot={() => {
 									handleRemovePlayerFromFormationLayout(formationPlayer);
 								}}
-								dataTest={`midfielder-position-spot-${idx}`}
-								key={`mid-${idx}`}
+								dataTest={`midfielder-position-spot-${index}`}
+								key={`mid-${index}`}
 								formationPlayer={formationPlayer}
 								backgroundColor={PlayerPositionColor.GREEN}
 								isPositionSelected={selectedSpot === formationPlayer}
@@ -110,7 +112,7 @@ const FootballField = ({
 					</div>
 					<div className="flex flex-col h-full justify-center items-start gap-6 flex-1" />
 					<div className="flex flex-col h-full justify-center items-center gap-6 flex-1">
-						{players.forwards.map((formationPlayer, idx) => (
+						{players.forwards.map((formationPlayer, index) => (
 							<PlayerPosition
 								handleSelectSpot={() => {
 									handleSelectSpot(formationPlayer);
@@ -118,8 +120,8 @@ const FootballField = ({
 								handleRemovePlayerFromSpot={() => {
 									handleRemovePlayerFromFormationLayout(formationPlayer);
 								}}
-								dataTest={`forward-position-spot-${idx}`}
-								key={`fwd-${idx}`}
+								dataTest={`forward-position-spot-${index}`}
+								key={`fwd-${index}`}
 								formationPlayer={formationPlayer}
 								backgroundColor={PlayerPositionColor.RED}
 								isPositionSelected={selectedSpot === formationPlayer}
