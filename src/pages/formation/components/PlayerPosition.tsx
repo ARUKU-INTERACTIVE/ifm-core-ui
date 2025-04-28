@@ -1,4 +1,4 @@
-import { IFormationSpot } from '../interfaces/coordinates.interface';
+import { IFormationPlayerPartial } from '../interfaces/formation-players.interface';
 
 export enum PlayerPositionColor {
 	YELLOW = '#FFD700',
@@ -9,7 +9,7 @@ export enum PlayerPositionColor {
 }
 
 interface IPlayerPositionProps {
-	formationSpot: IFormationSpot;
+	formationPlayer: IFormationPlayerPartial;
 	backgroundColor: PlayerPositionColor;
 	handleSelectSpot: () => void;
 	handleRemovePlayerFromSpot: () => void;
@@ -17,18 +17,17 @@ interface IPlayerPositionProps {
 }
 
 const PlayerPosition = ({
-	formationSpot,
+	formationPlayer,
 	backgroundColor,
 	handleSelectSpot,
 	handleRemovePlayerFromSpot,
 	isPositionSelected,
 }: IPlayerPositionProps) => {
-	const { player } = formationSpot;
+	const { player } = formationPlayer;
 	const playerInitials = player?.name
 		.split(' ')
 		.map((word) => word.charAt(0).toUpperCase())
 		.join('');
-	console.log(backgroundColor, 'backgroundColor');
 	return (
 		<div
 			className="relative w-full h-6 flex items-center justify-center text-white text-xs font-bold"

@@ -1,4 +1,4 @@
-import { IFormationSpot } from '../interfaces/coordinates.interface';
+import { IFormationPlayerPartial } from '../interfaces/formation-players.interface';
 import PlayerFormationCard from './PlayerFormationCard';
 
 import { IPlayer } from '@/interfaces/player/IPlayer';
@@ -6,10 +6,10 @@ import { IPlayer } from '@/interfaces/player/IPlayer';
 interface IFormationPlayersListProps {
 	rosterPlayers: IPlayer[];
 	handleUpdateFormationSpotInLayout: (
-		formationSpot: IFormationSpot,
+		formationPlayer: IFormationPlayerPartial,
 		player: IPlayer,
 	) => void;
-	selectedSpot: IFormationSpot | null;
+	selectedSpot: IFormationPlayerPartial | null;
 }
 const FormationPlayersList = ({
 	rosterPlayers,

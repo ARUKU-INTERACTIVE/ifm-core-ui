@@ -1,17 +1,14 @@
-import { IFormationSpot } from './coordinates.interface';
-
 import { IFormationPlayer } from '@/interfaces/formation-player/IFormationPlayer.interface';
+import { IPlayer } from '@/interfaces/player/IPlayer';
 
-export interface IFormationLayout {
-	goalkeeper: IFormationSpot[];
-	forwards: IFormationSpot[];
-	defenders: IFormationSpot[];
-	midfielders: IFormationSpot[];
+export interface IFormationPlayerPartial
+	extends Partial<Omit<IFormationPlayer, 'player'>> {
+	player?: IPlayer | null;
 }
 
-export interface IFormationSavedLayout {
-	goalkeeper: IFormationPlayer[];
-	forwards: IFormationPlayer[];
-	defenders: IFormationPlayer[];
-	midfielders: IFormationPlayer[];
+export interface IFormationLayout {
+	goalkeeper: IFormationPlayerPartial[];
+	forwards: IFormationPlayerPartial[];
+	defenders: IFormationPlayerPartial[];
+	midfielders: IFormationPlayerPartial[];
 }

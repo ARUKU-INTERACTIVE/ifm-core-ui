@@ -40,7 +40,6 @@ class FormationService implements IFormationService {
 	async saveFormation(
 		createFormation: ICreateFormation,
 	): Promise<ISingleResponse<IFormation>> {
-		console.log(createFormation, 'createFormation');
 		return await this.api.post<ISingleResponse<IFormation>>(
 			'/formation',
 			createFormation,

@@ -6,17 +6,16 @@ import SaveFormationForm, {
 	IFormationValues,
 } from './components/SaveFormationForm';
 import { IFormationSubset } from './interfaces/IFormationSubset';
-import { IFormationSpot } from './interfaces/coordinates.interface';
-import { IFormationLayout } from './interfaces/formation-players.interface';
 import {
-	calculatePlayerPosition,
-	calculatePlayerPositions,
-} from './utils/calculatePlayerPositions';
-import { calculatePlayerSavedPositions } from './utils/calculatePlayerSavedPositions';
+	IFormationLayout,
+	IFormationPlayerPartial,
+} from './interfaces/formation-players.interface';
+import { calculatePlayerPositions } from './utils/calculatePlayerPositions';
 import { presetFormations } from './utils/presetFormations';
 
 import { GET_TEAM_ERROR_MESSAGE } from '@/constants/messages/team-messages';
 import { useGetMe } from '@/hooks/auth/useGetMe';
+import { Position } from '@/interfaces/formation-player/IFormationPlayer.interface';
 import { ICreateFormation } from '@/interfaces/formation/ICreateFormation.interface';
 import { IFormation } from '@/interfaces/formation/IFormation.interface';
 import { IPlayer } from '@/interfaces/player/IPlayer';
@@ -36,7 +35,8 @@ const Formation = () => {
 	const [selectedSavedFormation, setSelectedSavedFormation] =
 		useState<IFormation | null>(null);
 	const [formations, setFormations] = useState<IFormation[]>([]);
-	const [selectedSpot, setSelectedSpot] = useState<IFormationSpot | null>(null);
+	const [selectedSpot, setSelectedSpot] =
+		useState<IFormationPlayerPartial | null>(null);
 	const [formationLayout, setFormationLayout] = useState<IFormationLayout>({
 		goalkeeper: [],
 		defenders: [],
@@ -44,7 +44,6 @@ const Formation = () => {
 		forwards: [],
 	});
 	const [formationDescription, setFormationDescription] = useState<string>('');
-	console.log(formations, 'formations');
 
 	const handleSaveFormation = async (formationValues: IFormationValues) => {
 		const { formationName, isActiveFormation } = formationValues;
@@ -60,10 +59,10 @@ const Formation = () => {
 			isActive: isActiveFormation,
 			description: formationDescription,
 			formationPlayers: formationPlayers.map(
-				({ position, positionIndex: order, player }) => ({
-					position,
+				({ position, positionIndex, player }) => ({
+					position: position ?? Position.Goalkeeper,
 					playerUuid: player?.uuid ?? '',
-					positionIndex: order,
+					positionIndex: positionIndex ?? 0,
 				}),
 			),
 			defenders: selectedFormation.defenders,
@@ -78,6 +77,7 @@ const Formation = () => {
 			`${createFormation.defenders}-${createFormation.midfielders}-${createFormation.forwards} formation named ${createFormation.name} was successfully created. `,
 		);
 		setFormations((prev) => [...prev, formation.data.attributes]);
+		setSelectedSavedFormation(formation.data.attributes);
 	};
 
 	const handleUpdateFormation = async (formationValues: IFormationValues) => {
@@ -94,10 +94,10 @@ const Formation = () => {
 			isActive: isActiveFormation,
 			description: formationDescription,
 			formationPlayers: formationPlayers.map(
-				({ position, positionIndex: order, player }) => ({
-					position,
+				({ position, positionIndex, player }) => ({
+					position: position ?? Position.Goalkeeper,
 					playerUuid: player?.uuid ?? '',
-					positionIndex: order,
+					positionIndex: positionIndex ?? 0,
 				}),
 			),
 			defenders: selectedFormation.defenders,
@@ -183,24 +183,24 @@ const Formation = () => {
 
 	useEffect(() => {
 		setFormationLayout(
-			calculatePlayerPosition(selectedFormation, formationLayout as any),
+			calculatePlayerPositions(selectedFormation, formationLayout as any),
 		);
 		setFormationDescription(selectedFormation.name);
 	}, [selectedFormation]);
 
-	const handleSelectSpot = (formationSpot: IFormationSpot) => {
-		setSelectedSpot(formationSpot);
+	const handleSelectSpot = (formationPlayer: IFormationPlayerPartial) => {
+		setSelectedSpot(formationPlayer);
 	};
 
 	const handleUpdateFormationSpotInLayout = (
-		formationSpot: IFormationSpot,
+		formationPlayer: IFormationPlayerPartial,
 		player: IPlayer,
 	) => {
 		setFormationLayout((prev) => {
-			const updateLine = (line: IFormationSpot[]) =>
+			const updateLine = (line: IFormationPlayerPartial[]) =>
 				line.map((s) =>
-					s.positionIndex === formationSpot.positionIndex
-						? { ...formationSpot, player }
+					s.positionIndex === formationPlayer.positionIndex
+						? { ...formationPlayer, player }
 						: s,
 				);
 
@@ -218,16 +218,16 @@ const Formation = () => {
 	};
 
 	const handleRemovePlayerFromFormationLayout = (
-		formationSpot: IFormationSpot,
+		formationPlayer: IFormationPlayerPartial,
 	) => {
-		if (!formationSpot.player) {
+		if (!formationPlayer.player) {
 			return console.error('Not found player in formation layout');
 		}
 		setFormationLayout((prev) => {
-			const updateLine = (line: IFormationSpot[]) =>
+			const updateLine = (line: IFormationPlayerPartial[]) =>
 				line.map((s) =>
-					s.positionIndex === formationSpot.positionIndex
-						? { ...formationSpot, player: null }
+					s.positionIndex === formationPlayer.positionIndex
+						? { ...line, player: null }
 						: s,
 				);
 
@@ -239,27 +239,15 @@ const Formation = () => {
 			};
 		});
 
-		setRosterPlayers((prev) => [...prev, formationSpot.player as IPlayer]);
+		setRosterPlayers((prev) => [...prev, formationPlayer.player as IPlayer]);
 	};
 
 	const handleFormationChange = (evt: ChangeEvent<HTMLSelectElement>) => {
 		const formationId = parseInt(evt.target.value);
 		const formation = presetFormations.find((f) => f.id === formationId);
 		if (formation) {
-			//setRosterPlayers((prev) => [
-			//	...prev,
-			//	...formationLayout.defenders
-			//		.map(({ player }) => player)
-			//		.filter((player) => player !== undefined && player !== null),
-			//]);
 			setSelectedFormation(formation);
 			setSelectedSavedFormation(null);
-			//setFormationLayout((prev) => ({
-			//	defenders: [...prev.defenders,],
-			//	forwards: [...prev.forwards],
-			//	goalkeeper: [...prev.goalkeeper],
-			//	midfielders: [...prev.midfielders],
-			//}));
 		}
 	};
 
@@ -293,7 +281,7 @@ const Formation = () => {
 				forwards: mappedFormation.Forward,
 			};
 			setFormationLayout(
-				calculatePlayerPosition(formation.data.attributes, draftFormation),
+				calculatePlayerPositions(formation.data.attributes, draftFormation),
 			);
 			setRosterPlayers((prev) =>
 				prev.filter((player) => !playersUuIds.includes(player.uuid)),

@@ -1,14 +1,16 @@
-import { IFormationSpot } from '../interfaces/coordinates.interface';
-import { IFormationLayout } from '../interfaces/formation-players.interface';
+import {
+	IFormationLayout,
+	IFormationPlayerPartial,
+} from '../interfaces/formation-players.interface';
 import PlayerPosition, { PlayerPositionColor } from './PlayerPosition';
 
 interface IFootballFieldProps {
 	players: IFormationLayout;
-	handleSelectSpot: (playerCoordinates: IFormationSpot) => void;
+	handleSelectSpot: (playerCoordinates: IFormationPlayerPartial) => void;
 	handleRemovePlayerFromFormationLayout: (
-		formationSpot: IFormationSpot,
+		formationPlayer: IFormationPlayerPartial,
 	) => void;
-	selectedSpot: IFormationSpot | null;
+	selectedSpot: IFormationPlayerPartial | null;
 }
 interface IGoalAreaProps {
 	isRight?: boolean;
@@ -54,70 +56,70 @@ const FootballField = ({
 
 				<div className="flex flex-row h-full">
 					<div className="flex flex-1 justify-start items-center">
-						{players.goalkeeper.map((formationSpot, idx) => (
+						{players.goalkeeper.map((formationPlayer, idx) => (
 							<PlayerPosition
 								key={`goal-${idx}`}
-								formationSpot={formationSpot}
+								formationPlayer={formationPlayer}
 								backgroundColor={PlayerPositionColor.YELLOW}
 								handleSelectSpot={() => {
-									handleSelectSpot(formationSpot);
+									handleSelectSpot(formationPlayer);
 								}}
 								handleRemovePlayerFromSpot={() => {
-									handleRemovePlayerFromFormationLayout(formationSpot);
+									handleRemovePlayerFromFormationLayout(formationPlayer);
 								}}
-								isPositionSelected={selectedSpot === formationSpot}
+								isPositionSelected={selectedSpot === formationPlayer}
 							/>
 						))}
 					</div>
 					{/* Renderiza jugadores de campo */}
 					<div className="flex flex-col h-full justify-center items-center gap-8 flex-1">
-						{players.defenders.map((formationSpot, idx) => (
+						{players.defenders.map((formationPlayer, idx) => (
 							<PlayerPosition
 								handleSelectSpot={() => {
-									handleSelectSpot(formationSpot);
+									handleSelectSpot(formationPlayer);
 								}}
 								handleRemovePlayerFromSpot={() => {
-									handleRemovePlayerFromFormationLayout(formationSpot);
+									handleRemovePlayerFromFormationLayout(formationPlayer);
 								}}
 								key={`def-${idx}`}
-								formationSpot={formationSpot}
+								formationPlayer={formationPlayer}
 								backgroundColor={PlayerPositionColor.BLUE}
-								isPositionSelected={selectedSpot === formationSpot}
+								isPositionSelected={selectedSpot === formationPlayer}
 							/>
 						))}
 					</div>
 
 					<div className="flex flex-col h-full justify-center items-center gap-6 flex-1" />
 					<div className="flex flex-col h-full justify-center items-center gap-8 flex-1">
-						{players.midfielders.map((formationSpot, idx) => (
+						{players.midfielders.map((formationPlayer, idx) => (
 							<PlayerPosition
 								handleSelectSpot={() => {
-									handleSelectSpot(formationSpot);
+									handleSelectSpot(formationPlayer);
 								}}
 								handleRemovePlayerFromSpot={() => {
-									handleRemovePlayerFromFormationLayout(formationSpot);
+									handleRemovePlayerFromFormationLayout(formationPlayer);
 								}}
 								key={`mid-${idx}`}
-								formationSpot={formationSpot}
+								formationPlayer={formationPlayer}
 								backgroundColor={PlayerPositionColor.GREEN}
-								isPositionSelected={selectedSpot === formationSpot}
+								isPositionSelected={selectedSpot === formationPlayer}
 							/>
 						))}
 					</div>
 					<div className="flex flex-col h-full justify-center items-start gap-6 flex-1" />
 					<div className="flex flex-col h-full justify-center items-center gap-10 flex-1">
-						{players.forwards.map((formationSpot, idx) => (
+						{players.forwards.map((formationPlayer, idx) => (
 							<PlayerPosition
 								handleSelectSpot={() => {
-									handleSelectSpot(formationSpot);
+									handleSelectSpot(formationPlayer);
 								}}
 								handleRemovePlayerFromSpot={() => {
-									handleRemovePlayerFromFormationLayout(formationSpot);
+									handleRemovePlayerFromFormationLayout(formationPlayer);
 								}}
 								key={`fwd-${idx}`}
-								formationSpot={formationSpot}
+								formationPlayer={formationPlayer}
 								backgroundColor={PlayerPositionColor.RED}
-								isPositionSelected={selectedSpot === formationSpot}
+								isPositionSelected={selectedSpot === formationPlayer}
 							/>
 						))}
 					</div>
