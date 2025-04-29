@@ -8,6 +8,19 @@ describe('Formation Page', () => {
 		cy.visit('/formation');
 	});
 
+	it('should redirect to team page if there is no team', () => {
+		cy.interceptApi(
+			'/user/me',
+			{ method: 'GET' },
+			{ fixture: 'user/user-without-team.json' },
+		);
+
+		cy.getBySel('team-creation-title').should('have.text', 'Create a team first!')
+		cy.getBySel('create-team-redirection').click()
+		cy.url().should('include', '/team');
+
+	})
+
 	it('should render the formation page with default formation', () => {
 		cy.interceptApi(
 			'/user/me',

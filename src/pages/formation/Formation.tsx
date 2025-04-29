@@ -1,4 +1,5 @@
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import FootballField from './components/FootballField';
 import FormationPlayersList from './components/FormationPlayersList';
@@ -49,6 +50,7 @@ const Formation = () => {
 		midfielders: [],
 		forwards: [],
 	});
+	const navigate = useNavigate();
 
 	const handleSaveFormation = async (formationValues: IFormationValues) => {
 		const { formationName, isActiveFormation } = formationValues;
@@ -411,6 +413,26 @@ const Formation = () => {
 	const assignedPlayerUuids = allPlayersInFormationLayout.map(
 		(formationPlayer) => formationPlayer?.player?.uuid,
 	);
+
+	if (!team) {
+		return (
+			<div className="flex flex-col gap-6 items-center justify-center mt-20">
+				<p
+					className="text-black w-full block text-center text-2xl font-bold"
+					data-test="team-creation-title"
+				>
+					Create a team first!
+				</p>
+				<button
+					onClick={() => navigate('/team')}
+					className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+					data-test="create-team-redirection"
+				>
+					Create Team
+				</button>
+			</div>
+		);
+	}
 	return (
 		<div className="flex flex-col gap-6 items-center justify-center bg-white">
 			<div className="w-full max-w-[550px] flex flex-col justify-center items-center gap-6">
