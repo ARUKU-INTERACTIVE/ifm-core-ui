@@ -45,6 +45,7 @@ export default function PlayerCard({
 	const [isOpenCreateAuctionModal, setIsOpenCreateAuctionModal] =
 		useState<boolean>(false);
 	const [auctionTimeLeft, setAuctionTimeLeft] = useState<number>(0);
+	const [isAuctionEnded, setIsAuctionEnded] = useState<boolean>(false);
 	const auctionFound = auctions?.data.find(
 		(auction) => auction.attributes.playerAddress === address,
 	);
@@ -67,6 +68,8 @@ export default function PlayerCard({
 	useEffect(() => {
 		if (auctionTimeLeft > 0) {
 			setIsOpenCreateAuctionModal(false);
+		} else {
+			setIsAuctionEnded(true);
 		}
 	}, [auctionTimeLeft]);
 
@@ -166,10 +169,19 @@ export default function PlayerCard({
 						className="pb-2 font-bold text-center"
 						data-test="auction-time-left"
 					>
-						<p className="text-red-500 text-sm">Auction Time Left:</p>
-						<p className="text-red-600 text-md" data-test="auction-time-left">
-							{auctionTimeLeft} {auctionTimeLeft === 1 ? 'hour' : 'hours'}
-						</p>
+						{isAuctionEnded ? (
+							<p className="text-red-500 text-sm">The auction has ended</p>
+						) : (
+							<>
+								<p className="text-red-500 text-sm">Auction Time Left:</p>
+								<p
+									className="text-red-600 text-md"
+									data-test="auction-time-left"
+								>
+									{auctionTimeLeft} {auctionTimeLeft === 1 ? 'hour' : 'hours'}
+								</p>
+							</>
+						)}
 					</div>
 				) : (
 					renderButton()
