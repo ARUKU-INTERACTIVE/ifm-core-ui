@@ -21,7 +21,10 @@ const SignInModal: React.FC<ISignInModalProps> = ({
 	isLoading,
 	isWalletConnected,
 }) => {
-	if (!isOpen) return null;
+	if (!isOpen) {
+		return null;
+	}
+
 	const isWalletConnectedText = isWalletConnected
 		? 'Wallet connected'
 		: 'Connect wallet';
