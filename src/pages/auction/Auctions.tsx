@@ -53,6 +53,7 @@ const Auctions = () => {
 		handleCreateAddTrustlineTransactionXDR,
 		handleSubmitTransactionXDR,
 		isLoading: isStellarLoading,
+		handleCheckTrustline,
 	} = useStellar();
 	const {
 		mutateAsync: getClaimTransaction,
@@ -134,10 +135,15 @@ const Auctions = () => {
 		}
 	};
 
-	const handleSubmitBid = async (
-		getPlaceBidTransactionParams: IGetPlaceBidTransactionParams,
+	const checkTrustline = async (
 		accountAddress: string,
 		tokenIssuer: string,
+	): Promise<boolean> => {
+		return await handleCheckTrustline(accountAddress, tokenIssuer);
+	};
+
+	const handleSubmitBid = async (
+		getPlaceBidTransactionParams: IGetPlaceBidTransactionParams,
 	) => {
 		const { bidAmount, auctionId } = getPlaceBidTransactionParams;
 
@@ -154,8 +160,6 @@ const Auctions = () => {
 			if (signedXDR) {
 				await handleSubmitPlaceBidTransaction(signedXDR, auctionId);
 			}
-
-			await handleAddTrustline(accountAddress, tokenIssuer);
 		}
 	};
 
@@ -237,6 +241,8 @@ const Auctions = () => {
 					isStellarLoading={isStellarLoading}
 					isGetClaimTransactionPending={isGetClaimTransactionPending}
 					isSubmitClaimTransactionPending={isSubmitClaimTransactionPending}
+					handleAddTrustline={handleAddTrustline}
+					checkTrustline={checkTrustline}
 				/>
 			)}
 		</div>

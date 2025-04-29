@@ -32,6 +32,14 @@ interface IAuctionCardProps {
 	playerIssuer: string;
 	isGetClaimTransactionPending: boolean;
 	isSubmitClaimTransactionPending: boolean;
+	handleAddTrustline: (
+		accountAddress: string,
+		tokenIssuer: string,
+	) => Promise<void>;
+	checkTrustline: (
+		accountAddress: string,
+		tokenIssuer: string,
+	) => Promise<boolean>;
 }
 
 const AuctionCard = ({
@@ -54,6 +62,8 @@ const AuctionCard = ({
 	playerIssuer,
 	isGetClaimTransactionPending,
 	isSubmitClaimTransactionPending,
+	handleAddTrustline,
+	checkTrustline,
 }: IAuctionCardProps) => {
 	const [isCreateBidModalOpen, setIsCreateBidModalOpen] =
 		useState<boolean>(false);
@@ -156,6 +166,8 @@ const AuctionCard = ({
 				isStellarLoading={isStellarLoading}
 				publicKey={publicKey}
 				playerIssuer={playerIssuer}
+				checkTrustline={checkTrustline}
+				handleAddTrustline={handleAddTrustline}
 			/>
 		</div>
 	);

@@ -1,5 +1,6 @@
 import { TRANSACTION_SIGNED_MESSAGE } from '@context/auth-messages';
 
+import { CREATE_ADD_TRUSTLINE_TRANSACTION_XDR_SUCCESS_MESSAGE } from '@/hooks/stellar/stellar-messages';
 import {
 	SUBMIT_CLAIM_TRANSACTION_ERROR_MESSAGE,
 	SUBMIT_CLAIM_TRANSACTION_SUCCESS_MESSAGE,
@@ -46,6 +47,16 @@ describe('Auctions Page', () => {
 			{ fixture: 'auction/auctions-response.json' },
 		);
 		cy.interceptApi(
+			'/user/me',
+			{ method: 'GET' },
+			{ fixture: 'user/my-user.json' },
+		);
+		cy.interceptApi(
+			'/player?sort%5BcreatedAt%5D=ASC',
+			{ method: 'GET' },
+			{ fixture: 'auction/auction-page-players-response.json' },
+		);
+		cy.interceptApi(
 			`/player?filter%5Bname%5D=${searchValue}&sort%5BcreatedAt%5D=ASC`,
 			{ method: 'GET' },
 			{ fixture: 'auction/search-auction-player-response.json' },
@@ -55,11 +66,21 @@ describe('Auctions Page', () => {
 			{ method: 'GET' },
 			{ fixture: 'auction/search-auction-response.json' },
 		);
-		cy.interceptApi(
-			'/user/me',
-			{ method: 'GET' },
-			{ fixture: 'user/my-user.json' },
-		);
+
+		cy.intercept(`**/accounts/${walletAddress}`, {
+			id: walletAddress,
+			account_id: walletAddress,
+			sequence: '523470614036490',
+			balances: [
+				{
+					asset_code: 'NFT',
+					balance: '0.0000001',
+					asset_issuer:
+						'GCFK2GVIJDIWVGPCG7OAE54SXSAITK5QCF4OMIQVEI4YIIM2H2N7IPHQ',
+					asset_type: 'credit_alphanum4',
+				},
+			],
+		});
 
 		cy.getBySel('auctions-searchbar').type(searchValue);
 		cy.wait(2000);
@@ -112,6 +133,45 @@ describe('Auctions Page', () => {
 			.then((card) => {
 				cy.wrap(card).find('button').click();
 			});
+
+		cy.getBySel('add-trustline-btn').click();
+
+		cy.intercept(`**/accounts/${walletAddress}`, {
+			id: walletAddress,
+			account_id: walletAddress,
+			sequence: '523470614036490',
+			balances: [
+				{
+					asset_code: 'NFT',
+					balance: '0.0000001',
+					asset_issuer:
+						'GBXGQJWVLWOYHFLVTKWV5FGHA3LNYY2JQKM7OAJAUEQFU6LPCSEFVXON',
+					asset_type: 'credit_alphanum4',
+				},
+			],
+		});
+
+		const signTrustlineEvent = new MessageEvent('message', {
+			data: {
+				type: 'onSign',
+				page: `${simpleSignerUrl}/sign`,
+				message: {
+					signedXDR:
+						'AAAAAgAAAAAzKM7rHj7CzGJLEyD/YyZgMXT5iBq+fyRJMHxlstrYtwAAAGQAA2/qAAAAIgAAAAEAAAAAAAAAAAAAAABoD/FxAAAAAAAAAAEAAAAAAAAABgAAAAFORlQAAAAAAP09c03uexcRzegT2cLQ8TehJBTtbhZeRrCWUc1C2yFYf/////////8AAAAAAAAAAbLa2LcAAABA30r/mklEhP3rLtnVfGHKEIZhs+K2kPMyhJ0XkxgKBvMub7Lwqe+0LlzOb9g/qhllInsVD0cS/PMoqe4PFrtqBg==',
+				},
+			},
+			origin: simpleSignerUrl,
+		});
+
+		cy.getBySel('toast-container').contains(
+			CREATE_ADD_TRUSTLINE_TRANSACTION_XDR_SUCCESS_MESSAGE,
+		);
+
+		cy.window().then((win) => {
+			win.dispatchEvent(signTrustlineEvent);
+		});
+
+		cy.getBySel('toast-container').contains(TRANSACTION_SIGNED_MESSAGE);
 
 		cy.getBySel('bid-amount-input').clear().type('2000');
 
@@ -180,6 +240,45 @@ describe('Auctions Page', () => {
 			.then((card) => {
 				cy.wrap(card).find('button').click();
 			});
+
+		cy.getBySel('add-trustline-btn').click();
+
+		cy.intercept(`**/accounts/${walletAddress}`, {
+			id: walletAddress,
+			account_id: walletAddress,
+			sequence: '523470614036490',
+			balances: [
+				{
+					asset_code: 'NFT',
+					balance: '0.0000001',
+					asset_issuer:
+						'GBXGQJWVLWOYHFLVTKWV5FGHA3LNYY2JQKM7OAJAUEQFU6LPCSEFVXON',
+					asset_type: 'credit_alphanum4',
+				},
+			],
+		});
+
+		const signTrustlineEvent = new MessageEvent('message', {
+			data: {
+				type: 'onSign',
+				page: `${simpleSignerUrl}/sign`,
+				message: {
+					signedXDR:
+						'AAAAAgAAAAAzKM7rHj7CzGJLEyD/YyZgMXT5iBq+fyRJMHxlstrYtwAAAGQAA2/qAAAAIgAAAAEAAAAAAAAAAAAAAABoD/FxAAAAAAAAAAEAAAAAAAAABgAAAAFORlQAAAAAAP09c03uexcRzegT2cLQ8TehJBTtbhZeRrCWUc1C2yFYf/////////8AAAAAAAAAAbLa2LcAAABA30r/mklEhP3rLtnVfGHKEIZhs+K2kPMyhJ0XkxgKBvMub7Lwqe+0LlzOb9g/qhllInsVD0cS/PMoqe4PFrtqBg==',
+				},
+			},
+			origin: simpleSignerUrl,
+		});
+
+		cy.getBySel('toast-container').contains(
+			CREATE_ADD_TRUSTLINE_TRANSACTION_XDR_SUCCESS_MESSAGE,
+		);
+
+		cy.window().then((win) => {
+			win.dispatchEvent(signTrustlineEvent);
+		});
+
+		cy.getBySel('toast-container').contains(TRANSACTION_SIGNED_MESSAGE);
 
 		cy.getBySel('bid-amount-input').clear().type('2000');
 
