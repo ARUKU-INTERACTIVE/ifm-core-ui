@@ -5,6 +5,7 @@ import CreateBidModal from './CreateBidModal';
 import Loading from '@/components/ui/Loading';
 import { IGetClaimTransactionParams } from '@/interfaces/auction/IGetClaimTransaction';
 import { IGetPlaceBidTransactionParams } from '@/interfaces/auction/IGetPlaceBidTransaction';
+import { formatHoursToHumanReadable } from '@/utils/formatHoursToHumanReadable';
 
 interface IAuctionCardProps {
 	playerName: string;
@@ -103,7 +104,7 @@ const AuctionCard = ({
 						<span className="font-bold text-red-600">
 							{isAuctionEnded
 								? 'The auction has ended'
-								: `Auction time left: ${timeLeft} hours`}
+								: `Auction time left: ${formatHoursToHumanReadable(timeLeft)}`}
 						</span>
 					</p>
 				</div>
