@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import {
+	CHECK_TRUSTLINE_ERROR_MESSAGE,
 	CREATE_ADD_TRUSTLINE_TRANSACTION_XDR_ERROR_MESSAGE,
 	CREATE_ADD_TRUSTLINE_TRANSACTION_XDR_SUCCESS_MESSAGE,
 	SUBMIT_TRANSACTION_XDR_ERROR_MESSAGE,
@@ -56,11 +57,16 @@ export const useStellar = () => {
 		accountAddress: string,
 		tokenIssuer: string,
 	): Promise<boolean> => {
-		return await stellarService.checkTrustline(
-			accountAddress,
-			tokenIssuer,
-			tokenCode,
-		);
+		try {
+			return await stellarService.checkTrustline(
+				accountAddress,
+				tokenIssuer,
+				tokenCode,
+			);
+		} catch (error) {
+			notificationService.error(CHECK_TRUSTLINE_ERROR_MESSAGE);
+			return false;
+		}
 	};
 
 	return {
