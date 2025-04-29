@@ -421,7 +421,7 @@ const Formation = () => {
 					className="text-black w-full block text-center text-2xl font-bold"
 					data-test="team-creation-title"
 				>
-					Create a team first!
+					You must have a team to start creating formations
 				</p>
 				<button
 					onClick={() => navigate('/team')}

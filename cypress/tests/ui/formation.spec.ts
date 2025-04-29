@@ -15,7 +15,7 @@ describe('Formation Page', () => {
 			{ fixture: 'user/user-without-team.json' },
 		);
 
-		cy.getBySel('team-creation-title').should('have.text', 'Create a team first!')
+		cy.getBySel('team-creation-title').should('have.text', 'You must have a team to start creating formations')
 		cy.getBySel('create-team-redirection').click()
 		cy.url().should('include', '/team');
 
