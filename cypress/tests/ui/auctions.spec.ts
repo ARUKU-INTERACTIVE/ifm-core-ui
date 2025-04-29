@@ -4,6 +4,8 @@ import {
 	TRANSACTION_SIGNED_MESSAGE,
 } from '@context/auth-messages';
 
+import auctionFixture from '../../fixtures/auction/auctions-response.json';
+
 import {
 	SUBMIT_CLAIM_TRANSACTION_ERROR_MESSAGE,
 	SUBMIT_CLAIM_TRANSACTION_SUCCESS_MESSAGE,
@@ -136,7 +138,20 @@ describe('Auctions Page', () => {
 		cy.interceptApi(
 			'/auction',
 			{ method: 'GET' },
-			{ fixture: 'auction/auctions-response.json' },
+			{
+				body: {
+					data: [
+						{
+							...auctionFixture.data[0],
+							attributes: {
+								...auctionFixture.data[0].attributes,
+								endTime: Math.floor(Date.now() / 1000) + 3600,
+								startTime: Math.floor(Date.now() / 1000),
+							},
+						},
+					],
+				},
+			},
 		).as('get-auctions');
 		cy.interceptApi(
 			'/user/me',
@@ -214,7 +229,20 @@ describe('Auctions Page', () => {
 		cy.interceptApi(
 			'/auction',
 			{ method: 'GET' },
-			{ fixture: 'auction/auctions-response.json' },
+			{
+				body: {
+					data: [
+						{
+							...auctionFixture.data[0],
+							attributes: {
+								...auctionFixture.data[0].attributes,
+								endTime: Math.floor(Date.now() / 1000) + 3600,
+								startTime: Math.floor(Date.now() / 1000),
+							},
+						},
+					],
+				},
+			},
 		).as('get-auctions');
 		cy.interceptApi(
 			'/user/me',
