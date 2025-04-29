@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { Link } from 'react-router-dom';
 
+import SignInModal from '../modal/SignInModal';
 import Action from './Action';
 import Logo from './Logo';
 
@@ -12,7 +14,11 @@ export default function NavBar() {
 		StoredCookies.REFRESH_TOKEN,
 		StoredCookies.PUBLIC_KEY,
 	]);
+	const description = cookies[StoredCookies.PUBLIC_KEY]
+		? 'Verify your wallet to sign in'
+		: 'Connect your wallet to continue';
 	const { isLoading, connectWallet, handleSignInWithTransaction } = useWallet();
+	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	return (
 		<div className="flex p-2 shadow-md justify-between items-center">
@@ -33,10 +39,22 @@ export default function NavBar() {
 			</div>
 			<Action
 				connected={!!cookies[StoredCookies.REFRESH_TOKEN]}
-				publicKey={cookies[StoredCookies.PUBLIC_KEY]}
 				isLoading={isLoading}
-				handleSignInWithTransaction={handleSignInWithTransaction}
-				handleConnectWallet={connectWallet}
+				isWalletConnected={!!cookies[StoredCookies.PUBLIC_KEY]}
+				handleOpenSignInModal={() => setIsModalOpen(true)}
+			/>
+			<SignInModal
+				isOpen={isModalOpen}
+				title="Sign In"
+				description={description}
+				onClose={() => setIsModalOpen(false)}
+				isLoading={isLoading}
+				isWalletConnected={!!cookies[StoredCookies.PUBLIC_KEY]}
+				connectWallet={connectWallet}
+				signInWithTransaction={async () => {
+					await handleSignInWithTransaction(cookies[StoredCookies.PUBLIC_KEY]);
+					setIsModalOpen(false);
+				}}
 			/>
 		</div>
 	);
