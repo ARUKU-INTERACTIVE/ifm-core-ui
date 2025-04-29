@@ -60,10 +60,7 @@ const AuctionList = ({
 				const highestBidAmountInXLM = convertStroopsToXlm(
 					auction.attributes.highestBidAmount,
 				);
-				const auctionTimeLeft = getAuctionTimeLeft(
-					auction.attributes.startTime,
-					auction.attributes.endTime,
-				);
+				const auctionTimeLeft = getAuctionTimeLeft(auction.attributes.endTime);
 				const isAuctionEnded = currentTime >= auction.attributes.endTime;
 
 				return (
