@@ -67,30 +67,31 @@ const AuctionList = ({
 				const isAuctionEnded = currentTime >= auction.attributes.endTime;
 
 				return (
-					<AuctionCard
-						key={auction.id}
-						playerName={auctionPlayer?.attributes.name as string}
-						playerImage={auctionPlayer?.attributes.imageUri as string}
-						setIsImageLoaded={setIsImageLoaded}
-						isImageLoaded={isImageLoaded}
-						highestBidAmount={formatPrice(highestBidAmountInXLM)}
-						timeLeft={auctionTimeLeft}
-						isGetPlaceBidTransactionPending={isGetPlaceBidTransactionPending}
-						handleSubmitBid={handleSubmitBid}
-						auctionId={auction.id as string}
-						isSubmitPlaceBidTransactionPending={
-							isSubmitPlaceBidTransactionPending
-						}
-						publicKey={user?.data.attributes.publicKey as string}
-						highestBidderAddress={auction.attributes.highestBidderAddress}
-						ownerAddress={auction.attributes.ownerAddress}
-						isAuctionEnded={isAuctionEnded}
-						handleSubmitClaim={handleSubmitClaim}
-						isStellarLoading={isStellarLoading}
-						playerIssuer={auctionPlayer?.attributes.issuer as string}
-						isGetClaimTransactionPending={isGetClaimTransactionPending}
-						isSubmitClaimTransactionPending={isSubmitClaimTransactionPending}
-					/>
+					<div key={auction.id}>
+						<AuctionCard
+							playerName={auctionPlayer?.attributes.name as string}
+							playerImage={auctionPlayer?.attributes.imageUri as string}
+							setIsImageLoaded={setIsImageLoaded}
+							isImageLoaded={isImageLoaded}
+							highestBidAmount={formatPrice(highestBidAmountInXLM)}
+							timeLeft={auctionTimeLeft}
+							isGetPlaceBidTransactionPending={isGetPlaceBidTransactionPending}
+							handleSubmitBid={handleSubmitBid}
+							auctionId={auction.id as string}
+							isSubmitPlaceBidTransactionPending={
+								isSubmitPlaceBidTransactionPending
+							}
+							publicKey={user?.data.attributes.publicKey as string}
+							highestBidderAddress={auction.attributes.highestBidderAddress}
+							ownerAddress={auction.attributes.ownerAddress}
+							isAuctionEnded={isAuctionEnded}
+							handleSubmitClaim={handleSubmitClaim}
+							isStellarLoading={isStellarLoading}
+							playerIssuer={auctionPlayer?.attributes.issuer as string}
+							isGetClaimTransactionPending={isGetClaimTransactionPending}
+							isSubmitClaimTransactionPending={isSubmitClaimTransactionPending}
+						/>
+					</div>
 				);
 			})}
 		</div>

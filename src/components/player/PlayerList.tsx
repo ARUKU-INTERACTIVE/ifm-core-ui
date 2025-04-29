@@ -31,16 +31,17 @@ const PlayerList = ({
 					id: id as string,
 				};
 				return (
-					<PlayerCard
-						key={id}
-						player={player}
-						submitCreateAuctionTransaction={submitCreateAuctionTransaction}
-						auctions={auctions}
-						isSubmittingCreateAuctionTransaction={
-							isSubmittingCreateAuctionTransaction
-						}
-						onMintPlayer={onMintPlayer}
-					/>
+					<div key={id}>
+						<PlayerCard
+							player={player}
+							submitCreateAuctionTransaction={submitCreateAuctionTransaction}
+							auctions={auctions}
+							isSubmittingCreateAuctionTransaction={
+								isSubmittingCreateAuctionTransaction
+							}
+							onMintPlayer={onMintPlayer}
+						/>
+					</div>
 				);
 			})}
 		</div>
