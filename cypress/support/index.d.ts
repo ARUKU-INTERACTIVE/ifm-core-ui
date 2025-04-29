@@ -28,5 +28,9 @@ declare namespace Cypress {
 		validateCode(inputSelector: string, errorSelector: string);
 		signIn(): Chainable<JQuery<HTMLElement>>;
 		deleteCookie(cookieName: string);
+		signInWithWallet(
+			simpleSignerUrl: string,
+			walletAddress: string,
+		): Chainable<JQuery<HTMLElement>>;
 	}
 }

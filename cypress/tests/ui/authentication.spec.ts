@@ -1,9 +1,7 @@
 import {
 	CONNECT_WALLET_ERROR,
 	CONNECT_WALLET_MESSAGE,
-	SIGN_IN_SUCCESS_MESSAGE,
 	SIGN_TRANSACTION_ERROR,
-	TRANSACTION_SIGNED_MESSAGE,
 } from '@context/auth-messages';
 
 describe('/auth', () => {
@@ -16,64 +14,7 @@ describe('/auth', () => {
 			cy.visit('/');
 		});
 		it('Should be able to connect your wallet and sign in with transaction', () => {
-			cy.interceptApi(
-				`/auth/challenge?publicKey=${walletAddress}`,
-				{ method: 'GET' },
-				{ fixture: 'auth/challenge-transaction-response.json' },
-			);
-			cy.interceptApi(
-				'/auth/sign-in',
-				{ method: 'POST' },
-				{ fixture: 'auth/sign-in.json' },
-			).as('sign-in');
-
-			cy.window().then((window) => {
-				cy.stub(window, 'open')
-					.as('connect-wallet')
-					.callsFake(() => null);
-			});
-
-			cy.getBySel('sign-in-btn').should('have.text', 'Sign In').click();
-			cy.get('@connect-wallet').should('be.called');
-
-			const connectEvent = new MessageEvent('message', {
-				data: {
-					type: 'onConnect',
-					page: `${simpleSignerUrl}/connect`,
-					message: {
-						publicKey: walletAddress,
-						wallet: 'albedo',
-					},
-				},
-				origin: simpleSignerUrl,
-			});
-
-			cy.window().then((win) => {
-				win.dispatchEvent(connectEvent);
-			});
-
-			cy.getBySel('toast-container').contains(CONNECT_WALLET_MESSAGE);
-
-			cy.wait(1000);
-
-			const signEvent = new MessageEvent('message', {
-				data: {
-					type: 'onSign',
-					page: `${simpleSignerUrl}/sign`,
-					message: {
-						signedXDR:
-							'AAAAAGrj5kK0Xb3d3c3NvZ2Z3YXJpZ2F0ZQAAAAAAAAAAABiGAAAAQAAAAA=',
-					},
-				},
-				origin: simpleSignerUrl,
-			});
-
-			cy.window().then((win) => {
-				win.dispatchEvent(signEvent);
-			});
-
-			cy.getBySel('toast-container').contains(TRANSACTION_SIGNED_MESSAGE);
-			cy.getBySel('toast-container').contains(SIGN_IN_SUCCESS_MESSAGE);
+			cy.signInWithWallet(simpleSignerUrl, walletAddress);
 		});
 
 		it('should show an error if the wallet is not connected', () => {
@@ -83,8 +24,8 @@ describe('/auth', () => {
 					.callsFake(() => null);
 			});
 
-			cy.getBySel('sign-in-btn').should('have.text', 'Sign In').click();
-			cy.get('@connect-wallet').should('be.called');
+			cy.getBySel('sign-in-btn').should('have.text', 'Connect Wallet').click();
+			cy.getBySel('connect-wallet-button').click();
 
 			const connectCancelEvent = new MessageEvent('message', {
 				data: {
@@ -107,7 +48,7 @@ describe('/auth', () => {
 				`/auth/challenge?publicKey=${walletAddress}`,
 				{ method: 'GET' },
 				{ fixture: 'auth/challenge-transaction-response.json' },
-			);
+			).as('get-challenge');
 
 			cy.window().then((window) => {
 				cy.stub(window, 'open')
@@ -115,8 +56,8 @@ describe('/auth', () => {
 					.callsFake(() => null);
 			});
 
-			cy.getBySel('sign-in-btn').should('have.text', 'Sign In').click();
-			cy.get('@connect-wallet').should('be.called');
+			cy.getBySel('sign-in-btn').should('have.text', 'Connect Wallet').click();
+			cy.getBySel('connect-wallet-button').click();
 
 			const connectEvent = new MessageEvent('message', {
 				data: {
@@ -137,6 +78,9 @@ describe('/auth', () => {
 			cy.getBySel('toast-container').contains(CONNECT_WALLET_MESSAGE);
 
 			cy.wait(2000);
+			cy.getBySel('sign-in-btn').should('have.text', 'Sign In');
+			cy.getBySel('sign-in-with-transaction-button').click();
+			cy.wait('@get-challenge');
 
 			const signCancelEvent = new MessageEvent('message', {
 				data: {

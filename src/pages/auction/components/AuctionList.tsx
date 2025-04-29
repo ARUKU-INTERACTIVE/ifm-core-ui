@@ -33,6 +33,14 @@ interface AuctionListProps {
 	isStellarLoading: boolean;
 	isGetClaimTransactionPending: boolean;
 	isSubmitClaimTransactionPending: boolean;
+	handleAddTrustline: (
+		accountAddress: string,
+		tokenIssuer: string,
+	) => Promise<void>;
+	checkTrustline: (
+		accountAddress: string,
+		tokenIssuer: string,
+	) => Promise<boolean>;
 }
 
 const AuctionList = ({
@@ -47,6 +55,8 @@ const AuctionList = ({
 	isStellarLoading,
 	isGetClaimTransactionPending,
 	isSubmitClaimTransactionPending,
+	handleAddTrustline,
+	checkTrustline,
 }: AuctionListProps) => {
 	const [isImageLoaded, setIsImageLoaded] = useState<boolean>(false);
 
@@ -87,6 +97,8 @@ const AuctionList = ({
 							playerIssuer={auctionPlayer?.attributes.issuer as string}
 							isGetClaimTransactionPending={isGetClaimTransactionPending}
 							isSubmitClaimTransactionPending={isSubmitClaimTransactionPending}
+							handleAddTrustline={handleAddTrustline}
+							checkTrustline={checkTrustline}
 						/>
 					</div>
 				);

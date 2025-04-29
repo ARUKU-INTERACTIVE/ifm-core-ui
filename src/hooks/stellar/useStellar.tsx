@@ -52,9 +52,21 @@ export const useStellar = () => {
 		}
 	};
 
+	const handleCheckTrustline = async (
+		accountAddress: string,
+		tokenIssuer: string,
+	): Promise<boolean> => {
+		return await stellarService.checkTrustline(
+			accountAddress,
+			tokenIssuer,
+			tokenCode,
+		);
+	};
+
 	return {
 		isLoading,
 		handleCreateAddTrustlineTransactionXDR,
 		handleSubmitTransactionXDR,
+		handleCheckTrustline,
 	};
 };

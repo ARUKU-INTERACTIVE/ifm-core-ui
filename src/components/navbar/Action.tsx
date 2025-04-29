@@ -1,46 +1,33 @@
-import { useEffect } from 'react';
-
-import LoadingButton from '../ui/LoadingButton';
 import Button from './Button';
 
 interface IActionProps {
 	connected: boolean;
-	publicKey?: string;
 	isLoading: boolean;
-	handleSignInWithTransaction: (publicKey: string) => void;
-	handleConnectWallet: () => void;
+	isWalletConnected: boolean;
+	handleOpenSignInModal: () => void;
 }
 
 export default function Action({
 	connected,
-	publicKey,
 	isLoading,
-	handleConnectWallet,
-	handleSignInWithTransaction,
+	isWalletConnected,
+	handleOpenSignInModal,
 }: IActionProps) {
-	useEffect(() => {
-		if (!publicKey || connected) {
-			return;
-		}
-
-		handleSignInWithTransaction(publicKey);
-	}, [publicKey, handleSignInWithTransaction, connected]);
-
 	if (connected) {
 		return (
 			<Button data-test="sign-out" to="/auth/sign-out" innerText="Sign Out" />
 		);
 	}
 
-	return isLoading ? (
-		<LoadingButton />
-	) : (
+	return (
 		<button
-			className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-			onClick={() => handleConnectWallet()}
+			className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full ${
+				isLoading ? 'opacity-50' : 'opacity-100'
+			}`}
+			onClick={() => handleOpenSignInModal()}
 			data-test="sign-in-btn"
 		>
-			Sign In
+			{isWalletConnected ? 'Sign In' : 'Connect Wallet'}
 		</button>
 	);
 }

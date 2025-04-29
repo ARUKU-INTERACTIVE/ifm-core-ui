@@ -1,0 +1,42 @@
+{
+	"data": {
+		"type": "formation",
+		"id": "1",
+		"attributes": {
+			"uuid": "550e8400-e29b-41d4-a716-446655440000",
+			"name": "New Formation",
+			"description": "New Formation Description",
+			"formationPlayers": [
+				{
+					"id": "1",
+					"name": "Player One",
+					"uuid": "550e8400-e29b-41d4-a716-446655440001",
+					"position": "Forward",
+					"positionIndex": 1,
+					"player": {
+						"id": "1",
+						"name": "Player One",
+						"uuid": "550e8400-e29b-41d4-a716-446655440001"
+					},
+					"formation": {
+						"id": "1",
+						"name": "New Formation",
+						"uuid": "550e8400-e29b-41d4-a716-446655440000"
+					}
+				}
+			],
+			"roster": {
+				"id": "1",
+				"name": "New Roster",
+				"uuid": "550e8400-e29b-41d4-a716-446655440001"
+			},
+			"rosterId": 1,
+			"forwards": 2,
+			"midfielders": 2,
+			"defenders": 2,
+			"createdAt": "2024-03-20T10:00:00Z",
+			"updatedAt": "2024-03-20T10:00:00Z",
+			"deletedAt": null
+		}
+	}
+}

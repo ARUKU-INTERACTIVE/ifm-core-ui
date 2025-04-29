@@ -20,7 +20,6 @@ import { IMintPlayerFormValues } from '@/interfaces/player/IMintPlayer';
 import { IPlayer } from '@/interfaces/player/IPlayer';
 import { notificationService } from '@/services/notification.service';
 import { playerService } from '@/services/player.service';
-import { convertPriceToStroops } from '@/utils/convertPriceToStroops';
 import { convertTimeToSeconds } from '@/utils/convertTimeToSeconds';
 
 export default function TransferMarket() {
@@ -113,7 +112,7 @@ export default function TransferMarket() {
 				},
 			} = await createAuctionTransaction({
 				playerId,
-				startingPrice: convertPriceToStroops(startingPrice),
+				startingPrice,
 				auctionTimeMs: convertTimeToSeconds(auctionTimeInHours),
 			});
 			const signedXDR = await handleSignTransactionXDR(xdr);
