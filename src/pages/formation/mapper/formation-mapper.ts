@@ -8,11 +8,11 @@ import {
 export class FormationMapper {
 	fromFormationPlayersPartialToFormationPlayersCreate(
 		formationPlayers: IFormationPlayerPartial[],
-		isCreate = true,
+		isCreating = true,
 	) {
 		return formationPlayers.map(({ position, positionIndex, player }) => {
 			if (!player?.uuid || !positionIndex || !position) {
-				if (isCreate) {
+				if (isCreating) {
 					throw new FormationMustHave11PlayersError();
 				} else {
 					throw new FormationMustHave11PlayersToUpdateError();

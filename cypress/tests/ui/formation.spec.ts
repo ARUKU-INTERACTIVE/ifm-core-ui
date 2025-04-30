@@ -187,12 +187,60 @@ describe('Formation Page', () => {
 		cy.interceptApi('/formation', { method: 'POST' }, { statusCode: 500 }).as(
 			'save-formation-error',
 		);
-
+		cy.interceptApi(
+			'/formation/550e8400-e29b-41d4-a716-446655440000?include[fields]=formationPlayers',
+			{ method: 'GET' },
+			{ fixture: 'formation/saved-formation-response.json' },
+		);
+		cy.getBySel('saved-formations-select').select(
+			'550e8400-e29b-41d4-a716-446655440000',
+		);
+		
+		cy.getBySel('formation-select').select('2');
 		cy.getBySel('formation-name-input').type('New Formation');
 		cy.getBySel('save-formation-btn').click();
 		cy.wait('@save-formation-error');
 
 		cy.getBySel('toast-container').contains('Error saving formation');
+	});
+
+	it.only('should display an error message if the 11 players for the formation are not selected', () => {
+		cy.interceptApi(
+			'/user/me',
+			{ method: 'GET' },
+			{ fixture: 'user/my-team-user.json' },
+		);
+		cy.interceptApi(
+			'/team/1',
+			{ method: 'GET' },
+			{ fixture: 'team/team-with-roster-response.json' },
+		);
+		cy.interceptApi(
+			'/roster/1?include%5Bfields%5D=players',
+			{ method: 'GET' },
+			{ fixture: 'roster/roster-with-team-players-response.json' },
+		);
+		cy.interceptApi(
+			'/formation?filter%5BrosterUuid%5D=1',
+			{ method: 'GET' },
+			{ fixture: 'formation/formations-response.json' },
+		);
+		
+		cy.interceptApi(
+			'/formation/550e8400-e29b-41d4-a716-446655440000?include[fields]=formationPlayers',
+			{ method: 'GET' },
+			{ fixture: 'formation/saved-formation-response.json' },
+		);
+		cy.getBySel('saved-formations-select').select(
+			'550e8400-e29b-41d4-a716-446655440000',
+		);
+		
+		cy.getBySel('formation-select').select('2');
+		cy.getBySel('formation-name-input').type('New Formation');
+		cy.getBySel("player-position").eq(0).find("button").first().click()
+		cy.getBySel('save-formation-btn').click();
+
+		cy.getBySel('toast-container').contains('You must select 11 players to create a formation.');
 	});
 
 	it('should update an existing formation successfully', () => {

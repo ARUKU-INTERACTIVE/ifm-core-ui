@@ -23,7 +23,10 @@ import {
 	ERROR_UPDATING_FORMATION,
 } from '@/constants/messages/formation-messages';
 import { GET_TEAM_ERROR_MESSAGE } from '@/constants/messages/team-messages';
-import { FormationMustHave11PlayersToUpdateError } from '@/errors/FormationMustHave11PlayersError';
+import {
+	FormationMustHave11PlayersError,
+	FormationMustHave11PlayersToUpdateError,
+} from '@/errors/FormationMustHave11PlayersError';
 import { useGetMe } from '@/hooks/auth/useGetMe';
 import { ICreateFormation } from '@/interfaces/formation/ICreateFormation.interface';
 import { IFormation } from '@/interfaces/formation/IFormation.interface';
@@ -114,7 +117,11 @@ const Formation = () => {
 			}
 		} catch (error) {
 			console.error(error);
-			notificationService.error(ERROR_CREATING_FORMATION);
+			if (error instanceof FormationMustHave11PlayersError) {
+				notificationService.error(error.message);
+			} else {
+				notificationService.error(ERROR_CREATING_FORMATION);
+			}
 		}
 	};
 
