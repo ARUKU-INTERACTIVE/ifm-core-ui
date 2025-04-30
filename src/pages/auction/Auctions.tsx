@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import ReactPaginate from 'react-paginate';
 
 import { useAuctions } from '../transfer-market/hooks/useAuctions';
 import { usePlayers } from '../transfer-market/hooks/usePlayers';
 import AuctionList from './components/AuctionList';
+import { ITEMS_PER_AUCTIONS_PAGE } from './constants/auctions.constants';
 import { useGetClaimTransaction } from './hooks/useGetClaimTransaction';
 import { useGetPlaceBidTransaction } from './hooks/useGetPlaceBidTransaction';
 import { useSubmitClaimTransaction } from './hooks/useSubmitClaimTransaction';
@@ -32,8 +34,17 @@ import { getCurrentTimestampInSeconds } from '@/utils/getCurrentTimestampInSecon
 
 const Auctions = () => {
 	const [playerName, setPlayerName] = useState<string>('');
-	const { data: auctions, isPending: isAuctionsPending } = useAuctions();
-	const { data: players } = usePlayers({ name: playerName });
+	const [currentAuctionsPage, setCurrentAuctionsPage] = useState(1);
+	const [pageCountAuctions, setPageCountAuctions] = useState(0);
+	const { data: auctions, isPending: isAuctionsPending } = useAuctions({
+		page: {
+			number: currentAuctionsPage,
+			size: ITEMS_PER_AUCTIONS_PAGE,
+		},
+	});
+	const { data: players } = usePlayers({
+		name: playerName,
+	});
 	const { data: user } = useGetMe();
 	const [filteredAuctions, setFilteredAuctions] = useState<
 		IListResponse<IAuction> | undefined
@@ -207,6 +218,16 @@ const Auctions = () => {
 		}
 	};
 
+	const handlePageChange = ({ selected }: { selected: number }) => {
+		setCurrentAuctionsPage(selected + 1);
+	};
+
+	useEffect(() => {
+		if (auctions?.meta?.pageCount) {
+			setPageCountAuctions(auctions.meta.pageCount);
+		}
+	}, [auctions]);
+
 	return (
 		<div className="flex flex-col justify-center items-center pt-3 w-full text-center">
 			<h1 className="text-xl font-bold text-center" data-test="auctions-title">
@@ -245,6 +266,20 @@ const Auctions = () => {
 					checkTrustline={checkTrustline}
 				/>
 			)}
+			<ReactPaginate
+				pageCount={pageCountAuctions}
+				pageRangeDisplayed={2}
+				marginPagesDisplayed={1}
+				onPageChange={handlePageChange}
+				containerClassName="flex justify-center mt-6 gap-2"
+				pageClassName="px-2.5 rounded-full border cursor-pointer"
+				activeClassName="bg-blue-500 rounded-full text-white"
+				previousLabel="<"
+				nextLabel=">"
+				breakLabel="..."
+				disabledClassName="opacity-50 cursor-not-allowed"
+				data-test="auctions-pagination"
+			/>
 		</div>
 	);
 };
