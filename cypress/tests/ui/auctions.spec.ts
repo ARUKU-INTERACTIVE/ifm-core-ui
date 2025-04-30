@@ -375,7 +375,7 @@ describe('Auctions Page', () => {
 		);
 
 		cy.wait('@get-auctions');
-		cy.getBySel('auction-card').should('have.length', 2);
+		cy.getBySel('auction-card').should('have.length', 3);
 	});
 
 	it('should throw an error if fails to claim an auction', () => {
