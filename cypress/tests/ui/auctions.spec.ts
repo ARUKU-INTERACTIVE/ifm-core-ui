@@ -20,47 +20,48 @@ describe('Auctions Page', () => {
 
 	it('should show the auctions page', () => {
 		cy.interceptApi(
-			'/auction',
+			'/auction?**',
 			{ method: 'GET' },
 			{ fixture: 'auction/auctions-response.json' },
-		);
+		).as('get-auctions');
 		cy.interceptApi(
 			'/user/me',
 			{ method: 'GET' },
 			{ fixture: 'user/my-user.json' },
 		);
 		cy.interceptApi(
-			'/player?sort%5BcreatedAt%5D=ASC',
+			'/player?sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ fixture: 'auction/auction-page-players-response.json' },
 		);
+		cy.wait('@get-auctions');
 
 		cy.getBySel('auctions-title').should('contain', 'Auctions');
-		cy.getBySel('auction-card').should('have.length', 3);
+		cy.getBySel('auction-card').should('have.length', 2);
 	});
 
 	it('should search an auction by its player name', () => {
 		const searchValue = 'three';
 		cy.interceptApi(
-			'/auction',
+			'/auction?**',
 			{ method: 'GET' },
 			{ fixture: 'auction/auctions-response.json' },
-		);
+		).as('get-auctions');
 		cy.interceptApi(
 			'/user/me',
 			{ method: 'GET' },
 			{ fixture: 'user/my-user.json' },
 		);
 		cy.interceptApi(
-			'/player?sort%5BcreatedAt%5D=ASC',
+			'/player?sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ fixture: 'auction/auction-page-players-response.json' },
 		);
 		cy.interceptApi(
-			`/player?filter%5Bname%5D=${searchValue}&sort%5BcreatedAt%5D=ASC`,
+			`/player?filter%5Bname%5D=${searchValue}&sort%5BcreatedAt%5D=DESC`,
 			{ method: 'GET' },
 			{ fixture: 'auction/search-auction-player-response.json' },
-		);
+		).as('get-player-by-name');
 		cy.interceptApi(
 			'/auction',
 			{ method: 'GET' },
@@ -83,7 +84,7 @@ describe('Auctions Page', () => {
 		});
 
 		cy.getBySel('auctions-searchbar').type(searchValue);
-		cy.wait(2000);
+		cy.wait('@get-player-by-name');
 
 		cy.getBySel('auction-card')
 			.should('have.length', 1)
@@ -92,7 +93,7 @@ describe('Auctions Page', () => {
 
 	it('should submit a bid for an auction', () => {
 		cy.interceptApi(
-			'/auction',
+			'/auction?page%5Bnumber%5D=1&page%5Bsize%5D=11',
 			{ method: 'GET' },
 			{ fixture: 'auction/auctions-response.json' },
 		).as('get-auctions');
@@ -102,7 +103,7 @@ describe('Auctions Page', () => {
 			{ fixture: 'user/my-user.json' },
 		);
 		cy.interceptApi(
-			'/player?sort%5BcreatedAt%5D=ASC',
+			'/player?sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ fixture: 'auction/auction-page-players-response.json' },
 		);
@@ -117,7 +118,7 @@ describe('Auctions Page', () => {
 			{ fixture: 'auction/bid-auction-response.json' },
 		);
 		cy.interceptApi(
-			'/auction',
+			'/auction?page%5Bnumber%5D=1&page%5Bsize%5D=11',
 			{ method: 'GET' },
 			{ fixture: 'auction/auctions-bid-response.json' },
 		).as('get-bid-auctions');
@@ -203,7 +204,7 @@ describe('Auctions Page', () => {
 
 	it('should throw an error if submit bid fails', () => {
 		cy.interceptApi(
-			'/auction',
+			'/auction?page%5Bnumber%5D=1&page%5Bsize%5D=11',
 			{ method: 'GET' },
 			{ fixture: 'auction/auctions-response.json' },
 		).as('get-auctions');
@@ -213,7 +214,7 @@ describe('Auctions Page', () => {
 			{ fixture: 'user/my-user.json' },
 		);
 		cy.interceptApi(
-			'/player?sort%5BcreatedAt%5D=ASC',
+			'/player?sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ fixture: 'auction/auction-page-players-response.json' },
 		);
@@ -307,7 +308,7 @@ describe('Auctions Page', () => {
 
 	it('should claim an auction', () => {
 		cy.interceptApi(
-			'/auction',
+			'/auction?page%5Bnumber%5D=1&page%5Bsize%5D=11',
 			{ method: 'GET' },
 			{ fixture: 'auction/claim-auctions-response.json' },
 		).as('get-claim-auctions');
@@ -317,7 +318,7 @@ describe('Auctions Page', () => {
 			{ fixture: 'user/my-user.json' },
 		);
 		cy.interceptApi(
-			'/player?sort%5BcreatedAt%5D=ASC',
+			'/player?sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ fixture: 'auction/auction-page-players-response.json' },
 		);
@@ -363,7 +364,7 @@ describe('Auctions Page', () => {
 			win.dispatchEvent(signEvent);
 		});
 		cy.interceptApi(
-			'/auction',
+			'/auction?page%5Bnumber%5D=1&page%5Bsize%5D=11',
 			{ method: 'GET' },
 			{ fixture: 'auction/auctions-response.json' },
 		).as('get-auctions');
@@ -374,12 +375,12 @@ describe('Auctions Page', () => {
 		);
 
 		cy.wait('@get-auctions');
-		cy.getBySel('auction-card').should('have.length', 3);
+		cy.getBySel('auction-card').should('have.length', 2);
 	});
 
 	it('should throw an error if fails to claim an auction', () => {
 		cy.interceptApi(
-			'/auction',
+			'/auction?page%5Bnumber%5D=1&page%5Bsize%5D=11',
 			{ method: 'GET' },
 			{ fixture: 'auction/claim-auctions-response.json' },
 		).as('get-claim-auctions');
@@ -389,7 +390,7 @@ describe('Auctions Page', () => {
 			{ fixture: 'user/my-user.json' },
 		);
 		cy.interceptApi(
-			'/player?sort%5BcreatedAt%5D=ASC',
+			'/player?sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ fixture: 'auction/auction-page-players-response.json' },
 		);

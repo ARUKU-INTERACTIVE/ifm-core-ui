@@ -11,7 +11,7 @@
 				"startTime": 1711468800,
 				"status": "Open",
 				"highestBidderAddress": "GBXGQJWVLWOYHFLVTKWV5FGHA3LNYY2JQKM7OAJAUEQFU6LPCSEFVXON",
-				"playerAddress": "address_2",
+				"playerAddress": "GAWDSTKH3VKAKCGAK26LMO2FEXDZFP54FQ37AQBVSIWX36I5RMFZTZOU",
 				"createdAt": "2024-03-19T15:30:00Z",
 				"updatedAt": "2024-03-19T15:30:00Z",
 				"deletedAt": null
@@ -59,9 +59,9 @@
 	},
 	"meta": {
 		"pageNumber": 1,
-		"pageSize": 10,
+		"pageSize": 11,
 		"pageCount": 1,
-		"itemCount": 2
+		"itemCount": 3
 	},
 	"included": []
 }

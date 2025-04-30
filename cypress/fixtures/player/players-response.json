@@ -36,7 +36,7 @@
 					"name": "Jane Smith",
 					"email": "jane@example.com"
 				},
-				"address": "address_2",
+				"address": "GAWDSTKH3VKAKCGAK26LMO2FEXDZFP54FQ37AQBVSIWX36I5RMFZTZOU",
 				"teamId": 1
 			}
 		}
@@ -48,7 +48,7 @@
 	},
 	"meta": {
 		"pageNumber": 1,
-		"pageSize": 10,
+		"pageSize": 2,
 		"pageCount": 1,
 		"itemCount": 1
 	},
