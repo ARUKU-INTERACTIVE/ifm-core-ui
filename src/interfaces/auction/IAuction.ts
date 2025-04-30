@@ -23,3 +23,10 @@ export enum AuctionStatus {
 	Completed = 'Completed',
 	NFTTransferred = 'NFTTransferred',
 }
+
+export interface IGetAllAuctionsParams {
+	page?: {
+		size: number;
+		number: number;
+	};
+}

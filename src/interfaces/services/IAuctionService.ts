@@ -1,6 +1,6 @@
 import { IListResponse, ISingleResponse } from '../api/IApiBaseResponse';
 import { ITransactionResponse } from '../api/ITransactionResponse';
-import { IAuction } from '../auction/IAuction';
+import { IAuction, IGetAllAuctionsParams } from '../auction/IAuction';
 import { ICreateAuctionTransactionParams } from '../auction/ICreateAuctionTransaction';
 import { IGetClaimTransactionParams } from '../auction/IGetClaimTransaction';
 import { IGetPlaceBidTransactionParams } from '../auction/IGetPlaceBidTransaction';
@@ -9,7 +9,7 @@ import { ISubmitCreateAuctionTransactionParams } from '../auction/ISubmitCreateA
 import { ISubmitPlaceBidTransactionParams } from '../auction/ISubmitPlaceBidTransaction';
 
 export interface IAuctionService {
-	getAll(): Promise<IListResponse<IAuction>>;
+	getAll(params: IGetAllAuctionsParams): Promise<IListResponse<IAuction>>;
 	createAuctionTransaction(
 		params: ICreateAuctionTransactionParams,
 	): Promise<ISingleResponse<ITransactionResponse>>;

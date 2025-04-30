@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { IGetAllAuctionsParams } from '@/interfaces/auction/IAuction';
 import { auctionService } from '@/services/auction.service';
 
-export const useAuctions = () => {
+export const useAuctions = (params: IGetAllAuctionsParams) => {
 	return useQuery({
-		queryKey: ['auctions'],
-		queryFn: () => auctionService.getAll(),
+		queryKey: ['auctions', params],
+		queryFn: () => auctionService.getAll(params),
 	});
 };
