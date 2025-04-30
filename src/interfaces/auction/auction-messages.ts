@@ -18,4 +18,4 @@ export const SUBMIT_CLAIM_TRANSACTION_SUCCESS_MESSAGE =
 export const SUBMIT_CLAIM_TRANSACTION_ERROR_MESSAGE =
 	'There was an error at submitting the claim transaction';
 export const PLAYER_NOT_OWNED_ERROR =
-	'Only owners can create auctions for their players';
+	'You must own this player to create an auction';
