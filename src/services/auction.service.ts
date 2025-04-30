@@ -28,15 +28,10 @@ class AuctionService implements IAuctionService {
 	async createAuctionTransaction(
 		createAuctionTransactionParams: ICreateAuctionTransactionParams,
 	): Promise<ISingleResponse<ITransactionResponse>> {
-		try {
-			return await this.api.post<ISingleResponse<ITransactionResponse>>(
-				`/auction/create/transaction`,
-				createAuctionTransactionParams,
-			);
-		} catch (error) {
-			console.error(error);
-			throw error;
-		}
+		return await this.api.post<ISingleResponse<ITransactionResponse>>(
+			`/auction/create/transaction`,
+			createAuctionTransactionParams,
+		);
 	}
 
 	async submitCreateAuctionTransaction(
