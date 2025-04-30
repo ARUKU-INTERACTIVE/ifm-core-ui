@@ -62,7 +62,7 @@ describe('Team Page', () => {
 			{ fixture: 'team/team-response.json' },
 		);
 		cy.interceptApi(
-			'/player?filter%5BteamId%5D=1&page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=ASC',
+			'/player?filter%5BteamId%5D=1&page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ fixture: 'player/team-players-response.json' },
 		);
@@ -136,7 +136,7 @@ describe('Team Page', () => {
 			{ fixture: 'team/team-response.json' },
 		);
 		cy.interceptApi(
-			'/player?filter%5BteamId%5D=1&page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=ASC',
+			'/player?filter%5BteamId%5D=1&page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ statusCode: 500 },
 		);
@@ -181,7 +181,7 @@ describe('Team Page', () => {
 			{ fixture: 'team/team-with-roster-response.json' },
 		);
 		cy.interceptApi(
-			'/player?filter%5BteamId%5D=1&page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=ASC',
+			'/player?filter%5BteamId%5D=1&page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ fixture: 'player/team-players-response.json' },
 		);
@@ -197,7 +197,7 @@ describe('Team Page', () => {
 			{ fixture: 'player/team-players-in-roster-response.json' },
 		);
 		cy.interceptApi(
-			'/player?filter%5BteamId%5D=1&page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=ASC',
+			'/player?filter%5BteamId%5D=1&page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ fixture: 'player/team-players-in-roster-response.json' },
 		).as('get-players-in-roster');
@@ -240,7 +240,7 @@ describe('Team Page', () => {
 			{ fixture: 'team/team-with-roster-response.json' },
 		);
 		cy.interceptApi(
-			'/player?filter%5BteamId%5D=1&page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=ASC',
+			'/player?filter%5BteamId%5D=1&page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ fixture: 'player/team-players-response.json' },
 		);
@@ -284,7 +284,7 @@ describe('Team Page', () => {
 			{ fixture: 'team/team-with-roster-response.json' },
 		);
 		cy.interceptApi(
-			'/player?filter%5BteamId%5D=1&page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=ASC',
+			'/player?filter%5BteamId%5D=1&page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ fixture: 'player/team-players-in-roster-response.json' },
 		);
@@ -300,7 +300,7 @@ describe('Team Page', () => {
 			{ fixture: 'player/team-players-in-roster-response.json' },
 		);
 		cy.interceptApi(
-			'/player?filter%5BteamId%5D=1&page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=ASC',
+			'/player?filter%5BteamId%5D=1&page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ fixture: 'player/team-players-response.json' },
 		).as('get-players');
@@ -345,7 +345,7 @@ describe('Team Page', () => {
 			{ fixture: 'team/team-with-roster-response.json' },
 		);
 		cy.interceptApi(
-			'/player?filter%5BteamId%5D=1&page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=ASC',
+			'/player?filter%5BteamId%5D=1&page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ fixture: 'player/team-players-in-roster-response.json' },
 		);
