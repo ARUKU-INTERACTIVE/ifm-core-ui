@@ -360,6 +360,8 @@ describe('Transfer Market', () => {
 							attributes: {
 								...auctionFixture.data[0].attributes,
 								playerAddress: 'address_2',
+								endTime: Math.floor(Date.now() / 1000) + 3600,
+								startTime: Math.floor(Date.now() / 1000),
 							},
 						},
 					],
@@ -372,7 +374,7 @@ describe('Transfer Market', () => {
 			SUBMIT_CREATE_AUCTION_SUCCESS_MESSAGE,
 		);
 
-		cy.getBySel('auction-time-left').should('contain', '1 hour');
+		cy.getBySel('auction-time-left').should('contain', '60min');
 	});
 
 	it('should show an error message if create auction fails', () => {

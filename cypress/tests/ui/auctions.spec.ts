@@ -1,5 +1,7 @@
 import { TRANSACTION_SIGNED_MESSAGE } from '@context/auth-messages';
 
+import auctionFixture from '../../fixtures/auction/auctions-response.json';
+
 import { CREATE_ADD_TRUSTLINE_TRANSACTION_XDR_SUCCESS_MESSAGE } from '@/hooks/stellar/stellar-messages';
 import {
 	SUBMIT_CLAIM_TRANSACTION_ERROR_MESSAGE,
@@ -94,7 +96,20 @@ describe('Auctions Page', () => {
 		cy.interceptApi(
 			'/auction',
 			{ method: 'GET' },
-			{ fixture: 'auction/auctions-response.json' },
+			{
+				body: {
+					data: [
+						{
+							...auctionFixture.data[0],
+							attributes: {
+								...auctionFixture.data[0].attributes,
+								endTime: Math.floor(Date.now() / 1000) + 3600,
+								startTime: Math.floor(Date.now() / 1000),
+							},
+						},
+					],
+				},
+			},
 		).as('get-auctions');
 		cy.interceptApi(
 			'/user/me',
@@ -199,13 +214,32 @@ describe('Auctions Page', () => {
 
 		cy.wait('@get-bid-auctions');
 		cy.getBySel('highest-bidder-msg').should('be.visible');
+
+		cy.getBySel('auction-card')
+			.last()
+			.then((card) => {
+				cy.wrap(card).find('button').should('not.exist');
+			});
 	});
 
 	it('should throw an error if submit bid fails', () => {
 		cy.interceptApi(
 			'/auction',
 			{ method: 'GET' },
-			{ fixture: 'auction/auctions-response.json' },
+			{
+				body: {
+					data: [
+						{
+							...auctionFixture.data[0],
+							attributes: {
+								...auctionFixture.data[0].attributes,
+								endTime: Math.floor(Date.now() / 1000) + 3600,
+								startTime: Math.floor(Date.now() / 1000),
+							},
+						},
+					],
+				},
+			},
 		).as('get-auctions');
 		cy.interceptApi(
 			'/user/me',

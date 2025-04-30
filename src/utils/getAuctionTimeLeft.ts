@@ -1,8 +1,6 @@
-import { SECONDS_PER_HOUR } from '@/constants/seconds-per-hour';
-
-export const getAuctionTimeLeft = (startTime: number, endTime: number) => {
-	const msTimeLeft = endTime - startTime;
-	const msToHours = msTimeLeft / SECONDS_PER_HOUR;
+export const getAuctionTimeLeft = (endTime: number) => {
+	const msTimeLeft = endTime * 1000 - Date.now();
+	const msToHours = msTimeLeft / 3600000;
 
 	return msToHours;
 };

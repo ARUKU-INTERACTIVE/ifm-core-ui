@@ -5,6 +5,7 @@ import CreateBidModal from './CreateBidModal';
 import Loading from '@/components/ui/Loading';
 import { IGetClaimTransactionParams } from '@/interfaces/auction/IGetClaimTransaction';
 import { IGetPlaceBidTransactionParams } from '@/interfaces/auction/IGetPlaceBidTransaction';
+import { formatHoursToHumanReadable } from '@/utils/formatHoursToHumanReadable';
 
 interface IAuctionCardProps {
 	playerName: string;
@@ -75,7 +76,7 @@ const AuctionCard = ({
 
 	return (
 		<div
-			className="w-[220px] rounded-xl border-[1px] border-gray-300 overflow-hidden shadow-lg p-2 pb-0"
+			className="w-[220px] rounded-xl border-[1px] border-gray-300 overflow-hidden shadow-lg p-2"
 			data-test="auction-card"
 		>
 			<div>
@@ -113,14 +114,14 @@ const AuctionCard = ({
 						<span className="font-bold text-red-600">
 							{isAuctionEnded
 								? 'The auction has ended'
-								: `Auction time left: ${timeLeft} hours`}
+								: `Auction time left: ${formatHoursToHumanReadable(timeLeft)}`}
 						</span>
 					</p>
 				</div>
 
 				{highestBidderAddress === publicKey && (
 					<p
-						className="text-gray-700 text-base mt-3"
+						className="text-gray-700 text-base mt-2"
 						data-test="highest-bidder-msg"
 					>
 						<span className="font-bold text-green-600">
@@ -135,7 +136,7 @@ const AuctionCard = ({
 				{(publicKey === ownerAddress || publicKey === highestBidderAddress) &&
 				isAuctionEnded ? (
 					<button
-						className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-3 w-full"
+						className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-3 mb-1 w-full"
 						onClick={() => handleSubmitClaim({ auctionId: Number(auctionId) })}
 					>
 						{isLoading ? (
@@ -147,12 +148,15 @@ const AuctionCard = ({
 						)}
 					</button>
 				) : (
-					<button
-						className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded m-3 w-full"
-						onClick={() => setIsCreateBidModalOpen(true)}
-					>
-						Create a Bid
-					</button>
+					publicKey !== highestBidderAddress &&
+					!isAuctionEnded && (
+						<button
+							className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded m-3 w-full"
+							onClick={() => setIsCreateBidModalOpen(true)}
+						>
+							Create a Bid
+						</button>
+					)
 				)}
 			</div>
 

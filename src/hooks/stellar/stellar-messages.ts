@@ -6,3 +6,5 @@ export const SUBMIT_TRANSACTION_XDR_SUCCESS_MESSAGE =
 	'Transaction XDR submitted successfully';
 export const SUBMIT_TRANSACTION_XDR_ERROR_MESSAGE =
 	'There was an error submitting the transaction XDR';
+export const CHECK_TRUSTLINE_ERROR_MESSAGE =
+	'There was an error checking the trustline';
