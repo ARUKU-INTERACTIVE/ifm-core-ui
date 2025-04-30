@@ -2,6 +2,7 @@ import { IFormationPlayerPartial } from '../interfaces/IFormationPlayers';
 import { getPlayerInitials } from '../utils/getPlayerInitials';
 
 import { PlayerPositionColor } from '@/interfaces/formation/player-position-color.enum';
+import PlayerCard from '@/pages/transfer-market/components/PlayerCard';
 
 interface IPlayerPositionProps {
 	formationPlayer: IFormationPlayerPartial;
@@ -39,7 +40,7 @@ const PlayerPosition = ({
 			<button
 				type="button"
 				onClick={() => handleSelectSpot()}
-				className={`cursor-pointer w-8 h-8 rounded-full border-2 ${
+				className={`group cursor-pointer w-8 h-8 rounded-full border-2 ${
 					isPositionSelected ? 'border-orange-500' : 'border-white'
 				}`}
 				style={{
@@ -50,6 +51,11 @@ const PlayerPosition = ({
 				}}
 				data-test={dataTest}
 			>
+				{player && (
+					<div className="absolute z-50 top-0 group-hover:block hidden text-black">
+						<PlayerCard player={player} isInTeam={true} />
+					</div>
+				)}
 				{playerInitials}
 			</button>
 		</div>

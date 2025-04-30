@@ -59,6 +59,7 @@ const Formation = () => {
 			...midfielders,
 			...forwards,
 		];
+
 		const createFormation: ICreateFormation = {
 			name: formationName,
 			isActive: isActiveFormation,
@@ -237,6 +238,7 @@ const Formation = () => {
 		},
 		[userData?.data.attributes.teamId],
 	);
+
 	useEffect(() => {
 		handleGetTeam();
 	}, [handleGetTeam]);
@@ -333,14 +335,15 @@ const Formation = () => {
 		if (formation) {
 			setSelectedFormation(formation);
 			setSelectedSavedFormation({ uuid: 'Default' } as IFormation);
-			setRosterPlayers((previousRosterPlayers) =>
-				previousRosterPlayers.map((player) => ({
+			setRosterPlayers((previousRosterPlayers) => {
+				return previousRosterPlayers.map((player) => ({
 					...player,
 					formationPlayerUuid: null,
-				})),
-			);
+				}));
+			});
 		}
 	};
+
 	const handleSavedFormationChange = async (
 		event: ChangeEvent<HTMLSelectElement>,
 	) => {
@@ -396,7 +399,11 @@ const Formation = () => {
 				forwards: mappedFormation.Forward,
 			};
 			setFormationLayout(
-				calculatePlayerPositions(formation.data.attributes, draftFormation),
+				calculatePlayerPositions(
+					formation.data.attributes,
+					draftFormation,
+					true,
+				),
 			);
 		}
 	};

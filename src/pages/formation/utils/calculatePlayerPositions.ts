@@ -8,17 +8,18 @@ import { Position } from '@/interfaces/formation-player/IFormationPlayer.interfa
 
 export const calculatePlayerPositions = (
 	formation: IFormationSubset,
-	formationSavedLayout?: IFormationLayout,
+	formationLayout: IFormationLayout,
+	isSavedFormation?: boolean,
 ): IFormationLayout => {
 	const allPlayers = [];
-	if (formationSavedLayout) {
+	if (formationLayout) {
 		allPlayers.push(
-			...(formationSavedLayout.defenders ?? []),
-			...(formationSavedLayout.midfielders ?? []),
-			...(formationSavedLayout.forwards ?? []),
+			...(formationLayout.defenders ?? []),
+			...(formationLayout.midfielders ?? []),
+			...(formationLayout.forwards ?? []),
 		);
 	}
-	const formationLayout: IFormationLayout = {
+	const draftFormationLayout: IFormationLayout = {
 		defenders: [],
 		midfielders: [],
 		forwards: [],
@@ -30,19 +31,26 @@ export const calculatePlayerPositions = (
 		position: Position.Goalkeeper,
 	};
 
-	if (formationSavedLayout?.goalkeeper?.[0]?.player) {
+	if (formationLayout?.goalkeeper?.[0]?.player) {
 		goalkeeper = {
-			...formationSavedLayout.goalkeeper?.[0],
 			positionIndex,
 			position: Position.Goalkeeper,
-			player: formationSavedLayout?.goalkeeper?.[0]?.player,
+			player: formationLayout?.goalkeeper?.[0]?.player,
 		};
+		if (isSavedFormation) {
+			goalkeeper = {
+				...formationLayout.goalkeeper?.[0],
+				...goalkeeper,
+			};
+		} else {
+			goalkeeper = { ...goalkeeper, uuid: undefined };
+		}
 	}
-	formationLayout.goalkeeper.push(goalkeeper);
+	draftFormationLayout.goalkeeper.push(goalkeeper);
 	positionIndex += 1;
 
 	for (let i = 0; i < formation.defenders; i++) {
-		const defender = formationSavedLayout
+		const defender = formationLayout
 			? allPlayers.find(
 					(formationPlayer) => formationPlayer.positionIndex === positionIndex,
 			  )
@@ -53,18 +61,24 @@ export const calculatePlayerPositions = (
 		};
 		if (defender) {
 			defenderDraft = {
-				...defender,
-				positionIndex,
-				position: Position.Defender,
+				...defenderDraft,
 				player: defender?.player,
 			};
+			if (isSavedFormation) {
+				defenderDraft = {
+					...defender,
+					...defenderDraft,
+				};
+			} else {
+				defenderDraft = { ...defenderDraft, uuid: undefined };
+			}
 		}
-		formationLayout.defenders.push(defenderDraft);
+		draftFormationLayout.defenders.push(defenderDraft);
 		positionIndex += 1;
 	}
 
 	for (let i = 0; i < formation.midfielders; i++) {
-		const midfielder = formationSavedLayout
+		const midfielder = formationLayout
 			? allPlayers.find(
 					(formationPlayer) => formationPlayer.positionIndex === positionIndex,
 			  )
@@ -75,18 +89,24 @@ export const calculatePlayerPositions = (
 		};
 		if (midfielder) {
 			midfielderDraft = {
-				...midfielder,
-				positionIndex,
-				position: Position.Midfielder,
+				...midfielderDraft,
 				player: midfielder?.player,
 			};
+			if (isSavedFormation) {
+				midfielderDraft = {
+					...midfielder,
+					...midfielderDraft,
+				};
+			} else {
+				midfielderDraft = { ...midfielderDraft, uuid: undefined };
+			}
 		}
-		formationLayout.midfielders.push(midfielderDraft);
+		draftFormationLayout.midfielders.push(midfielderDraft);
 		positionIndex += 1;
 	}
 
 	for (let i = 0; i < formation.forwards; i++) {
-		const forward = formationSavedLayout
+		const forward = formationLayout
 			? allPlayers.find(
 					(formationPlayer) => formationPlayer.positionIndex === positionIndex,
 			  )
@@ -97,15 +117,21 @@ export const calculatePlayerPositions = (
 		};
 		if (forward) {
 			forwardDraft = {
-				...forward,
-				positionIndex,
-				position: Position.Forward,
+				...forwardDraft,
 				player: forward?.player,
 			};
+			if (isSavedFormation) {
+				forwardDraft = {
+					...forward,
+					...forwardDraft,
+				};
+			} else {
+				forwardDraft = { ...forwardDraft, uuid: undefined };
+			}
 		}
-		formationLayout.forwards.push(forwardDraft);
+		draftFormationLayout.forwards.push(forwardDraft);
 		positionIndex += 1;
 	}
 
-	return formationLayout;
+	return draftFormationLayout;
 };
