@@ -12,7 +12,6 @@ import { IGetPlaceBidTransactionParams } from '@/interfaces/auction/IGetPlaceBid
 import { ISubmitClaimTransactionParams } from '@/interfaces/auction/ISubmitClaimTransaction';
 import { ISubmitCreateAuctionTransactionParams } from '@/interfaces/auction/ISubmitCreateAuction';
 import { ISubmitPlaceBidTransactionParams } from '@/interfaces/auction/ISubmitPlaceBidTransaction';
-import { IGetAllConfig } from '@/interfaces/common/IGetAllConfig';
 import { IApiService } from '@/interfaces/services/IApiService';
 import { IAuctionService } from '@/interfaces/services/IAuctionService';
 
@@ -32,7 +31,6 @@ class AuctionService implements IAuctionService {
 			queryParams.append('page[size]', page.size.toString());
 		}
 
-		// queryParams.append('sort[createdAt]', 'DESC');
 		return await this.api.get<IListResponse<IAuction>>(`/auction`, {
 			params: queryParams,
 		});
