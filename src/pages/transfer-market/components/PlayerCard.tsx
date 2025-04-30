@@ -12,6 +12,7 @@ import { IAuction } from '@/interfaces/auction/IAuction';
 import { ICreateAuctionFormValues } from '@/interfaces/auction/ICreateAuctionTransaction';
 import { IPlayer } from '@/interfaces/player/IPlayer';
 import { notificationService } from '@/services/notification.service';
+import { formatHoursToHumanReadable } from '@/utils/formatHoursToHumanReadable';
 import { getAuctionTimeLeft } from '@/utils/getAuctionTimeLeft';
 
 interface IPlayerCardProps {
@@ -50,9 +51,7 @@ export default function PlayerCard({
 	);
 	const getTimeLeft = (auction: IAuction) => {
 		const endTime = auction.endTime;
-		const startTime = auction.startTime;
-
-		const timeLeft = getAuctionTimeLeft(startTime, endTime);
+		const timeLeft = getAuctionTimeLeft(endTime);
 
 		return timeLeft;
 	};
@@ -166,10 +165,21 @@ export default function PlayerCard({
 						className="pb-2 font-bold text-center"
 						data-test="auction-time-left"
 					>
-						<p className="text-red-500 text-sm">Auction Time Left:</p>
-						<p className="text-red-600 text-md" data-test="auction-time-left">
-							{auctionTimeLeft} {auctionTimeLeft === 1 ? 'hour' : 'hours'}
-						</p>
+						{auctionTimeLeft <= 0 ? (
+							<p className="text-red-500 text-sm">The auction has ended</p>
+						) : (
+							<>
+								<p className="text-red-500 text-sm">Auction Time Left:</p>
+								<p
+									className="text-red-600 text-md"
+									data-test="auction-time-left"
+								>
+									{auctionTimeLeft <= 0
+										? 'The auction has ended'
+										: formatHoursToHumanReadable(auctionTimeLeft)}
+								</p>
+							</>
+						)}
 					</div>
 				) : (
 					renderButton()
