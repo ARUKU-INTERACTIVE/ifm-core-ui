@@ -5,13 +5,14 @@ import {
 	ISingleResponse,
 } from '@/interfaces/api/IApiBaseResponse';
 import { ITransactionResponse } from '@/interfaces/api/ITransactionResponse';
-import { IAuction, IGetAllAuctionsParams } from '@/interfaces/auction/IAuction';
+import { IAuction, IAuctionFilters } from '@/interfaces/auction/IAuction';
 import { ICreateAuctionTransactionParams } from '@/interfaces/auction/ICreateAuctionTransaction';
 import { IGetClaimTransactionParams } from '@/interfaces/auction/IGetClaimTransaction';
 import { IGetPlaceBidTransactionParams } from '@/interfaces/auction/IGetPlaceBidTransaction';
 import { ISubmitClaimTransactionParams } from '@/interfaces/auction/ISubmitClaimTransaction';
 import { ISubmitCreateAuctionTransactionParams } from '@/interfaces/auction/ISubmitCreateAuction';
 import { ISubmitPlaceBidTransactionParams } from '@/interfaces/auction/ISubmitPlaceBidTransaction';
+import { IGetAllConfig } from '@/interfaces/common/IGetAllConfig';
 import { IApiService } from '@/interfaces/services/IApiService';
 import { IAuctionService } from '@/interfaces/services/IAuctionService';
 
@@ -23,8 +24,17 @@ class AuctionService implements IAuctionService {
 
 	async getAll({
 		page,
-	}: IGetAllAuctionsParams): Promise<IListResponse<IAuction>> {
+		filters,
+	}: IGetAllConfig<IAuctionFilters>): Promise<IListResponse<IAuction>> {
 		const queryParams = new URLSearchParams();
+
+		if (filters) {
+			Object.entries(filters).forEach(([key, value]) => {
+				if (value) {
+					queryParams.append(`filter[${key}]`, value);
+				}
+			});
+		}
 
 		if (page) {
 			queryParams.append('page[number]', page.number.toString());

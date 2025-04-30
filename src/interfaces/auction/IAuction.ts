@@ -24,9 +24,9 @@ export enum AuctionStatus {
 	NFTTransferred = 'NFTTransferred',
 }
 
-export interface IGetAllAuctionsParams {
-	page?: {
-		size: number;
-		number: number;
-	};
+export interface IAuctionFilters {
+	playerAddress?: string;
+	ownerAddress?: string;
+	highestBidderAddress?: string;
+	status?: AuctionStatus;
 }
