@@ -4,13 +4,13 @@ import ReactPaginate from 'react-paginate';
 import { useAuctions } from '../transfer-market/hooks/useAuctions';
 import { usePlayers } from '../transfer-market/hooks/usePlayers';
 import AuctionList from './components/AuctionList';
-import { ITEMS_PER_AUCTIONS_PAGE } from './constants/auctions.constants';
 import { useGetClaimTransaction } from './hooks/useGetClaimTransaction';
 import { useGetPlaceBidTransaction } from './hooks/useGetPlaceBidTransaction';
 import { useSubmitClaimTransaction } from './hooks/useSubmitClaimTransaction';
 import { useSubmitPlaceBidTransaction } from './hooks/useSubmitPlaceBidTransaction';
 
 import Loading from '@/components/ui/Loading';
+import { ITEMS_PER_AUCTIONS_PAGE } from '@/constants/auctions.constants';
 import { useGetMe } from '@/hooks/auth/useGetMe';
 import { useWallet } from '@/hooks/auth/useWallet';
 import { SUBMIT_TRANSACTION_XDR_SUCCESS_MESSAGE } from '@/hooks/stellar/stellar-messages';
