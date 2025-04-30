@@ -20,7 +20,7 @@ describe('Auctions Page', () => {
 
 	it('should show the auctions page', () => {
 		cy.interceptApi(
-			'/auction?**',
+			'/auction?page%5Bnumber%5D=1&page%5Bsize%5D=11',
 			{ method: 'GET' },
 			{ fixture: 'auction/auctions-response.json' },
 		).as('get-auctions');
@@ -37,7 +37,7 @@ describe('Auctions Page', () => {
 		cy.wait('@get-auctions');
 
 		cy.getBySel('auctions-title').should('contain', 'Auctions');
-		cy.getBySel('auction-card').should('have.length', 2);
+		cy.getBySel('auction-card').should('have.length', 3);
 	});
 
 	it('should search an auction by its player name', () => {

@@ -53,7 +53,7 @@ describe('Transfer Market', () => {
 		cy.wait('@get-players');
 
 		cy.interceptApi(
-			`/player?filter%5Bname%5D=${searchValue}&page%5Bnumber%5D=1&page%5Bsize%5D=2&sort%5BcreatedAt%5D=DESC`,
+			`/player?filter%5Bname%5D=${searchValue}&page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=DESC`,
 			{ method: 'GET' },
 			{ fixture: 'player/player-response.json' },
 		).as('get-player-by-name');
