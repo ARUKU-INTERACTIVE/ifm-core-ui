@@ -21,15 +21,9 @@ describe('Team Page', () => {
 			'/user/me',
 			{ method: 'GET' },
 			{ fixture: 'user/my-user.json' },
-		);
-		cy.interceptApi(
-			'/player/sync/team',
-			{ method: 'PATCH' },
-			{
-				fixture: 'player/empty-sync-team-response.json',
-			},
-		);
+		).as('get-user');
 
+		cy.wait('@get-user');
 		cy.getBySel('team-home-msg')
 			.should('be.visible')
 			.and('have.text', "You don't have a team yet");

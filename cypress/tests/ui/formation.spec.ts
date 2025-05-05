@@ -14,12 +14,16 @@ describe('Formation Page', () => {
 			{ method: 'GET' },
 			{ fixture: 'user/user-without-team.json' },
 		);
+		cy.interceptApi('/formation*', { method: 'GET' }, { statusCode: 404 });
+		cy.interceptApi('/team**', { method: 'GET' }, { statusCode: 404 });
 
-		cy.getBySel('team-creation-title').should('have.text', 'You must have a team to start creating formations')
-		cy.getBySel('create-team-redirection').click()
+		cy.getBySel('team-creation-title').should(
+			'have.text',
+			'You must have a team to start creating formations',
+		);
+		cy.getBySel('create-team-redirection').click();
 		cy.url().should('include', '/team');
-
-	})
+	});
 
 	it('should render the formation page with default formation', () => {
 		cy.interceptApi(
