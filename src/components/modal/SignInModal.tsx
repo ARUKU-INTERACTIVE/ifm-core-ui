@@ -26,7 +26,7 @@ const SignInModal: React.FC<ISignInModalProps> = ({
 	}
 
 	const isWalletConnectedText = isWalletConnected
-		? 'Wallet connected'
+		? 'Change Wallet'
 		: 'Connect wallet';
 	const isLoadingText =
 		isLoading && !isWalletConnected ? 'Connecting...' : isWalletConnectedText;
@@ -53,9 +53,9 @@ const SignInModal: React.FC<ISignInModalProps> = ({
 						<button
 							onClick={connectWallet}
 							className={`px-4 py-2 w-52 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition ${
-								isWalletConnected ? 'opacity-50' : 'opacity-100'
+								isLoading ? 'opacity-50' : 'opacity-100'
 							}`}
-							disabled={isWalletConnected || isLoading}
+							disabled={isLoading}
 							data-test="connect-wallet-button"
 						>
 							{isLoadingText}
