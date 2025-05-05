@@ -260,6 +260,7 @@ const Formation = () => {
 		if (team && team.rosterId) {
 			handleGetFormations(team.rosterId);
 		}
+		setIsLoadingFormation(false);
 	}, [handleGetFormations, team]);
 
 	useEffect(() => {
