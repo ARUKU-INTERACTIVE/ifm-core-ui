@@ -30,6 +30,7 @@ export default function Team() {
 	const [rosterPlayersCount, setRosterPlayersCount] = useState<number>(0);
 	const [rosterPlayers, setRosterPlayers] = useState<IPlayer[] | null>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [isLoadingTeam, setIsLoadingTeam] = useState<boolean>(true);
 	const [isCreateTeamModalOpen, setIsCreateTeamModalOpen] =
 		useState<boolean>(false);
 
@@ -42,6 +43,7 @@ export default function Team() {
 
 	const handleGetTeam = useCallback(async () => {
 		if (userData?.data.attributes.teamId) {
+			setIsLoadingTeam(true);
 			try {
 				const { data } = await teamService.getTeamById(
 					userData?.data.attributes.teamId,
@@ -50,6 +52,8 @@ export default function Team() {
 			} catch (error) {
 				console.error(error);
 				notificationService.error(GET_TEAM_ERROR_MESSAGE);
+			} finally {
+				setIsLoadingTeam(false);
 			}
 		}
 	}, [userData?.data.attributes.teamId]);
@@ -165,6 +169,10 @@ export default function Team() {
 			playerService.syncPlayers();
 		}
 	}, [userData?.data.attributes.teamId]);
+
+	if (isLoadingTeam) {
+		return <Loading />;
+	}
 
 	if (!userData?.data.attributes.teamId || !team) {
 		return (

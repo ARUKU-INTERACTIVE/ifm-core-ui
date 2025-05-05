@@ -15,6 +15,7 @@ import { calculatePlayerPositions } from './utils/calculatePlayerPositions';
 import { presetFormations } from './utils/presetFormations';
 import { updateFormationPlayer } from './utils/updateFormationPlayer';
 
+import Loading from '@/components/ui/Loading';
 import {
 	ERROR_CREATING_FORMATION,
 	ERROR_UPDATING_FORMATION,
@@ -50,6 +51,7 @@ const Formation = () => {
 		midfielders: [],
 		forwards: [],
 	});
+	const [isLoadingFormation, setIsLoadingFormation] = useState<boolean>(true);
 	const navigate = useNavigate();
 
 	const handleSaveFormation = async (formationValues: IFormationValues) => {
@@ -224,6 +226,7 @@ const Formation = () => {
 
 	const handleGetFormations = useCallback(
 		async (rosterUuid: string) => {
+			setIsLoadingFormation(true);
 			if (userData?.data.attributes.teamId) {
 				try {
 					const { data } = await formationService.getAll({
@@ -235,6 +238,8 @@ const Formation = () => {
 				} catch (error) {
 					console.error(error);
 					notificationService.error(GET_TEAM_ERROR_MESSAGE);
+				} finally {
+					setIsLoadingFormation(false);
 				}
 			}
 		},
@@ -420,6 +425,10 @@ const Formation = () => {
 	const assignedPlayerUuids = allPlayersInFormationLayout.map(
 		(formationPlayer) => formationPlayer?.player?.uuid,
 	);
+
+	if (isLoadingFormation) {
+		return <Loading />;
+	}
 
 	if (!team) {
 		return (
