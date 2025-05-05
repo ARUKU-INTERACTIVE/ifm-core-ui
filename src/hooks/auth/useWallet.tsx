@@ -48,13 +48,13 @@ export function useWallet() {
 	const handleSignInWithTransaction = useCallback(
 		(publicKey: string) => {
 			async function signInWithTransaction(publicKey: string) {
-				setIsLoading(true);
-				const challengeTransactionResponse =
-					await authService.getChallengeTransaction(publicKey);
-				const { transactionXdr, memo } =
-					challengeTransactionResponse.data.attributes;
-
 				try {
+					setIsLoading(true);
+					const challengeTransactionResponse =
+						await authService.getChallengeTransaction(publicKey);
+					const { transactionXdr, memo } =
+						challengeTransactionResponse.data.attributes;
+
 					const signedTransaction = await handleSignTransactionXDR(
 						transactionXdr,
 					);
@@ -65,11 +65,12 @@ export function useWallet() {
 					}
 
 					handleSignIn(signedTransaction, publicKey, memo);
-				} catch {
-					notificationService.error(INVALID_TRANSACTION_ERROR);
+				} catch (error) {
+					const err = error as Error;
+					notificationService.error(err.message ?? INVALID_TRANSACTION_ERROR);
+				} finally {
+					setIsLoading(false);
 				}
-
-				setIsLoading(false);
 			}
 
 			return signInWithTransaction(publicKey);
