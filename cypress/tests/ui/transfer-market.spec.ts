@@ -4,6 +4,7 @@ import auctionFixture from '../../fixtures/auction/auctions-response.json';
 
 import {
 	CREATE_AUCTION_TRANSACTION_ERROR_MESSAGE,
+	PLAYER_NOT_OWNED_ERROR,
 	SUBMIT_CREATE_AUCTION_SUCCESS_MESSAGE,
 } from '@/interfaces/auction/auction-messages';
 
@@ -469,5 +470,64 @@ describe('Transfer Market', () => {
 		cy.getBySel('toast-container').contains(
 			CREATE_AUCTION_TRANSACTION_ERROR_MESSAGE,
 		);
+	});
+
+	it('should show an error message if player is not owned by user', () => {
+		cy.interceptApi(
+			'/player?sort%5BcreatedAt%5D=ASC',
+			{ method: 'GET' },
+			{ fixture: 'player/players-response.json' },
+		);
+		cy.interceptApi(
+			'/auction',
+			{ method: 'GET' },
+			{
+				body: {
+					data: [
+						{
+							...auctionFixture.data[0],
+							attributes: {
+								...auctionFixture.data[0].attributes,
+								playerAddress: 'address_5',
+							},
+						},
+						{
+							...auctionFixture.data[1],
+							attributes: {
+								...auctionFixture.data[1].attributes,
+								playerAddress: 'address_6',
+							},
+						},
+						...auctionFixture.data.slice(2),
+					],
+				},
+			},
+		).as('get-auctions');
+		cy.interceptApi(
+			'/auction/create/transaction',
+			{ method: 'POST' },
+			{
+				statusCode: 403,
+				body: {
+					error: {
+						detail: 'Player not owned by user',
+					},
+				},
+			},
+		);
+
+		cy.window().then((window) => {
+			cy.stub(window, 'open')
+				.as('create-auction')
+				.callsFake(() => null);
+		});
+
+		cy.getBySel('create-auction-btn').click();
+
+		cy.getBySel('starting-price-input').clear().type('100');
+		cy.getBySel('auction-time-input').clear().type('1');
+		cy.getBySel('submit-auction-btn').click();
+
+		cy.getBySel('toast-container').contains(PLAYER_NOT_OWNED_ERROR);
 	});
 });

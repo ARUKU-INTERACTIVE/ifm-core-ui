@@ -16,7 +16,10 @@ import Loading from '@/components/ui/Loading';
 import { useWallet } from '@/hooks/auth/useWallet';
 import { IListResponse } from '@/interfaces/api/IApiBaseResponse';
 import { ICreateAuctionFormValues } from '@/interfaces/auction/ICreateAuctionTransaction';
-import { CREATE_AUCTION_TRANSACTION_ERROR_MESSAGE } from '@/interfaces/auction/auction-messages';
+import {
+	CREATE_AUCTION_TRANSACTION_ERROR_MESSAGE,
+	PLAYER_NOT_OWNED_ERROR,
+} from '@/interfaces/auction/auction-messages';
 import { IMintPlayerFormValues } from '@/interfaces/player/IMintPlayer';
 import { IPlayer } from '@/interfaces/player/IPlayer';
 import { notificationService } from '@/services/notification.service';
@@ -129,7 +132,14 @@ export default function TransferMarket() {
 					xdr: signedXDR,
 				});
 			}
-		} catch {
+		} catch (error) {
+			if (
+				error instanceof Error &&
+				error.message === 'Player not owned by user'
+			) {
+				return notificationService.error(PLAYER_NOT_OWNED_ERROR);
+			}
+
 			notificationService.error(CREATE_AUCTION_TRANSACTION_ERROR_MESSAGE);
 		} finally {
 			setIsCreateAuctionPending(false);

@@ -17,3 +17,5 @@ export const SUBMIT_CLAIM_TRANSACTION_SUCCESS_MESSAGE =
 	'Auction rewards claimed successfully';
 export const SUBMIT_CLAIM_TRANSACTION_ERROR_MESSAGE =
 	'There was an error at submitting the claim transaction';
+export const PLAYER_NOT_OWNED_ERROR =
+	'You must own this player to create an auction';
