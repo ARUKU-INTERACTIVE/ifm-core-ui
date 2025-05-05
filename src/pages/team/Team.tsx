@@ -167,6 +167,8 @@ export default function Team() {
 	useEffect(() => {
 		if (userData?.data.attributes.teamId) {
 			playerService.syncPlayers();
+		} else {
+			setIsLoadingTeam(false);
 		}
 	}, [userData?.data.attributes.teamId]);
 
