@@ -9,10 +9,11 @@ import { useSubmitCreateAuctionTransaction } from './hooks/useSubmitCreateAuctio
 import { useSubmitMintPlayer } from './hooks/useSubmitMintPlayer';
 import useSubmitMintPlayerSac from './hooks/useSubmitMintPlayerSac';
 
+import { ListWrapper } from '@/components/list-wrapper/ListWrapper';
 import MintPlayerModal from '@/components/player/MintPlayerModal';
 import PlayerList from '@/components/player/PlayerList';
 import { PLAYER_REQUIRED_ERROR } from '@/components/player/player-messages';
-import Loading from '@/components/ui/Loading';
+import { PAGE_STEP } from '@/constants/auctions.constants';
 import { useWallet } from '@/hooks/auth/useWallet';
 import { IListResponse } from '@/interfaces/api/IApiBaseResponse';
 import { ICreateAuctionFormValues } from '@/interfaces/auction/ICreateAuctionTransaction';
@@ -31,12 +32,12 @@ export default function TransferMarket() {
 		useSubmitMintPlayer({ onSuccess: () => handleCloseMintPlayerModal() });
 	const { handleSignTransactionXDR } = useWallet();
 	const [name, setName] = useState('');
-	const [currentPlayersPage, setCurrentPlayersPage] = useState(1);
+	const [currentPlayersPage, setCurrentPlayersPage] = useState(0);
 	const [pageCountPlayers, setPageCountPlayers] = useState(0);
 	const { data: players, isLoading } = usePlayers({
 		name,
 		isInAuction: false,
-		page: currentPlayersPage,
+		page: currentPlayersPage + PAGE_STEP,
 	});
 	const { mutateAsync: getPlayerSacTransaction } = useGetPlayerSacTransaction();
 	const { mutateAsync: submitMintPlayerSac } = useSubmitMintPlayerSac();
@@ -101,7 +102,7 @@ export default function TransferMarket() {
 				description: values.description,
 			});
 		}
-		setCurrentPlayersPage(1);
+		setCurrentPlayersPage(0);
 		setIsMintPlayerPending(false);
 	};
 
@@ -147,7 +148,7 @@ export default function TransferMarket() {
 	};
 
 	const handlePageChange = ({ selected }: { selected: number }) => {
-		setCurrentPlayersPage(selected + 1);
+		setCurrentPlayersPage(selected);
 	};
 
 	useEffect(() => {
@@ -155,6 +156,18 @@ export default function TransferMarket() {
 			setPageCountPlayers(players.meta.pageCount);
 		}
 	}, [players]);
+
+	const renderPlayers = () => {
+		return (
+			<PlayerList
+				players={players as IListResponse<IPlayer>}
+				submitCreateAuctionTransaction={handleSubmitAuction}
+				auctions={auctions}
+				isSubmittingCreateAuctionTransaction={isCreateAuctionPending}
+				onMintPlayer={handleDeployPlayerSac}
+			/>
+		);
+	};
 
 	return (
 		<>
@@ -192,33 +205,27 @@ export default function TransferMarket() {
 				isSubmitMintPlayerPending={isSubmitMintPlayerPending}
 			/>
 
-			{isLoading ? (
-				<Loading />
-			) : (
-				<>
-					<PlayerList
-						players={players as IListResponse<IPlayer>}
-						submitCreateAuctionTransaction={handleSubmitAuction}
-						auctions={auctions}
-						isSubmittingCreateAuctionTransaction={isCreateAuctionPending}
-						onMintPlayer={handleDeployPlayerSac}
-					/>
-					<ReactPaginate
-						pageCount={pageCountPlayers}
-						pageRangeDisplayed={2}
-						marginPagesDisplayed={1}
-						onPageChange={handlePageChange}
-						containerClassName="flex justify-center mt-6 gap-2"
-						pageClassName="px-2.5 rounded-full border cursor-pointer"
-						activeClassName="bg-blue-500 rounded-full text-white"
-						previousLabel="<"
-						nextLabel=">"
-						breakLabel="..."
-						disabledClassName="opacity-50 cursor-not-allowed"
-						data-test="transfer-market-pagination"
-					/>
-				</>
-			)}
+			<ListWrapper
+				shouldShowList={Boolean(players?.data.length)}
+				emptyText="No players found"
+				listComponent={renderPlayers}
+				isLoading={isLoading}
+			/>
+			<ReactPaginate
+				pageCount={pageCountPlayers}
+				pageRangeDisplayed={2}
+				marginPagesDisplayed={1}
+				onPageChange={handlePageChange}
+				forcePage={currentPlayersPage}
+				containerClassName="flex justify-center mt-6 gap-2"
+				pageClassName="px-2.5 rounded-full border cursor-pointer"
+				activeClassName="bg-blue-500 rounded-full text-white"
+				previousLabel="<"
+				nextLabel=">"
+				breakLabel="..."
+				disabledClassName="opacity-50 cursor-not-allowed"
+				data-test="transfer-market-pagination"
+			/>
 		</>
 	);
 }

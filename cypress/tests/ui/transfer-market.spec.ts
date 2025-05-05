@@ -474,10 +474,10 @@ describe('Transfer Market', () => {
 
 	it('should show an error message if player is not owned by user', () => {
 		cy.interceptApi(
-			'/player?sort%5BcreatedAt%5D=ASC',
+			'/player?page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ fixture: 'player/players-response.json' },
-		);
+		).as('get-players');
 		cy.interceptApi(
 			'/auction',
 			{ method: 'GET' },
@@ -521,6 +521,8 @@ describe('Transfer Market', () => {
 				.as('create-auction')
 				.callsFake(() => null);
 		});
+
+		cy.wait('@get-players');
 
 		cy.getBySel('create-auction-btn').click();
 
