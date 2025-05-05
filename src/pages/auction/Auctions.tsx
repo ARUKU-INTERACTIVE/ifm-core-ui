@@ -9,8 +9,11 @@ import { useGetPlaceBidTransaction } from './hooks/useGetPlaceBidTransaction';
 import { useSubmitClaimTransaction } from './hooks/useSubmitClaimTransaction';
 import { useSubmitPlaceBidTransaction } from './hooks/useSubmitPlaceBidTransaction';
 
-import Loading from '@/components/ui/Loading';
-import { ITEMS_PER_AUCTIONS_PAGE } from '@/constants/auctions.constants';
+import { ListWrapper } from '@/components/list-wrapper/ListWrapper';
+import {
+	ITEMS_PER_AUCTIONS_PAGE,
+	PAGE_STEP,
+} from '@/constants/auctions.constants';
 import { useGetMe } from '@/hooks/auth/useGetMe';
 import { useWallet } from '@/hooks/auth/useWallet';
 import { SUBMIT_TRANSACTION_XDR_SUCCESS_MESSAGE } from '@/hooks/stellar/stellar-messages';
@@ -34,11 +37,11 @@ import { getCurrentTimestampInSeconds } from '@/utils/getCurrentTimestampInSecon
 
 const Auctions = () => {
 	const [playerName, setPlayerName] = useState<string>('');
-	const [currentAuctionsPage, setCurrentAuctionsPage] = useState(1);
+	const [currentAuctionsPage, setCurrentAuctionsPage] = useState(0);
 	const [pageCountAuctions, setPageCountAuctions] = useState(0);
 	const { data: auctions, isPending: isAuctionsPending } = useAuctions({
 		page: {
-			number: currentAuctionsPage,
+			number: currentAuctionsPage + PAGE_STEP,
 			size: ITEMS_PER_AUCTIONS_PAGE,
 		},
 	});
@@ -219,7 +222,7 @@ const Auctions = () => {
 	};
 
 	const handlePageChange = ({ selected }: { selected: number }) => {
-		setCurrentAuctionsPage(selected + 1);
+		setCurrentAuctionsPage(selected);
 	};
 
 	useEffect(() => {
@@ -228,6 +231,25 @@ const Auctions = () => {
 		}
 	}, [auctions]);
 
+	const renderAuctions = () => {
+		return (
+			<AuctionList
+				auctions={filteredAuctions}
+				players={players}
+				isGetPlaceBidTransactionPending={isGetPlaceBidTransactionPending}
+				handleSubmitBid={handleSubmitBid}
+				isSubmitPlaceBidTransactionPending={isSubmitPlaceBidTransactionPending}
+				user={user}
+				handleSubmitClaim={handleSubmitClaim}
+				currentTime={currentTime}
+				isStellarLoading={isStellarLoading}
+				isGetClaimTransactionPending={isGetClaimTransactionPending}
+				isSubmitClaimTransactionPending={isSubmitClaimTransactionPending}
+				handleAddTrustline={handleAddTrustline}
+				checkTrustline={checkTrustline}
+			/>
+		);
+	};
 	return (
 		<div className="flex flex-col justify-center items-center pt-3 w-full text-center">
 			<h1 className="text-xl font-bold text-center" data-test="auctions-title">
@@ -245,27 +267,12 @@ const Auctions = () => {
 				/>
 			</div>
 
-			{isAuctionsPending ? (
-				<Loading />
-			) : (
-				<AuctionList
-					auctions={filteredAuctions}
-					players={players}
-					isGetPlaceBidTransactionPending={isGetPlaceBidTransactionPending}
-					handleSubmitBid={handleSubmitBid}
-					isSubmitPlaceBidTransactionPending={
-						isSubmitPlaceBidTransactionPending
-					}
-					user={user}
-					handleSubmitClaim={handleSubmitClaim}
-					currentTime={currentTime}
-					isStellarLoading={isStellarLoading}
-					isGetClaimTransactionPending={isGetClaimTransactionPending}
-					isSubmitClaimTransactionPending={isSubmitClaimTransactionPending}
-					handleAddTrustline={handleAddTrustline}
-					checkTrustline={checkTrustline}
-				/>
-			)}
+			<ListWrapper
+				shouldShowList={Boolean(filteredAuctions?.data.length)}
+				emptyText="No auctions found"
+				listComponent={renderAuctions}
+				isLoading={isAuctionsPending}
+			/>
 			<ReactPaginate
 				pageCount={pageCountAuctions}
 				pageRangeDisplayed={2}
