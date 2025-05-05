@@ -41,7 +41,7 @@ class PlayerService implements IPlayerService {
 			queryParams.append('page[size]', page.size.toString());
 		}
 
-		queryParams.append('sort[createdAt]', 'ASC');
+		queryParams.append('sort[createdAt]', 'DESC');
 
 		return await this.api.get<IListResponse<IPlayer>>('/player', {
 			params: queryParams,

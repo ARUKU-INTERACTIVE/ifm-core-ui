@@ -26,10 +26,17 @@ describe('Transfer Market', () => {
 
 	it('should render correctly', () => {
 		cy.interceptApi(
-			'/player?sort%5BcreatedAt%5D=ASC',
+			'/player?page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ fixture: 'player/players-response.json' },
+		).as('get-players');
+		cy.interceptApi(
+			'/auction',
+			{ method: 'GET' },
+			{ fixture: 'auction/auctions-response.json' },
 		);
+
+		cy.wait('@get-players');
 
 		cy.getBySel('transfer-market-title').should('contain', 'Transfer Market');
 		cy.getBySel('card').should('have.length', 2);
@@ -38,14 +45,21 @@ describe('Transfer Market', () => {
 	it('should search a player by its name', () => {
 		const searchValue = 'two';
 		cy.interceptApi(
-			`/player?filter%5Bname%5D=${searchValue}&sort%5BcreatedAt%5D=ASC`,
+			`/player?page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=DESC`,
+			{ method: 'GET' },
+			{ fixture: 'player/players-response.json' },
+		).as('get-players');
+
+		cy.wait('@get-players');
+
+		cy.interceptApi(
+			`/player?filter%5Bname%5D=${searchValue}&page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=DESC`,
 			{ method: 'GET' },
 			{ fixture: 'player/player-response.json' },
-		);
-
+		).as('get-player-by-name');
 		cy.getBySel('transfer-market-title').should('contain', 'Transfer Market');
 		cy.getBySel('transfer-market-searchbar').type(searchValue);
-		cy.wait(200);
+		cy.wait('@get-player-by-name');
 
 		cy.getBySel('card')
 			.should('have.length', 1)
@@ -54,7 +68,7 @@ describe('Transfer Market', () => {
 
 	it('should mint a player', () => {
 		cy.interceptApi(
-			'/player?sort%5BcreatedAt%5D=ASC',
+			'/player?page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ fixture: 'player/players-response.json' },
 		);
@@ -111,7 +125,7 @@ describe('Transfer Market', () => {
 
 	it('should show an error if the player is not minted', () => {
 		cy.interceptApi(
-			'/player?sort%5BcreatedAt%5D=ASC',
+			'/player?page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ fixture: 'player/players-response.json' },
 		);
@@ -165,7 +179,7 @@ describe('Transfer Market', () => {
 
 	it('should mint and submit a player sac', () => {
 		cy.interceptApi(
-			'/player?sort%5BcreatedAt%5D=ASC',
+			'/player?page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ fixture: 'player/players-response.json' },
 		);
@@ -219,7 +233,7 @@ describe('Transfer Market', () => {
 
 	it('should show an error message if submit player sac fails', () => {
 		cy.interceptApi(
-			'/player?sort%5BcreatedAt%5D=ASC',
+			'/player?page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ fixture: 'player/players-response.json' },
 		);
@@ -279,7 +293,7 @@ describe('Transfer Market', () => {
 
 	it('should create and submit an auction', () => {
 		cy.interceptApi(
-			'/player?sort%5BcreatedAt%5D=ASC',
+			'/player?page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ fixture: 'player/players-response.json' },
 		).as('get-players');
@@ -379,7 +393,7 @@ describe('Transfer Market', () => {
 
 	it('should show an error message if create auction fails', () => {
 		cy.interceptApi(
-			'/player?sort%5BcreatedAt%5D=ASC',
+			'/player?page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=DESC',
 			{ method: 'GET' },
 			{ fixture: 'player/players-response.json' },
 		);

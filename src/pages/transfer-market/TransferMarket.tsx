@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import ReactPaginate from 'react-paginate';
 
 import { useAuctions } from './hooks/useAuctions';
 import { useCreateAuctionTransaction } from './hooks/useCreateAuctionTransaction';
@@ -27,13 +28,16 @@ export default function TransferMarket() {
 		useSubmitMintPlayer({ onSuccess: () => handleCloseMintPlayerModal() });
 	const { handleSignTransactionXDR } = useWallet();
 	const [name, setName] = useState('');
+	const [currentPlayersPage, setCurrentPlayersPage] = useState(1);
+	const [pageCountPlayers, setPageCountPlayers] = useState(0);
 	const { data: players, isLoading } = usePlayers({
 		name,
 		isInAuction: false,
+		page: currentPlayersPage,
 	});
 	const { mutateAsync: getPlayerSacTransaction } = useGetPlayerSacTransaction();
 	const { mutateAsync: submitMintPlayerSac } = useSubmitMintPlayerSac();
-	const { data: auctions } = useAuctions();
+	const { data: auctions } = useAuctions({});
 	const [isMintPlayerModalOpen, setIsMintPlayerModalOpen] = useState(false);
 
 	const { mutateAsync: createAuctionTransaction } =
@@ -94,6 +98,7 @@ export default function TransferMarket() {
 				description: values.description,
 			});
 		}
+		setCurrentPlayersPage(1);
 		setIsMintPlayerPending(false);
 	};
 
@@ -130,6 +135,16 @@ export default function TransferMarket() {
 			setIsCreateAuctionPending(false);
 		}
 	};
+
+	const handlePageChange = ({ selected }: { selected: number }) => {
+		setCurrentPlayersPage(selected + 1);
+	};
+
+	useEffect(() => {
+		if (players?.meta?.pageCount) {
+			setPageCountPlayers(players.meta.pageCount);
+		}
+	}, [players]);
 
 	return (
 		<>
@@ -170,13 +185,29 @@ export default function TransferMarket() {
 			{isLoading ? (
 				<Loading />
 			) : (
-				<PlayerList
-					players={players as IListResponse<IPlayer>}
-					submitCreateAuctionTransaction={handleSubmitAuction}
-					auctions={auctions}
-					isSubmittingCreateAuctionTransaction={isCreateAuctionPending}
-					onMintPlayer={handleDeployPlayerSac}
-				/>
+				<>
+					<PlayerList
+						players={players as IListResponse<IPlayer>}
+						submitCreateAuctionTransaction={handleSubmitAuction}
+						auctions={auctions}
+						isSubmittingCreateAuctionTransaction={isCreateAuctionPending}
+						onMintPlayer={handleDeployPlayerSac}
+					/>
+					<ReactPaginate
+						pageCount={pageCountPlayers}
+						pageRangeDisplayed={2}
+						marginPagesDisplayed={1}
+						onPageChange={handlePageChange}
+						containerClassName="flex justify-center mt-6 gap-2"
+						pageClassName="px-2.5 rounded-full border cursor-pointer"
+						activeClassName="bg-blue-500 rounded-full text-white"
+						previousLabel="<"
+						nextLabel=">"
+						breakLabel="..."
+						disabledClassName="opacity-50 cursor-not-allowed"
+						data-test="transfer-market-pagination"
+					/>
+				</>
 			)}
 		</>
 	);

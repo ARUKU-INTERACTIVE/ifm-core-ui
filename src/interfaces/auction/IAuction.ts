@@ -23,3 +23,10 @@ export enum AuctionStatus {
 	Completed = 'Completed',
 	NFTTransferred = 'NFTTransferred',
 }
+
+export interface IAuctionFilters {
+	playerAddress?: string;
+	ownerAddress?: string;
+	highestBidderAddress?: string;
+	status?: AuctionStatus;
+}
