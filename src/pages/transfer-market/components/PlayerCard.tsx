@@ -147,13 +147,16 @@ export default function PlayerCard({
 			</div>
 
 			<div className="flex items-center gap-3 py-2">
-				<Tooltip id={`${id}-player-description`} />
+				<Tooltip
+					id={`${id}-player-description`}
+					className="max-w-xs sm:max-w-lg break-words z-10"
+					content={description}
+					place="bottom-end"
+				/>
 				<p className="w-fit font-bold text-md capitalize">{name}</p>
 				<div
 					className="flex h-4 justify-end"
-					data-tooltip-content={description}
 					data-tooltip-id={`${id}-player-description`}
-					data-tooltip-place="bottom-end"
 				>
 					<DescriptionIcon />
 				</div>
