@@ -11,9 +11,13 @@ import {
 	IFormationPlayerPartial,
 } from './interfaces/IFormationPlayers';
 import { IFormationSubset } from './interfaces/IFormationSubset';
+import { formationMapper } from './mapper/formation-mapper';
 import { calculatePlayerPositions } from './utils/calculatePlayerPositions';
 import { presetFormations } from './utils/presetFormations';
-import { updateFormationPlayer } from './utils/updateFormationPlayer';
+import {
+	removeFormationPlayer,
+	updateFormationPlayer,
+} from './utils/updateFormationPlayer';
 
 import Loading from '@/components/ui/Loading';
 import {
@@ -21,8 +25,11 @@ import {
 	ERROR_UPDATING_FORMATION,
 } from '@/constants/messages/formation-messages';
 import { GET_TEAM_ERROR_MESSAGE } from '@/constants/messages/team-messages';
+import {
+	FormationMustHave11PlayersError,
+	FormationMustHave11PlayersToUpdateError,
+} from '@/errors/FormationMustHave11PlayersError';
 import { useGetMe } from '@/hooks/auth/useGetMe';
-import { Position } from '@/interfaces/formation-player/IFormationPlayer.interface';
 import { ICreateFormation } from '@/interfaces/formation/ICreateFormation.interface';
 import { IFormation } from '@/interfaces/formation/IFormation.interface';
 import { IUpdateFormation } from '@/interfaces/formation/IUpdateFormation';
@@ -63,24 +70,21 @@ const Formation = () => {
 			...midfielders,
 			...forwards,
 		];
-
-		const createFormation: ICreateFormation = {
-			name: formationName,
-			isActive: isActiveFormation,
-			formationPlayers: formationPlayers.map(
-				({ position, positionIndex, player }) => ({
-					position: position ?? Position.Goalkeeper,
-					playerUuid: player?.uuid ?? '',
-					positionIndex: positionIndex ?? 0,
-				}),
-			),
-			defenders: selectedFormation.defenders,
-			forwards: selectedFormation.forwards,
-			midfielders: selectedFormation.midfielders,
-			rosterUuid: team?.rosterId ?? '',
-		};
-
 		try {
+			const mappedFormationPlayers =
+				formationMapper.fromFormationPlayersPartialToFormationPlayersCreate(
+					formationPlayers,
+				);
+			const createFormation: ICreateFormation = {
+				name: formationName,
+				isActive: isActiveFormation,
+				formationPlayers: mappedFormationPlayers,
+				defenders: selectedFormation.defenders,
+				forwards: selectedFormation.forwards,
+				midfielders: selectedFormation.midfielders,
+				rosterUuid: team?.rosterId ?? '',
+			};
+
 			const formation = await formationService.saveFormation(createFormation);
 			const selectedSavedFormation = formation.data.attributes;
 			const formationPlayersMappedByUuid =
@@ -117,7 +121,11 @@ const Formation = () => {
 			}
 		} catch (error) {
 			console.error(error);
-			notificationService.error(ERROR_CREATING_FORMATION);
+			if (error instanceof FormationMustHave11PlayersError) {
+				notificationService.error(error.message);
+			} else {
+				notificationService.error(ERROR_CREATING_FORMATION);
+			}
 		}
 	};
 
@@ -142,31 +150,26 @@ const Formation = () => {
 				newFormationPlayers.push(formationPlayer);
 			}
 		});
-
-		const updateFormation: IUpdateFormation = {
-			name: formationName,
-			isActive: isActiveFormation,
-			formationPlayers: formationPlayersUpdate.map(
-				({ position, positionIndex, uuid }) => ({
-					position: position ?? Position.Goalkeeper,
-					positionIndex: positionIndex ?? 0,
-					formationPlayerUuid: uuid,
-				}),
-			),
-			defenders: selectedSavedFormation.defenders,
-			forwards: selectedSavedFormation.forwards,
-			midfielders: selectedSavedFormation.midfielders,
-			formationUuid: selectedSavedFormation?.uuid ?? '',
-			newFormationPlayers: newFormationPlayers.map(
-				({ position, positionIndex, player, uuid }) => ({
-					position: position ?? Position.Goalkeeper,
-					playerUuid: player?.uuid ?? '',
-					positionIndex: positionIndex ?? 0,
-					formationPlayerUuid: uuid,
-				}),
-			),
-		};
 		try {
+			const mappedUpdateFormationPlayers =
+				formationMapper.fromFormationPlayersPartialToUpdatedFormationPlayers(
+					formationPlayersUpdate,
+				);
+			const mappedFormationPlayers =
+				formationMapper.fromFormationPlayersPartialToFormationPlayersCreate(
+					formationPlayers,
+					false,
+				);
+			const updateFormation: IUpdateFormation = {
+				name: formationName,
+				isActive: isActiveFormation,
+				formationPlayers: mappedUpdateFormationPlayers,
+				defenders: selectedSavedFormation.defenders,
+				forwards: selectedSavedFormation.forwards,
+				midfielders: selectedSavedFormation.midfielders,
+				formationUuid: selectedSavedFormation?.uuid ?? '',
+				newFormationPlayers: mappedFormationPlayers,
+			};
 			await formationService.updateFormation(updateFormation);
 			notificationService.success(
 				`${updateFormation.defenders}-${updateFormation.midfielders}-${updateFormation.forwards} formation named ${updateFormation.name} was successfully updated. `,
@@ -188,7 +191,11 @@ const Formation = () => {
 			);
 		} catch (error) {
 			console.error(error);
-			notificationService.error(ERROR_UPDATING_FORMATION);
+			if (error instanceof FormationMustHave11PlayersToUpdateError) {
+				notificationService.error(error.message);
+			} else {
+				notificationService.error(ERROR_UPDATING_FORMATION);
+			}
 		}
 	};
 
@@ -312,7 +319,7 @@ const Formation = () => {
 			const removePlayerFromFormationLayout = (
 				formationPlayerPartial: IFormationPlayerPartial[],
 			) => {
-				return updateFormationPlayer(
+				return removeFormationPlayer(
 					formationPlayerPartial,
 					formationPlayer,
 					null,
