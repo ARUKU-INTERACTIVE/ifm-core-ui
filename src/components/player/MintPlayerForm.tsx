@@ -31,7 +31,7 @@ const MintPlayerForm = ({
 			validationSchema={mintPlayerSchema}
 			onSubmit={mintPlayer}
 		>
-			{() => {
+			{({ errors, touched }) => {
 				return (
 					<Form className="flex flex-col gap-4">
 						<div className="flex flex-col">
@@ -53,6 +53,9 @@ const MintPlayerForm = ({
 								className="border border-gray-300 rounded-md p-2"
 								data-test="mint-player-name-input"
 							/>
+							{errors.name && touched.name && (
+								<span className="text-red-500 text-sm">{errors.name}</span>
+							)}
 						</div>
 
 						<div className="flex flex-col">
@@ -66,6 +69,11 @@ const MintPlayerForm = ({
 								className="border border-gray-300 rounded-md p-2"
 								data-test="mint-player-description-input"
 							/>
+							{errors.description && touched.description && (
+								<span className="text-red-500 text-sm">
+									{errors.description}
+								</span>
+							)}
 						</div>
 
 						<div className="flex justify-end gap-3 mt-2">

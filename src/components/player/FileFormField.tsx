@@ -73,7 +73,7 @@ const FileInput = <T,>({
 			)}
 
 			{errors[name] && touched[name] && (
-				<div className="alert alert-danger" data-test="form-input-error">
+				<div className="text-red-500 text-sm" data-test="form-input-error">
 					{errors[name] as string}
 				</div>
 			)}

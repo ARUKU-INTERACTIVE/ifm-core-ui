@@ -124,6 +124,28 @@ describe('Transfer Market', () => {
 		cy.getBySel('toast-container').contains(PLAYER_MINTED_SUCCESSFULLY);
 	});
 
+	it('should show an error if the player mint transaction is available to sign', () => {
+		cy.interceptApi('/player/mint', { method: 'POST' }, { statusCode: 500 });
+
+		cy.window().then((window) => {
+			cy.stub(window, 'open')
+				.as('mint-player')
+				.callsFake(() => null);
+		});
+
+		cy.getBySel('transfer-market-mint-player-button').click();
+		cy.getBySel('mint-player-modal-title').should('contain', 'Mint Player');
+
+		cy.getBySel('mint-player-image-input').attachFile('/player/test.png', {
+			force: true,
+		});
+		cy.getBySel('mint-player-name-input').type('Player Three');
+		cy.getBySel('mint-player-description-input').type('Test description');
+		cy.getBySel('mint-player-button').click();
+
+		cy.getBySel('toast-container').contains(PLAYER_MINTED_ERROR);
+	});
+
 	it('should show an error if the player is not minted', () => {
 		cy.interceptApi(
 			'/player?page%5Bnumber%5D=1&page%5Bsize%5D=11&sort%5BcreatedAt%5D=DESC',

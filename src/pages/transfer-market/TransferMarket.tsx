@@ -12,7 +12,10 @@ import useSubmitMintPlayerSac from './hooks/useSubmitMintPlayerSac';
 import { ListWrapper } from '@/components/list-wrapper/ListWrapper';
 import MintPlayerModal from '@/components/player/MintPlayerModal';
 import PlayerList from '@/components/player/PlayerList';
-import { PLAYER_REQUIRED_ERROR } from '@/components/player/player-messages';
+import {
+	PLAYER_MINTED_ERROR,
+	PLAYER_REQUIRED_ERROR,
+} from '@/components/player/player-messages';
 import { PAGE_STEP } from '@/constants/auctions.constants';
 import { useWallet } from '@/hooks/auth/useWallet';
 import { IListResponse } from '@/interfaces/api/IApiBaseResponse';
@@ -73,37 +76,43 @@ export default function TransferMarket() {
 	};
 
 	const handleSubmitMintPlayer = async (values: IMintPlayerFormValues) => {
-		setIsMintPlayerPending(true);
-		if (!values.file) {
-			notificationService.error(PLAYER_REQUIRED_ERROR);
-			return;
-		}
-		const file = values.file[0];
+		try {
+			setIsMintPlayerPending(true);
+			if (!values.file) {
+				notificationService.error(PLAYER_REQUIRED_ERROR);
+				return;
+			}
+			const file = values.file[0];
 
-		const {
-			data: {
-				attributes: { xdr, ...mintPlayerData },
-			},
-		} = await playerService.mintPlayer({
-			file,
-			name: values.name,
-			description: values.description,
-		});
-
-		const signedTransactionXdr = await handleSignTransactionXDR(xdr);
-
-		if (signedTransactionXdr) {
-			submitMintPlayer({
-				xdr: signedTransactionXdr,
-				metadataCid: mintPlayerData.metadataCid,
-				imageCid: mintPlayerData.imageCid,
-				issuer: mintPlayerData.issuer,
+			const {
+				data: {
+					attributes: { xdr, ...mintPlayerData },
+				},
+			} = await playerService.mintPlayer({
+				file,
 				name: values.name,
 				description: values.description,
 			});
+
+			const signedTransactionXdr = await handleSignTransactionXDR(xdr);
+
+			if (signedTransactionXdr) {
+				submitMintPlayer({
+					xdr: signedTransactionXdr,
+					metadataCid: mintPlayerData.metadataCid,
+					imageCid: mintPlayerData.imageCid,
+					issuer: mintPlayerData.issuer,
+					name: values.name,
+					description: values.description,
+				});
+			}
+			setCurrentPlayersPage(0);
+		} catch (error) {
+			console.error(error);
+			notificationService.error(PLAYER_MINTED_ERROR);
+		} finally {
+			setIsMintPlayerPending(false);
 		}
-		setCurrentPlayersPage(0);
-		setIsMintPlayerPending(false);
 	};
 
 	const handleSubmitAuction = async (

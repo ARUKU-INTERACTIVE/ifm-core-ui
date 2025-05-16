@@ -1,7 +1,8 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 
 import CreateBidModal from './CreateBidModal';
 
+import { ImageWithFallback } from '@/components/ui/ImageWithFallback';
 import Loading from '@/components/ui/Loading';
 import { IGetClaimTransactionParams } from '@/interfaces/auction/IGetClaimTransaction';
 import { IGetPlaceBidTransactionParams } from '@/interfaces/auction/IGetPlaceBidTransaction';
@@ -10,8 +11,6 @@ import { formatHoursToHumanReadable } from '@/utils/formatHoursToHumanReadable';
 interface IAuctionCardProps {
 	playerName: string;
 	playerImage: string;
-	isImageLoaded?: boolean;
-	setIsImageLoaded: Dispatch<SetStateAction<boolean>>;
 	highestBidAmount: string;
 	timeLeft: number;
 	isGetPlaceBidTransactionPending: boolean;
@@ -46,8 +45,6 @@ interface IAuctionCardProps {
 const AuctionCard = ({
 	playerName,
 	playerImage,
-	setIsImageLoaded,
-	isImageLoaded,
 	highestBidAmount,
 	timeLeft,
 	isGetPlaceBidTransactionPending,
@@ -80,28 +77,14 @@ const AuctionCard = ({
 			data-test="auction-card"
 		>
 			<div>
-				<div className="w-full h-48 bg-gray-200 relative z-0 mb-2">
-					{playerImage && !isImageLoaded && (
-						<div className="w-full max-h-48 h-full absolute inset-0 animate-pulse bg-gray-400 rounded-lg" />
-					)}
-					{playerImage ? (
-						<img
-							src={playerImage}
-							alt="NFT Player"
-							loading="lazy"
-							onLoad={() => {
-								setIsImageLoaded(true);
-							}}
-							className={`w-full max-h-48 h-full object-cover rounded-lg transition-opacity duration-300 ${
-								isImageLoaded ? 'opacity-100' : 'opacity-0'
-							}`}
-						/>
-					) : (
-						<div className="w-full h-full bg-gray-600 flex justify-center rounded-lg items-center z-0">
-							<p className="text-white text-center">No image</p>
-						</div>
-					)}
-				</div>
+				<ImageWithFallback
+					src={playerImage}
+					alt="NFT Player Auction Image"
+					className="w-full h-48 object-cover"
+					wrapperClassName="w-full h-48 bg-gray-200 relative z-0 mb-2"
+					fallbackClassName="w-full h-full bg-gray-600 flex justify-center rounded-lg items-center z-0"
+				/>
+
 				<div className="text-center">
 					<div className="font-bold text-md mb-4">{playerName}</div>
 				</div>
