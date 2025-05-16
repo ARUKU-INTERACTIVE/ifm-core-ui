@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import AuctionCard from './AuctionCard';
 
 import {
@@ -58,8 +56,6 @@ const AuctionList = ({
 	handleAddTrustline,
 	checkTrustline,
 }: AuctionListProps) => {
-	const [isImageLoaded, setIsImageLoaded] = useState<boolean>(false);
-
 	return (
 		<div className="flex flex-wrap justify-evenly gap-10 py-3 px-10">
 			{auctions?.data.map((auction) => {
@@ -78,8 +74,6 @@ const AuctionList = ({
 						<AuctionCard
 							playerName={auctionPlayer?.attributes.name as string}
 							playerImage={auctionPlayer?.attributes.imageUri as string}
-							setIsImageLoaded={setIsImageLoaded}
-							isImageLoaded={isImageLoaded}
 							highestBidAmount={formatPrice(highestBidAmountInXLM)}
 							timeLeft={auctionTimeLeft}
 							isGetPlaceBidTransactionPending={isGetPlaceBidTransactionPending}

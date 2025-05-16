@@ -6,6 +6,7 @@ import { RosterOperationButton } from './RosterOperationButton';
 
 import { DescriptionIcon } from '@/components/icon/DescriptionIcon';
 import { SUBMIT_MINT_PLAYER_SAC_ERROR_MESSAGE } from '@/components/player/player-messages';
+import { ImageWithFallback } from '@/components/ui/ImageWithFallback';
 import Loading from '@/components/ui/Loading';
 import { IListResponse } from '@/interfaces/api/IApiBaseResponse';
 import { IAuction } from '@/interfaces/auction/IAuction';
@@ -42,7 +43,6 @@ export default function PlayerCard({
 	isLoadingOperation = false,
 }: IPlayerCardProps) {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const [isImageLoaded, setIsImageLoaded] = useState<boolean>(false);
 	const [isOpenCreateAuctionModal, setIsOpenCreateAuctionModal] =
 		useState<boolean>(false);
 	const [auctionTimeLeft, setAuctionTimeLeft] = useState<number>(0);
@@ -123,28 +123,13 @@ export default function PlayerCard({
 			className="w-[200px] rounded-xl border-[1px] border-gray-300 overflow-hidden shadow-lg p-2 pb-0 bg-white"
 			data-test="card"
 		>
-			<div className="w-full h-48 bg-gray-200 relative z-0">
-				{imageUri && !isImageLoaded && (
-					<div className="w-full max-h-48 h-full absolute inset-0 animate-pulse bg-gray-400 rounded-lg" />
-				)}
-				{imageUri ? (
-					<img
-						src={imageUri}
-						alt="NFT Player"
-						loading="lazy"
-						onLoad={() => {
-							setIsImageLoaded(true);
-						}}
-						className={`w-full max-h-48 h-full object-cover rounded-lg transition-opacity duration-300 ${
-							isImageLoaded ? 'opacity-100' : 'opacity-0'
-						}`}
-					/>
-				) : (
-					<div className="w-full h-full bg-gray-600 flex justify-center rounded-lg items-center z-0">
-						<p className="text-white text-center">No image</p>
-					</div>
-				)}
-			</div>
+			<ImageWithFallback
+				src={imageUri}
+				alt="NFT Player"
+				className="w-full max-h-48 h-full object-cover rounded-lg"
+				wrapperClassName="w-full h-48 bg-gray-200 relative z-0"
+				fallbackClassName="w-full h-full bg-gray-600 flex justify-center rounded-lg items-center z-0"
+			/>
 
 			<div className="flex items-center gap-3 py-2">
 				<Tooltip
