@@ -108,7 +108,7 @@ export default function TransferMarket() {
 			}
 			setCurrentPlayersPage(0);
 		} catch (error) {
-			console.log(error);
+			console.error(error);
 			notificationService.error(PLAYER_MINTED_ERROR);
 		} finally {
 			setIsMintPlayerPending(false);
